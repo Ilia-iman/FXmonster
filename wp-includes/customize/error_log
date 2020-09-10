@@ -1,0 +1,1 @@
+[01-Aug-2020 08:41:48 America/New_York] PHP Fatal error:  Class 'WP_Customize_Control' not found in /home/fxmoqtfb/public_html/wp-includes/customize/class-wp-widget-form-customize-control.php on line 17

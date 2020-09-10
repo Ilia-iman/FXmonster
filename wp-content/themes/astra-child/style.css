@@ -1,0 +1,379 @@
+/*
+ * @Author: aniom
+ * @Date:   2020-06-27 00:36:48
+ * @Last Modified by:   aniom
+ * @Last Modified time: 2020-06-27 00:45:34
+ */
+/* 
+Theme Name: Astra Child 
+Theme URL: http://fxmonster.net
+Description: Astra Child 
+Theme Author: Aniom
+Author URL: http://aniom.net
+Template: astra
+Version: 1.0.0 
+Text Domain: astra-child 
+*/
+
+#primary{
+	margin: 6em 0;
+}
+
+.button_green {
+	width: 100px;
+	height: 30px;
+	background: green;
+	border-radius: 5px;
+}
+
+.top_sector {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 0;
+}
+
+.ci{
+
+margin-left:15px;
+padding-left: 15px;
+-webkit-filter: grayscale(100%);
+-moz-filter: grayscale(100%);
+-ms-filter: grayscale(100%);
+-o-filter: grayscale(100%);
+filter: grayscale(100%);
+	transition:0.2s ease;
+}
+
+.ci:hover {
+-webkit-filter: grayscale(0%);
+-moz-filter: grayscale(0%);
+-ms-filter: grayscale(0%);
+-o-filter: grayscale(0%);
+filter: grayscale(0%);
+}
+
+.ci.ae {
+background: url('https://fxmonster.net/wp-content/uploads/2020/01/ae.png') no-repeat;
+background-position:left;
+}
+
+.ci.pr {
+background: url('https://fxmonster.net/wp-content/uploads/2020/01/pr.png') no-repeat;
+background-position:left;
+}
+
+.ci.fcpx {
+background: url('https://fxmonster.net/wp-content/uploads/2020/01/fxpc.png') no-repeat;
+background-position:left;
+}
+
+.ci.mg {
+background: url('https://fxmonster.net/wp-content/uploads/2020/01/mg.png') no-repeat;
+	background-position:left;
+}
+
+
+
+/* bold main menu, light sub-menu */
+.main-navigation ul:first-child{
+	font-weight:600;
+}
+.main-navigation ul li > ul{
+	font-weight:500;
+}
+
+
+
+
+/*products*/
+.header_outspace{
+	padding-top:83px;
+}
+
+.left{float:left;}
+.right{float:right;}
+.clear{clear:both;}
+
+.shadowBox{
+-webkit-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
+-moz-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
+box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
+	background:white;
+}
+
+.singleItemContentBox{
+	padding:20px;
+	color:#565656;
+}
+
+.woocommerce-product-gallery.woocommerce-product-gallery--with-images.woocommerce-product-gallery--columns-4.images{
+	width: 65%!important;
+}
+
+.recommendedSinglePage{
+	padding-top:90px;
+	text-transform: capitalize;
+}
+
+table.woocommerce-product-attributes{
+	border:none;
+	opacity:0.9;
+}
+
+span.onsale{
+	background:#007BFF!important;
+	width:80px!important;
+	left:auto !important;
+	right:280px!important;
+	padding:0 !important;
+	margin:0!important;
+	top:90px!important;
+	font-weight: bold!important;
+
+}
+
+table.woocommerce-product-attributes td{
+	border:none;
+}
+
+.woocommerce-product-attributes-item__value{
+	font-size:13px;
+
+	font-style:normal!important;
+}
+ 
+.controlGetProduct{
+	width:380px;
+	/*display:block;*/
+	margin-left:40px;
+	display:inline-block;
+}
+
+.controlGetProduct .inside{
+	margin:0 auto;
+}
+
+.controlGetProduct .price{
+	float:left;
+	padding:2px;
+	font-size:30px!important;
+}
+
+
+
+.controlGetProduct form{
+	float:right;
+	padding:10px;
+}
+
+/*Global category on main page */
+
+li.specialMainCats{
+	background: #F3F3F3;
+	display:inline-block;
+	padding:10px;
+	width:240px;
+	margin:18px;
+	transition:0.2s ease;
+}
+
+li.specialMainCats:hover{
+	background: transparent;
+}
+
+
+/*for page Store*/
+li.specialMainCats.inStore{
+	background: transparent!important;
+	color:white!important;
+
+} 
+
+li.specialMainCats.inStore a h2{
+	color:white!important;
+}
+
+li.specialMainCats.inStore:hover{
+	margin-top:-5px;
+}
+
+/*default*/
+
+li.specialMainCats a h2{
+	font-size:14px;
+	color:#494949;
+	text-transform: capitalize;
+	padding:10px;
+	text-align:center;
+}
+
+li.specialMainCats a img{
+	width:110px;
+	display:block;
+	margin:0 auto;
+	padding-top:20px;
+	padding-bottom:10px;
+}
+
+li.specialMainCats a mark{
+	display:none;
+}
+
+
+/*Main Widget Products*/
+li.mainWidgetProducts{
+	margin:14px;
+	display:inline-block;
+	width:360px;
+	/* height:265px; */
+	background:white;
+-webkit-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
+-moz-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
+box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
+ 
+/*border-radius: 6px;
+
+border-bottom:4px solid #55CDFF;*/
+	margin-bottom:85px;
+}
+
+
+li.mainWidgetProducts .productHeadingWd{
+	margin:10px;
+	font-family: 'Montserrat';
+	cursor:default;
+	text-align:center;
+
+}
+li.mainWidgetProducts form{
+	padding-top:28px;
+	margin:0px auto;
+	width:360px;
+	text-align:center;
+	font-size:14px;
+	padding-bottom:18px;
+}
+
+li.mainWidgetProducts img{
+	width:360px;
+	height:200px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+li.mainWidgetProducts button.button.single_add_to_cart_button{
+	padding:8px 14px!important;
+	color: grey;
+	background: white;
+	text-transform: uppercase;
+	transition:0.3s ease;
+	/*margin-right:8px;*/
+	margin: 0 8px 15px 20px;
+	float: left;
+}
+
+p.woocommerce-result-count{
+	font-size:12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	width:100%;
+	display:block;
+	opacity:0.8;
+}
+
+form.woocommerce-ordering{
+	float:left!important;
+}
+
+form.woocommerce-ordering select{
+	font-size:14px;
+}
+
+li.mainWidgetProducts a.details{
+	padding:0!important;
+	color: grey;
+	text-transform: uppercase;
+	padding:6px 14px!important;
+	background:white!important;
+	float: right;
+	margin: 0 20px 15px 0;
+}
+
+/*li.mainWidgetProducts a.details:hover{
+	background:black!important;*/
+}
+
+ul.products li.mainWidgetProducts a.details{
+	padding:8px 14px!important;
+}
+
+
+
+li.mainWidgetProducts .productHeadingWd span.product-title{
+	color:#434343;
+	display:block;
+	line-height: 45px;
+	height:12px;
+	font-size: 15px;
+}
+
+li.mainWidgetProducts .productHeadingWd span.product-cat{
+	color:#9D9D9D;
+	font-size:11px;
+	line-height: 15px;
+	text-align:center!important;
+	/* text-transform: uppercase; */
+
+}
+
+
+
+button.single_add_to_cart_button.button.alt {
+	padding:8px 14px!important;
+	color: white;
+	text-transform: uppercase;
+	transition:0.3s ease;
+	width: 100px;
+	background-color: #ff1a55;
+	border-radius: 5px;
+	padding: 5px 15px;
+	margin: 0 8px 15px 20px;
+}
+
+.button_div{
+
+}
+
+.catSpecialHead{
+	/*padding-top:20px;*/
+	padding-bottom:20px;
+}
+
+.textHeadCatSide h4{
+	padding:7px 22px;
+	color:#464646;
+}
+
+ul.category_head_sets{
+	color:#B4B4B4;
+	list-style-type: none;
+	padding:0;
+	margin:0;
+}
+ul.category_head_sets li{
+	padding:0;
+	margin:0;
+	display:inline-block;
+	padding:7px 22px;
+	border-right:1px solid #B4B4B4;
+	line-height: 14px;
+}
+
+ul.category_head_sets li:last-child{
+	border:none;
+}
+
+ul.category_head_sets li a:hover{
+	color:black;
+}

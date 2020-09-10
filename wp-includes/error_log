@@ -1,0 +1,15 @@
+[30-Jul-2020 06:18:31 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function is_main_site() in /home/fxmoqtfb/public_html/wp-includes/update.php:812
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-includes/update.php on line 812
+[30-Jul-2020 12:29:03 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function feed_content_type() in /home/fxmoqtfb/public_html/wp-includes/feed-atom-comments.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-includes/feed-atom-comments.php on line 8
+[30-Jul-2020 12:29:33 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function feed_content_type() in /home/fxmoqtfb/public_html/wp-includes/feed-atom-comments.php:8
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-includes/feed-atom-comments.php on line 8
+[31-Jul-2020 02:05:57 America/New_York] PHP Fatal error:  Class 'IXR_Server' not found in /home/fxmoqtfb/public_html/wp-includes/class-wp-xmlrpc-server.php on line 23
+[31-Jul-2020 02:06:00 America/New_York] PHP Fatal error:  Class 'IXR_Server' not found in /home/fxmoqtfb/public_html/wp-includes/class-wp-xmlrpc-server.php on line 23
+[31-Jul-2020 10:55:36 America/New_York] PHP Fatal error:  Class 'IXR_Server' not found in /home/fxmoqtfb/public_html/wp-includes/class-wp-xmlrpc-server.php on line 23

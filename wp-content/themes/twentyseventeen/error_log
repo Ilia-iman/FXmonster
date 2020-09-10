@@ -1,0 +1,25 @@
+[26-Feb-2020 18:19:29 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/404.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/404.php on line 13
+[26-Feb-2020 18:19:32 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/404.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/404.php on line 13
+[06-Jun-2020 12:14:16 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_part() in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/footer.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/footer.php on line 22
+[06-Jun-2020 14:49:33 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_part() in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/footer.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/footer.php on line 22
+[06-Jun-2020 18:47:52 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/404.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/404.php on line 13
+[08-Jun-2020 20:57:51 America/New_York] PHP Notice:  Undefined index: wp_version in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/functions.php on line 15
+[08-Jun-2020 20:57:51 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/functions.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/themes/twentyseventeen/functions.php on line 16

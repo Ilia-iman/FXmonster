@@ -1,0 +1,12 @@
+[29-Feb-2020 09:18:07 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function add_action() in /home/fxmoqtfb/public_html/wp-content/plugins/hello.php:69
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/plugins/hello.php on line 69
+[29-Aug-2020 01:21:08 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function add_action() in /home/fxmoqtfb/public_html/wp-content/plugins/hello.php:69
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/plugins/hello.php on line 69
+[29-Aug-2020 01:21:09 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function add_action() in /home/fxmoqtfb/public_html/wp-content/plugins/hello.php:69
+Stack trace:
+#0 {main}
+  thrown in /home/fxmoqtfb/public_html/wp-content/plugins/hello.php on line 69
