@@ -11,6 +11,9 @@ wp-content/*
 # ignore node dependency directories
 node_modules/
 
+# ignore uploads directories
+uploads/
+
 # ignore IDE files
 .idea
 
