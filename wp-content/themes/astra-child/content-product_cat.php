@@ -22,7 +22,7 @@ $slug = basename(get_permalink());
 
 ?>
 
-<li class="specialMainCats <? if($slug == 'store'){echo 'inStore';} ?>" <?php /*wc_product_cat_class( 'specialMainCats', $category );*/ ?>>
+<li class="specialMainCats <?php if($slug == 'store'){echo 'inStore';} ?>" <?php /*wc_product_cat_class( 'specialMainCats', $category );*/ ?>>
 	<?php
 	/**
 	 * woocommerce_before_subcategory hook.

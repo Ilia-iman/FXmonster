@@ -64,16 +64,10 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 <li class="mainWidgetProducts">
 
 	<?php do_action( 'woocommerce_widget_product_item_start', $args ); ?>
-
-	
-
-
-
 		<a href="<?php echo esc_url( $product->get_permalink() ); ?>">
 
 			<?php echo $product->get_image(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
-			
 
 		</a>
 
@@ -87,7 +81,7 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 
 	<div class="productHeadingWd">
 		
-		<span class="product-cat"><? echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>
+		<span class="product-cat"><?php echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>
 		
 		<span class="product-title"><?php echo wp_kses_post( $product->get_name() ); ?></span>
 
@@ -97,15 +91,12 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 
  	</div>
 
- 	<? //woocommerce_template_single_add_to_cart();?>
+ 	<?php //woocommerce_template_single_add_to_cart();?>
 
  	<!-- Button Buy --> 
-
-
-	
-	<form class="cart clearfix" action="<?php echo esc_url( $product->product_url ); ?>" method="get" enctype='multipart/form-data'>
+    <form class="cart clearfix" action="<?php echo esc_url( $product->product_url ); ?>" method="get" enctype='multipart/form-data'>
 		<div style="float:left;padding:2px;">
-<a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="single_add_to_cart_button button details">Learn More</a>
+            <a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="single_add_to_cart_button button details">Learn More</a>
 		</div>
 		
 		<div style="float:right;padding:2px;">
@@ -113,17 +104,7 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 		<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text().' $'.$product->price); ?></button>
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 		</div>
-
-
-		
-
 	</form>
-
-
-
-
-
 	<?php do_action( 'woocommerce_widget_product_item_end', $args ); ?>
-
 </li>
 

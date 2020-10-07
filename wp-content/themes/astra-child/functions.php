@@ -1,5 +1,11 @@
 <?php
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'woocommerce_custom_single_add_to_cart_text' );
 
+function woocommerce_custom_single_add_to_cart_text() {
+    global $product;
+
+    return __($product->get_price() ? '$'.$product->get_price().' BUY' : 'FREE', 'woocommerce' );
+}
 
 add_action( 'wp_enqueue_scripts', 'bento_child_enqueue_styles' );
 function bento_child_enqueue_styles() {

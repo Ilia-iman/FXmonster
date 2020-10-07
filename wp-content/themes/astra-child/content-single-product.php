@@ -90,15 +90,15 @@ $image = wp_get_attachment_url( $thumbnail_id );
 <!--			<img src='--><?// echo $image;?><!--' width="100px">-->
 <!--		</div>-->
 		<div class="left textHeadCatSide">
-			<h4><a href="<? echo get_term_link( $saveParentCatID );?>"><? echo $globallyCatName;?></a></h4>
+			<h4><a href="<?php echo get_term_link( $saveParentCatID );?>"><?php echo $globallyCatName;?></a></h4>
 			<ul class="category_head_sets">
-			<? wp_list_categories( $args_cat_list );?>
+			<?php wp_list_categories( $args_cat_list );?>
 			</ul>
 		</div>
 		<div class="clear"></div>
 	</div>
 	
-	<?
+	<?php
 	//var_dump($product_categories);
 	//echo $product_categories[1]['name'];
 
@@ -140,14 +140,14 @@ $image = wp_get_attachment_url( $thumbnail_id );
 	 */
 	?>
 		<div class="customPriceAndOrderBtn">
-			<?
+			<?php
 			woocommerce_template_single_price(); //Цена
  			woocommerce_template_single_add_to_cart();//Кнопка
 			?>
 		</div><br/>
 
 	</div>
-	<?
+	<?php
 		
 
 	do_action( 'woocommerce_before_single_product_summary' ); //Отображение левой части (Ютуб)
@@ -176,12 +176,12 @@ $image = wp_get_attachment_url( $thumbnail_id );
 
 
 
-				<? wc_display_product_attributes( $product );?>
+				<?php wc_display_product_attributes( $product );?>
 
 	<div class="clear"></div>
 	<div class="singleItemContentBox shadowBox">
-		<h5><? the_title();?></h5>
-		<? the_content();?>
+		<h5><?php the_title();?></h5>
+		<?php the_content();?>
 	</div>
 
 	<?php
@@ -210,7 +210,7 @@ $image = wp_get_attachment_url( $thumbnail_id );
 
 <h2 class="recommendedSinglePage">Recommended</h2>
 
-<?
+<?php
 
 /*$args = array(
     'orderby' => 'modified',
