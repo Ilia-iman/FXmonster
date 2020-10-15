@@ -381,3 +381,8 @@ ul.category_head_sets li a:hover{
 .woocommerce div.product .customPriceAndOrderBtn { margin-right: 0 }
 .woocommerce div.product .customPriceAndOrderBtn p.price { margin: 0 10px 0 0 }
 .woocommerce div.product .customPriceAndOrderBtn .cart { margin: 0 }
+
+.product-preview-image .gif-preview { display: none; }
+.product-preview-image .gif-preview img { object-fit: cover; }
+.product-preview-image:hover .gif-preview { display: block; }
+.product-preview-image:hover .image-preview { display: none; }

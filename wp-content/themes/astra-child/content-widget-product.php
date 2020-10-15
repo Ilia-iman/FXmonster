@@ -57,18 +57,22 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 
 }
 
-
-
+$gif = get_field('gif', $product->get_id());
 ?>
 
 <li class="mainWidgetProducts">
 
 	<?php do_action( 'woocommerce_widget_product_item_start', $args ); ?>
-		<a href="<?php echo esc_url( $product->get_permalink() ); ?>">
+		<a class="<?php echo ($gif['id'] > 0) ? 'product-preview-image' : ''; ?>" href="<?php echo esc_url( $product->get_permalink() ); ?>">
+            <span class="image-preview"/>
+			    <?php echo $product->get_image(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            </span>
 
-			<?php echo $product->get_image(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-
-
+            <?php if ($gif['url']) :?>
+                <span class="gif-preview">
+                    <img src="<?php echo $gif['url'];?>" alt="" />
+                </span>
+            <?php endif?>
 		</a>
 
 
