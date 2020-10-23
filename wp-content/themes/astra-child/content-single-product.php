@@ -86,19 +86,19 @@ $image = wp_get_attachment_url( $thumbnail_id );
 	?>
 
 	<div class="catSpecialHead">
-<!--		<div class="left">-->
-<!--			<img src='--><?// echo $image;?><!--' width="100px">-->
-<!--		</div>-->
+		<div class="left">
+			<img src='<?php echo $image;?>' width="100px">
+		</div>
 		<div class="left textHeadCatSide">
-			<h4><a href="<? echo get_term_link( $saveParentCatID );?>"><? echo $globallyCatName;?></a></h4>
+			<h4><a href="<?php echo get_term_link( $saveParentCatID );?>"><?php echo $globallyCatName;?></a></h4>
 			<ul class="category_head_sets">
-			<? wp_list_categories( $args_cat_list );?>
+			<?php wp_list_categories( $args_cat_list );?>
 			</ul>
 		</div>
 		<div class="clear"></div>
 	</div>
 	
-	<?
+	<?php
 	//var_dump($product_categories);
 	//echo $product_categories[1]['name'];
 
@@ -140,14 +140,14 @@ $image = wp_get_attachment_url( $thumbnail_id );
 	 */
 	?>
 		<div class="customPriceAndOrderBtn">
-			<?
+			<?php
 			woocommerce_template_single_price(); //Цена
  			woocommerce_template_single_add_to_cart();//Кнопка
 			?>
 		</div><br/>
 
 	</div>
-	<?
+	<?php
 		
 
 	do_action( 'woocommerce_before_single_product_summary' ); //Отображение левой части (Ютуб)
@@ -173,15 +173,14 @@ $image = wp_get_attachment_url( $thumbnail_id );
 
 		
 		?>
+			
 
-
-
-				<? wc_display_product_attributes( $product );?>
+			<?// wc_display_product_attributes( $product );?>
 
 	<div class="clear"></div>
 	<div class="singleItemContentBox shadowBox">
-		<h5><? the_title();?></h5>
-		<? the_content();?>
+		<h5><?php the_title();?></h5>
+		<?php the_content();?>
 	</div>
 
 	<?php
@@ -204,56 +203,57 @@ $image = wp_get_attachment_url( $thumbnail_id );
 	//woocommerce_output_product_data_tabs();
 	//do_action( 'woocommerce_after_single_product_summary' );
 	?>
+</div>
 
-<?php do_action( 'woocommerce_after_single_product' ); ?>
-
-
-<h2 class="recommendedSinglePage">Recommended</h2>
-
-<?
-
-/*$args = array(
-    'orderby' => 'modified',
-    'order' => 'DESC',
-    'limit' => 3,
-);*/
-/*$products = wc_get_products( $args );
-var_dump($products);*/
-
-/*$productxx = get_product(get_the_ID());
-
-var_dump($productxx );*/
-
-//woocommerce_product_loop_start();
-
-//wc_get_template_part( 'content', 'widget-product' );
-
-//add_action( 'custom_after_single_product_summary', 'woocommerce_output_related_products', 20 );
-
-?>
-<ul class="products">
-    <?php
-    $args = array(
-        'post_type' => 'product',
-        'posts_per_page' => 8,
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'product_cat',
-                'field'    => 'term_id',
-                'terms'    => array( $saveParentCatID )
-            )
-        )
-    );
-
-    $loop = new WP_Query( $args );
-
-    if ( $loop->have_posts() ) {
-        while ( $loop->have_posts() ) : $loop->the_post();
-            wc_get_template_part( 'content', 'product' );
-        endwhile;
-    } else {
-        echo __( 'No products found' );
-    }
-    wp_reset_postdata();
-    ?>
-</ul>
+<?php //do_action( 'woocommerce_after_single_product' ); ?>
+<!---->
+<!---->
+<!--<h2 class="recommendedSinglePage">Recommended</h2>-->
+<!---->
+<?//
+//
+///*$args = array(
+//    'orderby' => 'modified',
+//    'order' => 'DESC',
+//    'limit' => 3,
+//);*/
+///*$products = wc_get_products( $args );
+//var_dump($products);*/
+//
+///*$productxx = get_product(get_the_ID());
+//
+//var_dump($productxx );*/
+//
+////woocommerce_product_loop_start();
+//
+////wc_get_template_part( 'content', 'widget-product' );
+//
+////add_action( 'custom_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+//
+//?>
+<!--<ul class="products">-->
+<!--    --><?php
+//    $args = array(
+//        'post_type' => 'product',
+//        'posts_per_page' => 8,
+//        'tax_query' => array(
+//            array(
+//                'taxonomy' => 'product_cat',
+//                'field'    => 'term_id',
+//                'terms'    => array( $saveParentCatID )
+//            )
+//        )
+//    );
+//
+//    $loop = new WP_Query( $args );
+//
+//    if ( $loop->have_posts() ) {
+//        while ( $loop->have_posts() ) : $loop->the_post();
+//            wc_get_template_part( 'content', 'product' );
+//        endwhile;
+//    } else {
+//        echo __( 'No products found' );
+//    }
+//    wp_reset_postdata();
+//    ?>
+<!--</ul>

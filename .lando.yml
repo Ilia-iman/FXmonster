@@ -1,4 +1,0 @@
-name: fxmonster
-recipe: wordpress
-config:
-  php: '7.1'

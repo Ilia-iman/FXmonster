@@ -1,8 +1,8 @@
 <?php
 /**
- * @Author: aniom
+ * @Author: FXMONSTER
  * @Date:   2020-06-27 00:35:19
- * @Last Modified by:   aniom
+ * @Last Modified by:   Iman
  * @Last Modified time: 2020-06-27 00:47:19
  */
  
@@ -33,7 +33,7 @@
 
  * @version 3.5.5
 
- * @author aniom.net
+ * @author FXMONSTER
 
  */
 
@@ -45,40 +45,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 }
 
-
-
 global $product;
-
-
 
 if ( ! is_a( $product, 'WC_Product' ) ) {
 
 	return;
 
 }
-
-
-
+$gif = get_field('gif', $product->get_id());
 ?>
 
 <li class="mainWidgetProducts">
-
 	<?php do_action( 'woocommerce_widget_product_item_start', $args ); ?>
+		<a class="<?php echo ($gif['id'] > 0) ? 'product-preview-image' : ''; ?>" href="<?php echo esc_url( $product->get_permalink() ); ?>">
+            <span class="image-preview"/>
+			    <?php echo $product->get_image(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            </span>
 
-	
-
-
-
-		<a href="<?php echo esc_url( $product->get_permalink() ); ?>">
-
-			<?php echo $product->get_image(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-
-			
-
+            <?php if ($gif['url']) :?>
+                <span class="gif-preview">
+                    <img src="<?php echo $gif['url'];?>" alt="" />
+                </span>
+            <?php endif?>
 		</a>
-
-
-
 		<?php //if ( ! empty( $show_rating ) ) : ?>
 
 			<?php //echo wc_get_rating_html( $product->get_average_rating() ); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -87,8 +76,7 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 
 	<div class="productHeadingWd">
 		
-		<span class="product-cat"><? echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>
-		
+		<span class="product-cat"><?php echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>		
 		<span class="product-title"><?php echo wp_kses_post( $product->get_name() ); ?></span>
 
 		
@@ -113,15 +101,8 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 		<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text().' $'.$product->price); ?></button>
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 		</div>
-
-
 		
-
 	</form>
-
-
-
-
 
 	<?php do_action( 'woocommerce_widget_product_item_end', $args ); ?>
 

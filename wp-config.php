@@ -18,25 +18,9 @@
  * @package WordPress
  */
 
-/** This will ensure these are only loaded on Lando  */
-if (getenv('LANDO')) {
-    /** The name of the database for WordPress */
-    define('DB_NAME', 'wordpress');
-    /** MySQL database username */
-    define('DB_USER', 'wordpress');
-    /** MySQL database password */
-    define('DB_PASSWORD', 'wordpress');
-    /** MySQL hostname */
-    define('DB_HOST', 'database.fxmonster.internal');
-
-    /** URL routing (Optional, may not be necessary) */
-    define('WP_HOME','http://fxmonster.lndo.site');
-    define('WP_SITEURL','http://fxmonster.lndo.site');
-}
-
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'fxmoqtfb_080920' );
+define( 'DB_NAME', 'fxmoqtfb_develop' );
 
 /** MySQL database username */
 define( 'DB_USER', 'fxmoqtfb_wp136' );

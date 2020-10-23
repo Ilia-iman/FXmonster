@@ -1,6 +1,5 @@
 <?php
 
-
 add_action( 'wp_enqueue_scripts', 'bento_child_enqueue_styles' );
 function bento_child_enqueue_styles() {
 	$parent_style = 'bento-theme-styles';
