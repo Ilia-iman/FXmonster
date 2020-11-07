@@ -144,9 +144,8 @@ $image = wp_get_attachment_url( $thumbnail_id );
 			woocommerce_template_single_price(); //Цена
  			woocommerce_template_single_add_to_cart();//Кнопка
 			?>
-		</div><br/>
-
-	</div>
+		</div>
+    </div>
 	<?php
 		
 

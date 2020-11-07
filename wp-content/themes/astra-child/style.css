@@ -1,15 +1,13 @@
 /*
- * @Author: aniom
+ * @Author: FXMONSTER
  * @Date:   2020-06-27 00:36:48
- * @Last Modified by:   aniom
+ * @Last Modified by:   FXMONSTER
  * @Last Modified time: 2020-06-27 00:45:34
  */
 /* 
 Theme Name: Astra Child 
 Theme URL: http://fxmonster.net
-Description: Astra Child 
-Theme Author: Aniom
-Author URL: http://aniom.net
+Description: Astra Child
 Template: astra
 Version: 1.0.0 
 Text Domain: astra-child 
@@ -252,7 +250,7 @@ li.mainWidgetProducts form{
 	width:360px;
 	text-align:center;
 	font-size:14px;
-	padding-bottom:18px;
+	padding-bottom:15px;
 }
 
 li.mainWidgetProducts img{
@@ -263,12 +261,14 @@ li.mainWidgetProducts img{
 }
 
 li.mainWidgetProducts button.button.single_add_to_cart_button{
-	padding:8px 14px!important;
+	/*padding:8px 14px!important;*/
 	color: grey;
 	background: white;
 	text-transform: uppercase;
 	transition:0.3s ease;
-	/*margin-right:8px;	*/
+	text-align: right;
+	margin-right: 8px;
+	margin-bottom: 8px;
 	/*margin: 0 8px 15px 20px;*/
 	float: left;
 }
@@ -288,15 +288,6 @@ form.woocommerce-ordering{
 
 form.woocommerce-ordering select{
 	font-size:14px;
-}
-
-li.mainWidgetProducts a.details{
-	color: grey;
-	text-transform: uppercase;
-	padding:6px 14px!important;
-	background:white!important;
-	float: right;
-	/*margin: 0 20px 15px 0;*/
 }
 
 /*li.mainWidgetProducts a.details:hover{
@@ -334,19 +325,25 @@ button.single_add_to_cart_button.button.alt {
 	text-transform: uppercase;
 	transition:0.3s ease;
 	width: 170px;
-	background-color:  #ff1a55;
+	background-color:  #79b017;
 	border-radius: 5px;
 	padding: 5px 15px;
-	margin: 0 8px 15px 20px;
+	/*margin: 0 8px 15px 20px;*/
 }
 
-.button_div{
-
+li.mainWidgetProducts a.details{
+	color: grey;
+	text-transform: uppercase;
+	padding:8px 14px!important;
+	background:white!important;
+	float: right;
+	/*margin: 0 20px 15px 0;*/
 }
 
 .catSpecialHead{
-	/*padding-top:20px;*/
-	padding-bottom:20px;
+	/*!*padding-top:20px;*!*/
+	/*padding-left: 0px;*/
+	/*padding-bottom:20px;*/
 }
 
 .textHeadCatSide h4{
@@ -375,6 +372,11 @@ ul.category_head_sets li:last-child{
 
 ul.category_head_sets li a:hover{
 	color:black;
+}
+
+.customPriceAndOrderBtn{
+	display: flex;
+	align-items: center;
 }
 
 
