@@ -33,41 +33,41 @@ Text Domain: astra-child
 
 .ci{
 
-margin-left:15px;
-padding-left: 15px;
--webkit-filter: grayscale(100%);
--moz-filter: grayscale(100%);
--ms-filter: grayscale(100%);
--o-filter: grayscale(100%);
-filter: grayscale(100%);
+	margin-left:15px;
+	padding-left: 15px;
+	-webkit-filter: grayscale(100%);
+	-moz-filter: grayscale(100%);
+	-ms-filter: grayscale(100%);
+	-o-filter: grayscale(100%);
+	filter: grayscale(100%);
 	transition:0.2s ease;
 }
 
 .ci:hover {
--webkit-filter: grayscale(0%);
--moz-filter: grayscale(0%);
--ms-filter: grayscale(0%);
--o-filter: grayscale(0%);
-filter: grayscale(0%);
+	-webkit-filter: grayscale(0%);
+	-moz-filter: grayscale(0%);
+	-ms-filter: grayscale(0%);
+	-o-filter: grayscale(0%);
+	filter: grayscale(0%);
 }
 
 .ci.ae {
-background: url('https://fxmonster.net/wp-content/uploads/2020/01/ae.png') no-repeat;
-background-position:left;
+	background: url('https://fxmonster.net/wp-content/uploads/2020/01/ae.png') no-repeat;
+	background-position:left;
 }
 
 .ci.pr {
-background: url('https://fxmonster.net/wp-content/uploads/2020/01/pr.png') no-repeat;
-background-position:left;
+	background: url('https://fxmonster.net/wp-content/uploads/2020/01/pr.png') no-repeat;
+	background-position:left;
 }
 
 .ci.fcpx {
-background: url('https://fxmonster.net/wp-content/uploads/2020/01/fxpc.png') no-repeat;
-background-position:left;
+	background: url('https://fxmonster.net/wp-content/uploads/2020/01/fxpc.png') no-repeat;
+	background-position:left;
 }
 
 .ci.mg {
-background: url('https://fxmonster.net/wp-content/uploads/2020/01/mg.png') no-repeat;
+	background: url('https://fxmonster.net/wp-content/uploads/2020/01/mg.png') no-repeat;
 	background-position:left;
 }
 
@@ -94,9 +94,9 @@ background: url('https://fxmonster.net/wp-content/uploads/2020/01/mg.png') no-re
 .clear{clear:both;}
 
 .shadowBox{
--webkit-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
--moz-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 19px -5px rgba(0,0,0,0.2);
 	background:white;
 }
 
@@ -140,7 +140,7 @@ table.woocommerce-product-attributes td{
 
 	font-style:normal!important;
 }
- 
+
 .controlGetProduct{
 	width:380px;
 	/*display:block;*/
@@ -186,7 +186,7 @@ li.specialMainCats.inStore{
 	background: transparent!important;
 	color:white!important;
 
-} 
+}
 
 li.specialMainCats.inStore a h2{
 	color:white!important;
@@ -226,13 +226,13 @@ li.mainWidgetProducts{
 	width:360px;
 	/* height:265px; */
 	background:white;
--webkit-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
--moz-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
- 
-/*border-radius: 6px;
+	-webkit-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 15px -1px rgba(0,0,0,0.2);
 
-border-bottom:4px solid #55CDFF;*/
+	/*border-radius: 6px;
+
+    border-bottom:4px solid #55CDFF;*/
 	margin-bottom:85px;
 }
 
@@ -324,8 +324,8 @@ button.single_add_to_cart_button.button.alt {
 	color: white;
 	text-transform: uppercase;
 	transition:0.3s ease;
-	width: 170px;
-	background-color:  #79b017;
+	width: 150px;
+	background-color:  #32cd32;
 	border-radius: 5px;
 	padding: 5px 15px;
 	/*margin: 0 8px 15px 20px;*/
@@ -375,10 +375,32 @@ ul.category_head_sets li a:hover{
 }
 
 .customPriceAndOrderBtn{
+	height: 40px;
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
 }
 
+.woocommerce div.product .customPriceAndOrderBtn form.cart {
+	margin: 0;
+}
+
+.woocommerce div.product .customPriceAndOrderBtn p.price {
+	margin: 0px 10px 0px 0px;
+}
+
+.ywcfav-video-content.youtube._16_9{
+	width:1200px;
+	height:640px;
+}
+
+.woocommerce-product-gallery__trigger {
+	display: none;
+}
+
+.woocommerce div.product form.cart div.quantity {
+	display: none;
+}
 
 .product-preview-image .gif-preview { display: none; }
 .product-preview-image .gif-preview img { object-fit: cover; }
