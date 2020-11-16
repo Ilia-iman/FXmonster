@@ -1,6 +1,12 @@
 <?php
 
 add_action( 'wp_enqueue_scripts', 'bento_child_enqueue_styles' );
+add_action( 'wp_enqueue_scripts', 'LazyGif' );
+
+function lazygif() {
+    wp_enqueue_script( 'lazyGif', get_template_directory_uri() . '-child/js/lazygif.js' );
+}
+
 function bento_child_enqueue_styles() {
 	$parent_style = 'bento-theme-styles';
     wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );

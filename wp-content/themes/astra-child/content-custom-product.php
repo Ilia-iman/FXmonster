@@ -5,7 +5,7 @@
  * @Last Modified by:   Iman
  * @Last Modified time: 2020-06-27 00:47:19
  */
- 
+
 
 /**
 
@@ -64,7 +64,7 @@ $gif = get_field('gif', $product->get_id());
 
             <?php if ($gif['url']) :?>
                 <span class="gif-preview">
-                    <img src="<?php echo $gif['url'];?>" alt="" />
+                    <img src="" data-src="<?php echo $gif['url'];?>" alt="" />
                 </span>
             <?php endif?>
 		</a>
@@ -75,11 +75,11 @@ $gif = get_field('gif', $product->get_id());
 		<?php //endif; ?>
 
 	<div class="productHeadingWd">
-		
-		<span class="product-cat"><?php echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>		
+
+		<span class="product-cat"><?php echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>
 		<span class="product-title"><?php echo wp_kses_post( $product->get_name() ); ?></span>
 
-		
+
 
 		<?php //echo $product->get_price_html(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
@@ -87,22 +87,22 @@ $gif = get_field('gif', $product->get_id());
 
  	<? //woocommerce_template_single_add_to_cart();?>
 
- 	<!-- Button Buy --> 
+ 	<!-- Button Buy -->
 
 
-	
+
 	<form class="cart clearfix" action="<?php echo esc_url( $product->product_url ); ?>" method="get" enctype='multipart/form-data'>
 		<div style="float:left;padding:2px;">
 <a href="<?php echo esc_url( $product->get_permalink() ); ?>" class="single_add_to_cart_button button details">Learn More</a>
 		</div>
-		
+
 		<div style="float:right;padding:2px;">
 		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
 		<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt">
             <?php echo esc_html( $product->single_add_to_cart_text().' $'.$product->price); ?></button>
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 		</div>
-		
+
 	</form>
 
 	<?php do_action( 'woocommerce_widget_product_item_end', $args ); ?>

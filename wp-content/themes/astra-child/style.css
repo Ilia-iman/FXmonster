@@ -402,6 +402,10 @@ ul.category_head_sets li a:hover{
 	display: none;
 }
 
+.woocommerce span.onsale {
+	right: 0px !important;
+}
+
 .product-preview-image .gif-preview { display: none; }
 .product-preview-image .gif-preview img { object-fit: cover; }
 .product-preview-image:hover .gif-preview { display: block; }
