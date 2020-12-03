@@ -4,7 +4,8 @@ add_action( 'wp_enqueue_scripts', 'bento_child_enqueue_styles' );
 add_action( 'wp_enqueue_scripts', 'LazyGif' );
 
 function lazygif() {
-    wp_enqueue_script( 'lazyGif', get_template_directory_uri() . '-child/js/lazygif.js' );
+//    wp_enqueue_script( 'lazyGif', get_template_directory_uri() . '-child/js/lazygif.js' );
+    wp_enqueue_script( 'lazyload', 'https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js' );
 }
 
 function bento_child_enqueue_styles() {

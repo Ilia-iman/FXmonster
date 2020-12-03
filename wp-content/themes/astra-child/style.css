@@ -52,12 +52,12 @@ Text Domain: astra-child
 }
 
 .ci.ae {
-	background: url('https://fxmonster.net/wp-content/uploads/2020/01/ae.png') no-repeat;
+	background: url('https://fxmonster.net/wp-content/uploads/2020/12/aeNew-24x23.png') no-repeat;
 	background-position:left;
 }
 
 .ci.pr {
-	background: url('https://fxmonster.net/wp-content/uploads/2020/01/pr.png') no-repeat;
+	background: url('https://fxmonster.net/wp-content/uploads/2020/12/prNew-24x23.png') no-repeat;
 	background-position:left;
 }
 
@@ -273,6 +273,11 @@ li.mainWidgetProducts button.button.single_add_to_cart_button{
 	float: left;
 }
 
+li.mainWidgetProducts button.button.single_add_to_cart_button:hover {
+	color: grey;
+	background: white;
+}
+
 p.woocommerce-result-count{
 	font-size:12px;
 	font-weight: 600;
@@ -298,7 +303,9 @@ ul.products li.mainWidgetProducts a.details{
 	padding:8px 14px!important;
 }
 
-
+ul.products li.mainWidgetProducts a.details:hover{
+	color: grey;
+}
 
 li.mainWidgetProducts .productHeadingWd span.product-title{
 	color:#434343;
@@ -406,7 +413,7 @@ ul.category_head_sets li a:hover{
 	right: 0px !important;
 }
 
-.product-preview-image .gif-preview { display: none; }
-.product-preview-image .gif-preview img { object-fit: cover; }
-.product-preview-image:hover .gif-preview { display: block; }
+.product-preview-image .lazyload  { display: none; }
+.product-preview-image .lazyload  img { object-fit: cover; }
+.product-preview-image:hover .lazyload  { display: block; }
 .product-preview-image:hover .image-preview { display: none; }

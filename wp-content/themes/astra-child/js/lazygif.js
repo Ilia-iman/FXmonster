@@ -6,8 +6,8 @@
         const data = gifsrc.getAttribute("data-src");
         gifsrc.setAttribute("src", data);
     }
-});*/
+});
 
 jQuery('.gif-preview').each(function() {
     console.info(this.data('src'));
-})
+})*/

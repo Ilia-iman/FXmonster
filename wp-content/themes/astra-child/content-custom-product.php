@@ -54,7 +54,7 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 }
 $gif = get_field('gif', $product->get_id());
 ?>
-
+<script type="text/javascript">lazyload();</script>
 <li class="mainWidgetProducts">
 	<?php do_action( 'woocommerce_widget_product_item_start', $args ); ?>
 		<a class="<?php echo ($gif['id'] > 0) ? 'product-preview-image' : ''; ?>" href="<?php echo esc_url( $product->get_permalink() ); ?>">
@@ -62,11 +62,10 @@ $gif = get_field('gif', $product->get_id());
 			    <?php echo $product->get_image(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </span>
 
-            <?php if ($gif['url']) :?>
-                <span class="gif-preview">
-                    <img src="" data-src="<?php echo $gif['url'];?>" alt="" />
-                </span>
-            <?php endif?>
+            <?php if ($gif['url']) : ?>
+                <img class="lazyload" src="" data-src="<?php echo $gif['url']; ?>" alt=""/>
+            <?php endif ?>
+
 		</a>
 		<?php //if ( ! empty( $show_rating ) ) : ?>
 
@@ -75,11 +74,13 @@ $gif = get_field('gif', $product->get_id());
 		<?php //endif; ?>
 
 	<div class="productHeadingWd">
-
-		<span class="product-cat"><?php echo get_the_terms( $product->term_id, 'product_cat' )[0]->name; ?></span>
-		<span class="product-title"><?php echo wp_kses_post( $product->get_name() ); ?></span>
-
-
+        <?php
+        $term_id = get_the_terms($product->get_id(), 'product_cat')[0];
+        ?>
+        <span class="product-cat">
+            <a href="<?php echo esc_url(get_term_link($term_id, 'product_cat')); ?>"><?php echo get_the_terms( $product->get_id(), 'product_cat' )[0]->name; ?></a></span>
+        <span class="product-title">
+            <a href="<?php echo esc_url($product->get_permalink()); ?>"><?php echo wp_kses_post($product->get_name()); ?></a></span>
 
 		<?php //echo $product->get_price_html(); // PHPCS:Ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
