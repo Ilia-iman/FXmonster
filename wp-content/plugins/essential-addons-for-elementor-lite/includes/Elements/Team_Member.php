@@ -10,6 +10,8 @@ use \Elementor\Controls_Manager;
 use \Elementor\Group_Control_Border;
 use \Elementor\Group_Control_Image_Size;
 use \Elementor\Group_Control_Typography;
+use \Elementor\Group_Control_Background;
+use Elementor\Repeater;
 use \Elementor\Utils;
 use \Elementor\Widget_Base;
 
@@ -20,28 +22,50 @@ class Team_Member extends Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'EA Team Member', 'essential-addons-for-elementor-lite');
+		return esc_html__( 'Team Member', 'essential-addons-for-elementor-lite');
 	}
 
 	public function get_icon() {
-		return 'eicon-person';
+		return 'eaicon-team-mamber';
 	}
 
-   public function get_categories() {
+   	public function get_categories() {
 		return [ 'essential-addons-elementor' ];
 	}
-	
-	
+
+	public function get_keywords()
+	{
+        return [
+			'team',
+			'member',
+			'team member',
+			'ea team member',
+			'ea team members',
+			'person',
+			'card',
+			'meet the team',
+			'team builder',
+			'our team',
+			'ea',
+			'essential addons'
+		];
+    }
+
+	public function get_custom_help_url()
+	{
+        return 'https://essential-addons.com/elementor/docs/team-members/';
+    }
+
 	protected function _register_controls() {
 
-		
+
   		$this->start_controls_section(
   			'eael_section_team_member_image',
   			[
   				'label' => esc_html__( 'Team Member Image', 'essential-addons-for-elementor-lite')
   			]
   		);
-		
+
 
 		$this->add_control(
 			'eael_team_member_image',
@@ -82,28 +106,37 @@ class Team_Member extends Widget_Base {
 			[
 				'label' => esc_html__( 'Name', 'essential-addons-for-elementor-lite'),
 				'type' => Controls_Manager::TEXT,
+                'dynamic' => [
+                    'active' => true,
+                ],
 				'default' => esc_html__( 'John Doe', 'essential-addons-for-elementor-lite'),
 			]
 		);
-		
+
 		$this->add_control(
 			'eael_team_member_job_title',
 			[
 				'label' => esc_html__( 'Job Position', 'essential-addons-for-elementor-lite'),
 				'type' => Controls_Manager::TEXT,
+                'dynamic' => [
+                    'active' => true,
+                ],
 				'default' => esc_html__( 'Software Engineer', 'essential-addons-for-elementor-lite'),
 			]
 		);
-		
+
 		$this->add_control(
 			'eael_team_member_description',
 			[
 				'label' => esc_html__( 'Description', 'essential-addons-for-elementor-lite'),
 				'type' => Controls_Manager::TEXTAREA,
+                'dynamic' => [
+                    'active' => true,
+                ],
 				'default' => esc_html__( 'Add team member description here. Remove the text if not necessary.', 'essential-addons-for-elementor-lite'),
 			]
 		);
-		
+
 
 		$this->end_controls_section();
 
@@ -123,7 +156,37 @@ class Team_Member extends Widget_Base {
 				'default' => 'yes',
 			]
 		);
-		
+
+        $repeater = new Repeater();
+
+        $repeater->add_control(
+            'social_new',
+            [
+                'label' => esc_html__( 'Icon', 'essential-addons-for-elementor-lite'),
+                'type' => Controls_Manager::ICONS,
+                'fa4compatibility' => 'social',
+                'default' => [
+                    'value' => 'fab fa-wordpress',
+                    'library' => 'fa-brands',
+                ],
+            ]
+        );
+
+        $repeater->add_control(
+            'link',
+            [
+                'name' => 'link',
+                'label' => esc_html__( 'Link', 'essential-addons-for-elementor-lite'),
+                'type' => Controls_Manager::URL,
+                'dynamic'   => ['active' => true],
+                'label_block' => true,
+                'default' => [
+                    'url' => '',
+                    'is_external' => 'true',
+                ],
+                'placeholder' => esc_html__( 'Place URL here', 'essential-addons-for-elementor-lite'),
+            ]
+        );
 		
 		$this->add_control(
 			'eael_team_member_social_profile_links',
@@ -158,29 +221,7 @@ class Team_Member extends Widget_Base {
 						]
 					],
 				],
-				'fields' => [
-					[
-						'name' => 'social_new',
-						'label' => esc_html__( 'Icon', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::ICONS,
-						'fa4compatibility' => 'social',
-						'default' => [
-							'value' => 'fab fa-wordpress',
-							'library' => 'fa-brands',
-						],
-					],
-					[
-						'name' => 'link',
-						'label' => esc_html__( 'Link', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::URL,
-						'label_block' => true,
-						'default' => [
-							'url' => '',
-							'is_external' => 'true',
-						],
-						'placeholder' => esc_html__( 'Place URL here', 'essential-addons-for-elementor-lite'),
-					],
-				],
+				'fields' => $repeater->get_controls(),
 				'title_field' => '<i class="{{ social_new.value }}"></i>',
 			]
 		);
@@ -195,7 +236,7 @@ class Team_Member extends Widget_Base {
 					'label' => __( 'Go Premium for More Features', 'essential-addons-for-elementor-lite')
 				]
 			);
-		
+
 			$this->add_control(
 				'eael_control_get_pro',
 				[
@@ -203,7 +244,7 @@ class Team_Member extends Widget_Base {
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'1' => [
-							'title' => __( '', 'essential-addons-for-elementor-lite'),
+							'title' => '',
 							'icon' => 'fa fa-unlock-alt',
 						],
 					],
@@ -211,10 +252,10 @@ class Team_Member extends Widget_Base {
 					'description' => '<span class="pro-feature"> Get the  <a href="https://wpdeveloper.net/in/upgrade-essential-addons-elementor" target="_blank">Pro version</a> for more stunning elements and customization options.</span>'
 				]
 			);
-			
+
 			$this->end_controls_section();
 		}
-		
+
 		$this->start_controls_section(
 			'eael_section_team_members_styles_general',
 			[
@@ -229,6 +270,7 @@ class Team_Member extends Widget_Base {
 			'eael-team-members-centered'      => esc_html__( 'Centered Style', 	'essential-addons-for-elementor-lite' ),
 			'eael-team-members-circle'        => esc_html__( 'Circle Style', 	'essential-addons-for-elementor-lite' ),
 			'eael-team-members-social-bottom' => esc_html__( 'Social on Bottom', 	'essential-addons-for-elementor-lite' ),
+			'eael-team-members-social-right'  => esc_html__( 'Social on Right', 	'essential-addons-for-elementor-lite' ),
 		]);
 
 		$this->add_control(
@@ -244,7 +286,8 @@ class Team_Member extends Widget_Base {
 		$team_member_style_presets_condition = apply_filters('eael_team_member_style_presets_condition', [
 			'eael-team-members-centered',
 			'eael-team-members-circle',
-			'eael-team-members-social-bottom'
+			'eael-team-members-social-bottom',
+			'eael-team-members-social-right'
 		]);
 
 		$this->add_control(
@@ -381,17 +424,17 @@ class Team_Member extends Widget_Base {
 				],
 			]
 		);
-		
+
 		$this->end_controls_section();
-		
-		
+
+
 		$this->start_controls_section(
 			'eael_section_team_members_image_styles',
 			[
 				'label' => esc_html__( 'Team Member Image Style', 'essential-addons-for-elementor-lite'),
 				'tab' => Controls_Manager::TAB_STYLE
 			]
-		);		
+		);
 
 		$this->add_responsive_control(
 			'eael_team_members_image_width',
@@ -514,7 +557,7 @@ class Team_Member extends Widget_Base {
 				],
 			]
 		);
-		
+
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
@@ -543,7 +586,7 @@ class Team_Member extends Widget_Base {
 				],
 			]
 		);
-		
+
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
@@ -572,7 +615,7 @@ class Team_Member extends Widget_Base {
 				],
 			]
 		);
-		
+
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
@@ -583,14 +626,14 @@ class Team_Member extends Widget_Base {
 
 		$this->end_controls_section();
 
-		
+
 		$this->start_controls_section(
 			'eael_section_team_members_social_profiles_styles',
 			[
 				'label' => esc_html__( 'Social Profiles Style', 'essential-addons-for-elementor-lite'),
 				'tab' => Controls_Manager::TAB_STYLE
 			]
-		);		
+		);
 
 
 		$this->add_control(
@@ -619,24 +662,48 @@ class Team_Member extends Widget_Base {
 		$this->add_responsive_control(
 			'eael_team_members_social_profiles_padding',
 			[
-				'label' => esc_html__( 'Social Profiles Spacing', 'essential-addons-for-elementor-lite'),
+				'label' => esc_html__( 'Social Profiles Margin', 'essential-addons-for-elementor-lite'),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em' ],
 				'selectors' => [
 					'{{WRAPPER}} .eael-team-content > .eael-team-member-social-profiles' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .eael-team-image > .eael-team-member-social-profiles' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
 
 		$this->add_responsive_control(
+			'eael_team_members_social_icons_padding',
+			[
+				'label'      => esc_html__( 'Social Icon Padding', 'essential-addons-for-elementor-lite'),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .eael-team-content > .eael-team-member-social-profiles li.eael-team-member-social-link > a' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .eael-team-image > .eael-team-member-social-profiles li.eael-team-member-social-link > a' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+		$this->add_responsive_control(
 			'eael_team_members_social_icons_spacing',
 			[
-				'label'      => esc_html__( 'Social Icon Spacing', 'essential-addons-for-elementor-lite'),
+				'label'      => esc_html__( 'Social Icon Distance', 'essential-addons-for-elementor-lite'),
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em' ],
 				'selectors'  => [
 					'{{WRAPPER}} .eael-team-content > .eael-team-member-social-profiles li.eael-team-member-social-link' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .eael-team-image > .eael-team-member-social-profiles li.eael-team-member-social-link' 	=> 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
+			]
+		);
+		$this->add_control(
+			'eael_team_members_social_icons_used_gradient_bg',
+			[
+				'label' => __( 'Use Gradient Background', 'essential-addons-for-elementor-lite' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => __( 'Yes', 'essential-addons-for-elementor-lite' ),
+				'label_off' => __( 'No', 'essential-addons-for-elementor-lite' ),
+				'return_value' => 'yes',
 			]
 		);
 
@@ -656,8 +723,7 @@ class Team_Member extends Widget_Base {
 				],
 			]
 		);
-		
-		
+
 		$this->add_control(
 			'eael_team_members_social_icon_background',
 			[
@@ -667,9 +733,25 @@ class Team_Member extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .eael-team-member-social-link > a' => 'background-color: {{VALUE}};',
 				],
+				'condition' => [
+					'eael_team_members_social_icons_used_gradient_bg' => ''
+				]
 			]
 		);
-		
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'eael_team_members_social_icon_gradient_background',
+				'label' => __( 'Background', 'essential-addons-for-elementor-lite' ),
+				'types' => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .eael-team-member-social-link > a',
+				'condition' => [
+					'eael_team_members_social_icons_used_gradient_bg' => 'yes'
+				]
+			]
+		);
+
+
 		$this->add_group_control(
 			Group_Control_Border::get_type(),
 			[
@@ -677,7 +759,7 @@ class Team_Member extends Widget_Base {
 				'selector' => '{{WRAPPER}} .eael-team-member-social-link > a',
 			]
 		);
-		
+
 		$this->add_control(
 			'eael_team_members_social_icon_border_radius',
 			[
@@ -702,7 +784,7 @@ class Team_Member extends Widget_Base {
 			]
 		);
 
-		
+
 		$this->end_controls_tab();
 
 		$this->start_controls_tab( 'eael_team_members_social_icon_hover', [ 'label' => esc_html__( 'Hover', 'essential-addons-for-elementor-lite') ] );
@@ -722,12 +804,27 @@ class Team_Member extends Widget_Base {
 		$this->add_control(
 			'eael_team_members_social_icon_hover_background',
 			[
-				'label' => esc_html__( 'Hover Background Color', 'essential-addons-for-elementor-lite'),
+				'label' => esc_html__( 'Hover Background', 'essential-addons-for-elementor-lite'),
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
 					'{{WRAPPER}} .eael-team-member-social-link > a:hover' => 'background-color: {{VALUE}};',
 				],
+				'condition' => [
+					'eael_team_members_social_icons_used_gradient_bg' => ''
+				]
+			]
+		);
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'eael_team_members_social_icon_hover_gradient_background',
+				'label' => __( 'Background', 'essential-addons-for-elementor-lite' ),
+				'types' => [ 'classic', 'gradient' ],
+				'selector' => '{{WRAPPER}} .eael-team-member-social-link > a:hover',
+				'condition' => [
+					'eael_team_members_social_icons_used_gradient_bg' => 'yes'
+				]
 			]
 		);
 
@@ -742,9 +839,9 @@ class Team_Member extends Widget_Base {
 				],
 			]
 		);
-		
+
 		$this->end_controls_tab();
-		
+
 		$this->end_controls_tabs();
 
 
@@ -755,13 +852,13 @@ class Team_Member extends Widget_Base {
 
 
 	protected function render( ) {
-		
-      $settings = $this->get_settings();
-      $team_member_image = $this->get_settings( 'eael_team_member_image' );
-	  $team_member_image_url = Group_Control_Image_Size::get_attachment_image_src( $team_member_image['id'], 'thumbnail', $settings );	
-	  if( empty( $team_member_image_url ) ) : $team_member_image_url = $team_member_image['url']; else: $team_member_image_url = $team_member_image_url; endif;
-	  $team_member_classes = $this->get_settings('eael_team_members_preset') . " " . $this->get_settings('eael_team_members_image_rounded');
-	
+
+        $settings = $this->get_settings_for_display();
+		$team_member_image = $this->get_settings( 'eael_team_member_image' );
+		$team_member_image_url = Group_Control_Image_Size::get_attachment_image_src( $team_member_image['id'], 'thumbnail', $settings );
+		if( empty( $team_member_image_url ) ) : $team_member_image_url = $team_member_image['url']; else: $team_member_image_url = $team_member_image_url; endif;
+		$team_member_classes = $this->get_settings('eael_team_members_preset') . " " . $this->get_settings('eael_team_members_image_rounded');
+
 	?>
 
 
@@ -771,6 +868,9 @@ class Team_Member extends Widget_Base {
 				<figure>
 					<img src="<?php echo esc_url($team_member_image_url);?>" alt="<?php echo esc_attr( get_post_meta($team_member_image['id'], '_wp_attachment_image_alt', true) ); ?>">
 				</figure>
+				<?php if( 'eael-team-members-social-right' === $settings['eael_team_members_preset'] ) : ?>
+					<?php do_action('eael/team_member_social_right_markup', $settings); ?>
+				<?php endif; ?>
 			</div>
 
 			<div class="eael-team-content">
@@ -780,29 +880,29 @@ class Team_Member extends Widget_Base {
 				<?php if( 'eael-team-members-social-bottom' === $settings['eael_team_members_preset'] ) : ?>
 					<?php do_action('eael/team_member_social_botton_markup', $settings); ?>
 				<?php else: ?>
-					<?php if ( ! empty( $settings['eael_team_member_enable_social_profiles'] ) ): ?>
-					<ul class="eael-team-member-social-profiles">
-						<?php foreach ( $settings['eael_team_member_social_profile_links'] as $item ) : ?>
-							<?php $icon_migrated = isset($item['__fa4_migrated']['social_new']);
-							$icon_is_new = empty($item['social']); ?>
-							<?php if ( ! empty( $item['social'] ) || !empty($item['social_new'])) : ?>
-								<?php $target = $item['link']['is_external'] ? ' target="_blank"' : ''; ?>
-								<li class="eael-team-member-social-link">
-									<a href="<?php echo esc_attr( $item['link']['url'] ); ?>" <?php echo $target; ?>>
-										<?php if ($icon_is_new || $icon_migrated) { ?>
-											<?php if( isset( $item['social_new']['value']['url'] ) ) : ?>
-												<img src="<?php echo esc_attr($item['social_new']['value']['url'] ); ?>" alt="<?php echo esc_attr(get_post_meta($item['social_new']['value']['id'], '_wp_attachment_image_alt', true)); ?>" />
-											<?php else : ?>
-												<i class="<?php echo esc_attr($item['social_new']['value'] ); ?>"></i>
-											<?php endif; ?>
-										<?php } else { ?>
-											<i class="<?php echo esc_attr($item['social'] ); ?>"></i>
-										<?php } ?>
-									</a>
-								</li>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</ul>
+					<?php if ( ! empty( $settings['eael_team_member_enable_social_profiles'] ) && 'eael-team-members-social-right' !== $settings['eael_team_members_preset'] ): ?>
+						<ul class="eael-team-member-social-profiles">
+							<?php foreach ( $settings['eael_team_member_social_profile_links'] as $item ) : ?>
+								<?php $icon_migrated = isset($item['__fa4_migrated']['social_new']);
+								$icon_is_new = empty($item['social']); ?>
+								<?php if ( ! empty( $item['social'] ) || !empty($item['social_new'])) : ?>
+									<?php $target = $item['link']['is_external'] ? ' target="_blank"' : ''; ?>
+									<li class="eael-team-member-social-link">
+										<a href="<?php echo esc_attr( $item['link']['url'] ); ?>" <?php echo $target; ?>>
+											<?php if ($icon_is_new || $icon_migrated) { ?>
+												<?php if( isset( $item['social_new']['value']['url'] ) ) : ?>
+													<img src="<?php echo esc_attr($item['social_new']['value']['url'] ); ?>" alt="<?php echo esc_attr(get_post_meta($item['social_new']['value']['id'], '_wp_attachment_image_alt', true)); ?>" />
+												<?php else : ?>
+													<i class="<?php echo esc_attr($item['social_new']['value'] ); ?>"></i>
+												<?php endif; ?>
+											<?php } else { ?>
+												<i class="<?php echo esc_attr($item['social'] ); ?>"></i>
+											<?php } ?>
+										</a>
+									</li>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						</ul>
 					<?php endif; ?>
 					<p class="eael-team-text"><?php echo $settings['eael_team_member_description']; ?></p>
 				<?php endif; ?>

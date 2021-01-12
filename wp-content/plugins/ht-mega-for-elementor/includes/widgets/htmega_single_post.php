@@ -74,6 +74,22 @@ class HTMega_Elementor_Widget_SinglePost extends Widget_Base {
             );
 
             $this->add_control(
+                'single_post_title_length',
+                [
+                    'label' => __( 'Title Length', 'htmega-addons' ),
+                    'type' => Controls_Manager::NUMBER,
+                    'min' => 1,
+                    'max' => 1000,
+                    'step' => 1,
+                    'default' => 5,
+                    'condition'=>[
+                        'show_title'=>'yes',
+                    ],
+                ]
+            );
+
+
+            $this->add_control(
                 'show_category',
                 [
                     'label' => esc_html__( 'Category', 'htmega-addons' ),
@@ -368,6 +384,7 @@ class HTMega_Elementor_Widget_SinglePost extends Widget_Base {
     protected function render( $instance = [] ) {
 
         $settings   = $this->get_settings_for_display();
+        $title_length = ( $settings['single_post_title_length'] ? $settings['single_post_title_length'] : 5 );
 
         $this->add_render_attribute( 'htmega_single_post_attr', 'class', 'htmega-single-post htmega-single-post-style-'.$settings['post_style'] );
 
@@ -419,7 +436,7 @@ class HTMega_Elementor_Widget_SinglePost extends Widget_Base {
                                 ?>
                             </div>
                         <?php endif; if($settings['show_title'] == 'yes' ):?>
-                            <h2><a href="<?php the_permalink();?>"><?php echo wp_trim_words( get_the_title(), 5, '' ); ?></a></h2>
+                            <h2><a href="<?php the_permalink();?>"><?php echo wp_trim_words( get_the_title(), $title_length, '' ); ?></a></h2>
                         <?php endif; if( $settings['show_author'] == 'yes' || $settings['show_date'] == 'yes'):?>
                             <ul class="meta">
                                 <?php if( $settings['show_author'] == 'yes' ):?>
@@ -432,7 +449,12 @@ class HTMega_Elementor_Widget_SinglePost extends Widget_Base {
                     </div>
                 </div>
 
-            <?php endwhile; wp_reset_postdata(); wp_reset_query(); endif; ?>
+            <?php endwhile; wp_reset_postdata(); wp_reset_query(); 
+                else:
+                    echo esc_html__( 'No selected post', 'htmega-addons' );
+                endif;
+            ?>
+            
 
         <?php
 

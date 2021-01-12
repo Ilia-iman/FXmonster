@@ -1,4 +1,5 @@
 <?php
+
 namespace Essential_Addons_Elementor\Elements;
 
 // If this file is called directly, abort.
@@ -7,58 +8,214 @@ if (!defined('ABSPATH')) {
 }
 
 use \Elementor\Controls_Manager;
-use \Elementor\Frontend;
 use \Elementor\Group_Control_Border;
 use \Elementor\Group_Control_Typography;
+use \Elementor\Plugin;
 use \Elementor\Utils;
 use \Elementor\Widget_Base;
+use \Elementor\Repeater;
+
+use \Essential_Addons_Elementor\Classes\Helper;
 
 class Data_Table extends Widget_Base {
-	use \Essential_Addons_Elementor\Traits\Helper;
+	
 
-	public $unique_id = null;
-	public function get_name() {
-		return 'eael-data-table';
-	}
+    public $unique_id = null;
+    public function get_name()
+    {
+        return 'eael-data-table';
+    }
 
-	public function get_title() {
-		return esc_html__( 'EA Data Table', 'essential-addons-for-elementor-lite');
-	}
+    public function get_title()
+    {
+        return esc_html__('Data Table', 'essential-addons-for-elementor-lite');
+    }
 
-	public function get_icon() {
-		return 'eicon-table';
-	}
+    public function get_icon()
+    {
+        return 'eaicon-data-table';
+    }
 
-   public function get_categories() {
-		return [ 'essential-addons-elementor' ];
-	}
+    public function get_categories()
+    {
+        return ['essential-addons-elementor'];
+    }
 
-	protected function _register_controls() {
+    public function get_keywords()
+    {
+        return [
+            'table',
+            'ea table',
+            'data table',
+            'ea data table',
+            'export eable',
+            'CSV',
+            'comparison table',
+            'grid',
+            'ea',
+            'essential addons',
+        ];
+    }
 
-  		/**
-  		 * Data Table Header
-  		 */
-  		$this->start_controls_section(
-  			'eael_section_data_table_header',
-  			[
-  				'label' => esc_html__( 'Header', 'essential-addons-for-elementor-lite')
-  			]
-  		);
+    public function get_custom_help_url()
+    {
+        return 'https://essential-addons.com/elementor/docs/data-table/';
+    }
 
-		do_action('eael_section_data_table_enabled', $this);
+    protected function _register_controls()
+    {
 
-		if(!apply_filters('eael/pro_enabled', false)) {
-			$this->add_control(
-				'eael_pricing_table_style_pro_alert',
-				[
-					'label'     => esc_html__( 'Sorting feature is available in pro version!', 'essential-addons-for-elementor-lite'),
-					'type'      => Controls_Manager::HEADING,
-					'condition' => [
-						'eael_section_data_table_enabled' => 'true',
-					]
+        /**
+         * Data Table Header
+         */
+        $this->start_controls_section(
+            'eael_section_data_table_header',
+            [
+                'label' => esc_html__('Header', 'essential-addons-for-elementor-lite')
+            ]
+        );
+
+        do_action('eael_section_data_table_enabled', $this);
+
+        if (!apply_filters('eael/pro_enabled', false)) {
+            $this->add_control(
+                'eael_pricing_table_style_pro_alert',
+                [
+                    'label'     => esc_html__('Sorting feature is available in pro version!', 'essential-addons-for-elementor-lite'),
+                    'type'      => Controls_Manager::HEADING,
+                    'condition' => [
+                        'eael_section_data_table_enabled' => 'true',
+                    ]
+                ]
+            );
+        }
+
+        $repeater = new Repeater();
+
+        $repeater->add_control(
+            'eael_data_table_header_col',
+            [
+                'label' => esc_html__('Column Name', 'essential-addons-for-elementor-lite'),
+                'default' => 'Table Header',
+                'type' => Controls_Manager::TEXT,
+                'dynamic'   => ['active' => true],
+                'label_block' => false,
+            ]
+        );
+
+        $repeater->add_control(
+            'eael_data_table_header_col_span',
+            [
+                'label' => esc_html__('Column Span', 'essential-addons-for-elementor-lite'),
+                'default' => '',
+                'type' => Controls_Manager::TEXT,
+                'dynamic'   => ['active' => true],
+                'label_block' => false,
+            ]
+        );
+
+        $repeater->add_control(
+            'eael_data_table_header_col_icon_enabled',
+            [
+                'label' => esc_html__('Enable Header Icon', 'essential-addons-for-elementor-lite'),
+                'type' => Controls_Manager::SWITCHER,
+                'label_on' => __('yes', 'essential-addons-for-elementor-lite'),
+                'label_off' => __('no', 'essential-addons-for-elementor-lite'),
+                'default' => 'false',
+                'return_value' => 'true',
+            ]
+        );
+
+        $repeater->add_control(
+            'eael_data_table_header_icon_type',
+            [
+                'label'    => esc_html__('Header Icon Type', 'essential-addons-for-elementor-lite'),
+                'type'    => Controls_Manager::CHOOSE,
+                'options'               => [
+                    'none'        => [
+                        'title'   => esc_html__('None', 'essential-addons-for-elementor-lite'),
+                        'icon'    => 'fa fa-ban',
+                    ],
+                    'icon'        => [
+                        'title'   => esc_html__('Icon', 'essential-addons-for-elementor-lite'),
+                        'icon'    => 'fa fa-star',
+                    ],
+                    'image'       => [
+                        'title'   => esc_html__('Image', 'essential-addons-for-elementor-lite'),
+                        'icon'    => 'fa fa-picture-o',
+                    ],
+                ],
+                'default'               => 'icon',
+                'condition' => [
+                    'eael_data_table_header_col_icon_enabled' => 'true'
+                ]
+            ]
+        );
+
+        // Comment on this control
+        $repeater->add_control(
+            'eael_data_table_header_col_icon_new',
+            [
+                'label' => esc_html__('Icon', 'essential-addons-for-elementor-lite'),
+                'type' => Controls_Manager::ICONS,
+                'fa4compatibility' => 'eael_data_table_header_col_icon',
+                'default' => [
+                    'value' => 'fas fa-star',
+                    'library' => 'solid',
+                ],
+				'condition' => [
+					'eael_data_table_header_col_icon_enabled' => 'true',
+					'eael_data_table_header_icon_type'	=> 'icon'
 				]
-			);
-		}
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_header_col_img',
+			[
+				'label' => esc_html__( 'Image', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::MEDIA,
+				'default' => [
+					'url' => Utils::get_placeholder_image_src(),
+				],
+				'condition' => [
+					'eael_data_table_header_icon_type'	=> 'image'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_header_col_img_size',
+			[
+				'label' => esc_html__( 'Image Size(px)', 'essential-addons-for-elementor-lite'),
+				'default' => '25',
+				'type' => Controls_Manager::NUMBER,
+				'label_block' => false,
+				'condition' => [
+					'eael_data_table_header_icon_type'	=> 'image'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_header_css_class',
+			[
+				'label'			=> esc_html__( 'CSS Class', 'essential-addons-for-elementor-lite'),
+				'type'			=> Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
+				'label_block' 	=> false,
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_header_css_id',
+			[
+				'label'			=> esc_html__( 'CSS ID', 'essential-addons-for-elementor-lite'),
+				'type'			=> Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
+				'label_block'	=> false,
+			]
+		);
 
   		$this->add_control(
 			'eael_data_table_header_cols_data',
@@ -71,99 +228,7 @@ class Data_Table extends Widget_Base {
 					[ 'eael_data_table_header_col' => 'Table Header' ],
 					[ 'eael_data_table_header_col' => 'Table Header' ],
 				],
-				'fields' => [
-					[
-						'name' => 'eael_data_table_header_col',
-						'label' => esc_html__( 'Column Name', 'essential-addons-for-elementor-lite'),
-						'default' => 'Table Header',
-						'type' => Controls_Manager::TEXT,
-						'label_block' => false,
-					],
-					[
-						'name' => 'eael_data_table_header_col_span',
-						'label' => esc_html__( 'Column Span', 'essential-addons-for-elementor-lite'),
-						'default' => '',
-						'type' => Controls_Manager::TEXT,
-						'label_block' => false,
-					],
-					[
-						'name' => 'eael_data_table_header_col_icon_enabled',
-						'label' => esc_html__( 'Enable Header Icon', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::SWITCHER,
-						'label_on' => __( 'yes', 'essential-addons-for-elementor-lite'),
-						'label_off' => __( 'no', 'essential-addons-for-elementor-lite'),
-						'default' => 'false',
-						'return_value' => 'true',
-					],
-					[
-						'name'	=> 'eael_data_table_header_icon_type',
-						'label'	=> esc_html__( 'Header Icon Type', 'essential-addons-for-elementor-lite'),
-						'type'	=> Controls_Manager::CHOOSE,
-						'options'               => [
-							'none'        => [
-								'title'   => esc_html__( 'None', 'essential-addons-for-elementor-lite'),
-								'icon'    => 'fa fa-ban',
-							],
-							'icon'        => [
-								'title'   => esc_html__( 'Icon', 'essential-addons-for-elementor-lite'),
-								'icon'    => 'fa fa-star',
-							],
-							'image'       => [
-								'title'   => esc_html__( 'Image', 'essential-addons-for-elementor-lite'),
-								'icon'    => 'fa fa-picture-o',
-							],
-						],
-						'default'               => 'icon',
-						'condition' => [
-							'eael_data_table_header_col_icon_enabled' => 'true'
-						]
-					],
-					[
-						'name' => 'eael_data_table_header_col_icon_new',
-						'label' => esc_html__( 'Icon', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::ICONS,
-						'fa4compatibility' => 'eael_data_table_header_col_icon',
-						'default' => '',
-						'condition' => [
-							'eael_data_table_header_col_icon_enabled' => 'true',
-							'eael_data_table_header_icon_type'	=> 'icon'
-						]
-					],
-					[
-						'name' => 'eael_data_table_header_col_img',
-						'label' => esc_html__( 'Image', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::MEDIA,
-						'default' => [
-							'url' => Utils::get_placeholder_image_src(),
-						],
-						'condition' => [
-							'eael_data_table_header_icon_type'	=> 'image'
-						]
-					],
-					[
-						'name' => 'eael_data_table_header_col_img_size',
-						'label' => esc_html__( 'Image Size(px)', 'essential-addons-for-elementor-lite'),
-						'default' => '25',
-						'type' => Controls_Manager::NUMBER,
-						'label_block' => false,
-						'condition' => [
-							'eael_data_table_header_icon_type'	=> 'image'
-						]
-					],
-					[
-						'name'			=> 'eael_data_table_header_css_class',
-						'label'			=> esc_html__( 'CSS Class', 'essential-addons-for-elementor-lite'),
-						'type'			=> Controls_Manager::TEXT,
-						'label_block' 	=> false,
-					],
-					[
-						'name'			=> 'eael_data_table_header_css_id',
-						'label'			=> esc_html__( 'CSS ID', 'essential-addons-for-elementor-lite'),
-						'type'			=> Controls_Manager::TEXT,
-						'label_block'	=> false,
-					],
-
-				],
+				'fields'      =>  $repeater->get_controls() ,
 				'title_field' => '{{eael_data_table_header_col}}',
 			]
 		);
@@ -178,7 +243,166 @@ class Data_Table extends Widget_Base {
   			[
   				'label' => esc_html__( 'Content', 'essential-addons-for-elementor-lite')
   			]
-  		);
+		  );
+
+		$repeater = new Repeater();
+
+		$repeater->add_control(
+			'eael_data_table_content_row_type',
+			[
+				'label' => esc_html__( 'Row Type', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'row',
+				'label_block' => false,
+				'options' => [
+					'row' => esc_html__( 'Row', 'essential-addons-for-elementor-lite'),
+					'col' => esc_html__( 'Column', 'essential-addons-for-elementor-lite'),
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_colspan',
+			[
+				'label'			=> esc_html__( 'Col Span', 'essential-addons-for-elementor-lite'),
+				'type'			=> Controls_Manager::NUMBER,
+				'description'	=> esc_html__( 'Default: 1 (optional).'),
+				'default' 		=> 1,
+				'min'     		=> 1,
+				'label_block'	=> true,
+				'condition' 	=> [
+					'eael_data_table_content_row_type' => 'col'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_type',
+			[
+				'label'		=> esc_html__( 'Content Type', 'essential-addons-for-elementor-lite'),
+				'type'	=> Controls_Manager::CHOOSE,
+				'options'               => [
+					'textarea'        => [
+						'title'   => esc_html__( 'Textarea', 'essential-addons-for-elementor-lite'),
+						'icon'    => 'fa fa-text-width',
+					],
+					'editor'       => [
+						'title'   => esc_html__( 'Editor', 'essential-addons-for-elementor-lite'),
+						'icon'    => 'fa fa-pencil',
+					],
+					'template'        => [
+						'title'   => esc_html__( 'Templates', 'essential-addons-for-elementor-lite'),
+						'icon'    => 'fa fa-file',
+					]
+				],
+				'default'	=> 'textarea',
+				'condition' => [
+					'eael_data_table_content_row_type' => 'col'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_rowspan',
+			[
+				'label'			=> esc_html__( 'Row Span', 'essential-addons-for-elementor-lite'),
+				'type'			=> Controls_Manager::NUMBER,
+				'description'	=> esc_html__( 'Default: 1 (optional).'),
+				'default' 		=> 1,
+				'min'     		=> 1,
+				'label_block'	=> true,
+				'condition' 	=> [
+					'eael_data_table_content_row_type' => 'col'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_primary_templates_for_tables',
+			[
+				'label'                 => __( 'Choose Template', 'essential-addons-for-elementor-lite'),
+				'type'                  => Controls_Manager::SELECT,
+				'options'               => Helper::get_elementor_templates(),
+				'condition'             => [
+					'eael_data_table_content_type'      => 'template',
+				],
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_title',
+			[
+				'label' => esc_html__( 'Cell Text', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::TEXTAREA,
+                'dynamic'   => ['active' => true],
+				'label_block' => true,
+				'default' => esc_html__( 'Content', 'essential-addons-for-elementor-lite'),
+				'condition' => [
+					'eael_data_table_content_row_type' => 'col',
+					'eael_data_table_content_type' => 'textarea'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_content',
+			[
+				'label' => esc_html__( 'Cell Text', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::WYSIWYG,
+				'label_block' => true,
+				'default' => esc_html__( 'Content', 'essential-addons-for-elementor-lite'),
+				'condition' => [
+					'eael_data_table_content_row_type' => 'col',
+					'eael_data_table_content_type' => 'editor'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_title_link',
+			[
+				'label' => esc_html__( 'Link', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::URL,
+                'dynamic'   => ['active' => true],
+				'label_block' => true,
+				'default' => [
+						'url' => '',
+						'is_external' => '',
+					 ],
+					 'show_external' => true,
+					 'separator' => 'before',
+				 'condition' => [
+					'eael_data_table_content_row_type' => 'col',
+					'eael_data_table_content_type' => 'textarea'
+				],
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_css_class',
+			[
+				'label'			=> esc_html__( 'CSS Class', 'essential-addons-for-elementor-lite'),
+				'type'			=> Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
+				'label_block'	=> false,
+				'condition' 	=> [
+					'eael_data_table_content_row_type' => 'col'
+				]
+			]
+		);
+
+		$repeater->add_control(
+			'eael_data_table_content_row_css_id',
+			[
+				'label'			=> esc_html__( 'CSS ID', 'essential-addons-for-elementor-lite'),
+				'type'			=> Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
+				'label_block'	=> false,
+				'condition' 	=> [
+					'eael_data_table_content_row_type' => 'col'
+				]
+			]
+		);
 
   		$this->add_control(
 			'eael_data_table_content_rows',
@@ -192,131 +416,7 @@ class Data_Table extends Widget_Base {
 					[ 'eael_data_table_content_row_type' => 'col' ],
 					[ 'eael_data_table_content_row_type' => 'col' ],
 				],
-				'fields' => [
-					[
-						'name' => 'eael_data_table_content_row_type',
-						'label' => esc_html__( 'Row Type', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::SELECT,
-						'default' => 'row',
-						'label_block' => false,
-						'options' => [
-							'row' => esc_html__( 'Row', 'essential-addons-for-elementor-lite'),
-							'col' => esc_html__( 'Column', 'essential-addons-for-elementor-lite'),
-						]
-					],
-					[
-						'name'			=> 'eael_data_table_content_row_colspan',
-						'label'			=> esc_html__( 'Col Span', 'essential-addons-for-elementor-lite'),
-						'type'			=> Controls_Manager::NUMBER,
-						'description'	=> esc_html__( 'Default: 1 (optional).'),
-						'default' 		=> 1,
-						'min'     		=> 1,
-						'label_block'	=> true,
-						'condition' 	=> [
-							'eael_data_table_content_row_type' => 'col'
-						]
-					],
-					[
-						'name'			=> 'eael_data_table_content_row_rowspan',
-						'label'			=> esc_html__( 'Row Span', 'essential-addons-for-elementor-lite'),
-						'type'			=> Controls_Manager::NUMBER,
-						'description'	=> esc_html__( 'Default: 1 (optional).'),
-						'default' 		=> 1,
-						'min'     		=> 1,
-						'label_block'	=> true,
-						'condition' 	=> [
-							'eael_data_table_content_row_type' => 'col'
-						]
-					],
-					[
-						'name'		=> 'eael_data_table_content_type',
-						'label'		=> esc_html__( 'Content Type', 'essential-addons-for-elementor-lite'),
-						'type'	=> Controls_Manager::CHOOSE,
-						'options'               => [
-							'textarea'        => [
-								'title'   => esc_html__( 'Textarea', 'essential-addons-for-elementor-lite'),
-								'icon'    => 'fa fa-text-width',
-							],
-							'editor'       => [
-								'title'   => esc_html__( 'Editor', 'essential-addons-for-elementor-lite'),
-								'icon'    => 'fa fa-pencil',
-							],
-							'template'        => [
-								'title'   => esc_html__( 'Templates', 'essential-addons-for-elementor-lite'),
-								'icon'    => 'fa fa-file',
-							]
-						],
-						'default'	=> 'textarea',
-						'condition' => [
-							'eael_data_table_content_row_type' => 'col'
-						]
-					],
-					[
-		                'name'					=> 'eael_primary_templates_for_tables',
-		                'label'                 => __( 'Choose Template', 'essential-addons-for-elementor-lite'),
-		                'type'                  => Controls_Manager::SELECT,
-		                'options'               => $this->eael_get_page_templates(),
-						'condition'             => [
-							'eael_data_table_content_type'      => 'template',
-						],
-		            ],
-					[
-						'name' => 'eael_data_table_content_row_title',
-						'label' => esc_html__( 'Cell Text', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::TEXTAREA,
-						'label_block' => true,
-						'default' => esc_html__( 'Content', 'essential-addons-for-elementor-lite'),
-						'condition' => [
-							'eael_data_table_content_row_type' => 'col',
-							'eael_data_table_content_type' => 'textarea'
-						]
-					],
-					[
-						'name' => 'eael_data_table_content_row_content',
-						'label' => esc_html__( 'Cell Text', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::WYSIWYG,
-						'label_block' => true,
-						'default' => esc_html__( 'Content', 'essential-addons-for-elementor-lite'),
-						'condition' => [
-							'eael_data_table_content_row_type' => 'col',
-							'eael_data_table_content_type' => 'editor'
-						]
-					],
-					[
-						'name' => 'eael_data_table_content_row_title_link',
-						'label' => esc_html__( 'Link', 'essential-addons-for-elementor-lite'),
-						'type' => Controls_Manager::URL,
-						'label_block' => true,
-						'default' => [
-		        				'url' => '',
-		        				'is_external' => '',
-		     				],
-		     				'show_external' => true,
-		     				'separator' => 'before',
-		     			'condition' => [
-							'eael_data_table_content_row_type' => 'col',
-							'eael_data_table_content_type' => 'textarea'
-						],
-					],
-					[
-						'name'			=> 'eael_data_table_content_row_css_class',
-						'label'			=> esc_html__( 'CSS Class', 'essential-addons-for-elementor-lite'),
-						'type'			=> Controls_Manager::TEXT,
-						'label_block'	=> false,
-						'condition' 	=> [
-							'eael_data_table_content_row_type' => 'col'
-						]
-					],
-					[
-						'name'			=> 'eael_data_table_content_row_css_id',
-						'label'			=> esc_html__( 'CSS ID', 'essential-addons-for-elementor-lite'),
-						'type'			=> Controls_Manager::TEXT,
-						'label_block'	=> false,
-						'condition' 	=> [
-							'eael_data_table_content_row_type' => 'col'
-						]
-					]
-				],
+				'fields' =>  $repeater->get_controls() ,
 				'title_field' => '{{eael_data_table_content_row_type}}::{{eael_data_table_content_row_title || eael_data_table_content_row_content}}',
 			]
 		);
@@ -335,8 +435,8 @@ class Data_Table extends Widget_Base {
             'ea_adv_data_table_export_csv_button',
             [
                 'label' => __('Export table as CSV file', 'essential-addons-for-elementor-lite'),
-                'type' => Controls_Manager::BUTTON,
-                'text' => __('Export', 'essential-addons-for-elementor-lite'),
+                'type'  => Controls_Manager::BUTTON,
+                'text'  => __('Export', 'essential-addons-for-elementor-lite'),
                 'event' => 'ea:table:export',
             ]
         );
@@ -350,7 +450,7 @@ class Data_Table extends Widget_Base {
 					'label' => __( 'Go Premium for More Features', 'essential-addons-for-elementor-lite')
 				]
 			);
-		
+
 			$this->add_control(
 				'eael_control_get_pro',
 				[
@@ -358,7 +458,7 @@ class Data_Table extends Widget_Base {
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'1' => [
-							'title' => __( '', 'essential-addons-for-elementor-lite'),
+							'title' => '',
 							'icon' => 'fa fa-unlock-alt',
 						],
 					],
@@ -366,7 +466,7 @@ class Data_Table extends Widget_Base {
 					'description' => '<span class="pro-feature"> Get the  <a href="https://wpdeveloper.net/in/upgrade-essential-addons-elementor" target="_blank">Pro version</a> for more stunning elements and customization options.</span>'
 				]
 			);
-			
+
 			$this->end_controls_section();
 		}
 
@@ -386,15 +486,15 @@ class Data_Table extends Widget_Base {
 		$this->add_responsive_control(
             'table_width',
             [
-                'label'                 => __( 'Width', 'essential-addons-for-elementor-lite'),
-                'type'                  => Controls_Manager::SLIDER,
-                'default'               => [
+                'label'      => __('Width', 'essential-addons-for-elementor-lite'),
+                'type'       => Controls_Manager::SLIDER,
+                'default'    => [
                     'size' => 100,
                     'unit' => '%',
                 ],
-                'size_units'            => [ '%', 'px' ],
-                'range'                 => [
-                    '%' => [
+                'size_units' => ['%', 'px'],
+                'range'      => [
+                    '%'  => [
                         'min' => 1,
                         'max' => 100,
                     ],
@@ -403,31 +503,31 @@ class Data_Table extends Widget_Base {
                         'max' => 1200,
                     ],
                 ],
-                'selectors'             => [
+                'selectors'  => [
                     '{{WRAPPER}} .eael-data-table' => 'max-width: {{SIZE}}{{UNIT}};',
                 ],
             ]
-		);
+        );
 
-		$this->add_control(
+        $this->add_control(
             'table_alignment',
             [
-                'label'                 => __( 'Alignment', 'essential-addons-for-elementor-lite'),
-                'type'                  => Controls_Manager::CHOOSE,
-				'label_block'           => false,
-                'default'               => 'center',
-                'options'               => [
-                    'left' 		=> [
-                        'title' => __( 'Left', 'essential-addons-for-elementor-lite'),
-                        'icon' 	=> 'eicon-h-align-left',
+                'label'        => __('Alignment', 'essential-addons-for-elementor-lite'),
+                'type'         => Controls_Manager::CHOOSE,
+                'label_block'  => false,
+                'default'      => 'center',
+                'options'      => [
+                    'left'   => [
+                        'title' => __('Left', 'essential-addons-for-elementor-lite'),
+                        'icon'  => 'eicon-h-align-left',
                     ],
-                    'center' 	=> [
-                        'title' => __( 'Center', 'essential-addons-for-elementor-lite'),
-                        'icon' 	=> 'eicon-h-align-center',
+                    'center' => [
+                        'title' => __('Center', 'essential-addons-for-elementor-lite'),
+                        'icon'  => 'eicon-h-align-center',
                     ],
-                    'right' 	=> [
-                        'title' => __( 'Right', 'essential-addons-for-elementor-lite'),
-                        'icon' 	=> 'eicon-h-align-right',
+                    'right'  => [
+                        'title' => __('Right', 'essential-addons-for-elementor-lite'),
+                        'icon'  => 'eicon-h-align-right',
                     ],
 				],
                 'prefix_class'           => 'eael-table-align-',
@@ -463,6 +563,8 @@ class Data_Table extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .eael-data-table thead tr th:first-child' => 'border-radius: {{SIZE}}px 0px 0px 0px;',
 					'{{WRAPPER}} .eael-data-table thead tr th:last-child' => 'border-radius: 0px {{SIZE}}px 0px 0px;',
+                    '.rtl {{WRAPPER}} .eael-data-table thead tr th:first-child' => 'border-radius: 0px {{SIZE}}px 0px 0px;',
+                    '.rtl {{WRAPPER}} .eael-data-table thead tr th:last-child' => 'border-radius: {{SIZE}}px 0px 0px 0px;',
 				],
 			]
 		);
@@ -510,7 +612,7 @@ class Data_Table extends Widget_Base {
 						],
 					]
 				);
-				
+
 				$this->add_group_control(
 					Group_Control_Border::get_type(),
 						[
@@ -521,7 +623,7 @@ class Data_Table extends Widget_Base {
 				);
 
 			$this->end_controls_tab();
-			
+
 			$this->start_controls_tab( 'eael_data_table_header_title_hover', [ 'label' => esc_html__( 'Hover', 'essential-addons-for-elementor-lite') ] );
 
 				$this->add_control(
@@ -574,54 +676,54 @@ class Data_Table extends Widget_Base {
 		$this->add_responsive_control(
             'header_icon_size',
             [
-                'label'                 => __( 'Icon Size', 'essential-addons-for-elementor-lite'),
-				'type'                  => Controls_Manager::SLIDER,
-                'size_units'            => [ 'px' ],
-                'range'                 => [
+                'label'      => __('Icon Size', 'essential-addons-for-elementor-lite'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => [
                     'px' => [
                         'min' => 1,
                         'max' => 70,
                     ],
-				],
-				'default'	=> [
-					'size'	=> 20
-				],
-                'selectors'             => [
-					'{{WRAPPER}} .eael-data-table thead tr th i' => 'font-size: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .eael-data-table thead tr th .data-table-header-svg-icon' => 'height: {{SIZE}}{{UNIT}}; width: {{SIZE}}{{UNIT}};',
-				]
+                ],
+                'default'    => [
+                    'size' => 20,
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .eael-data-table thead tr th i'                           => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .eael-data-table thead tr th .data-table-header-svg-icon' => 'height: {{SIZE}}{{UNIT}}; width: {{SIZE}}{{UNIT}};',
+                ],
             ]
-		);
+        );
 
-		$this->add_responsive_control(
+        $this->add_responsive_control(
             'header_icon_position_from_top',
             [
-                'label'                 => __( 'Icon Position', 'essential-addons-for-elementor-lite'),
-				'type'                  => Controls_Manager::SLIDER,
-                'size_units'            => [ 'px', '%' ],
-                'range'                 => [
+                'label'      => __('Icon Position', 'essential-addons-for-elementor-lite'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range'      => [
                     'px' => [
                         'min' => 1,
                         'max' => 70,
-					],
-					'%'	=> [
-						'min'	=> 0,
-						'max'	=> 100
-					]
-					],
-                'selectors'             => [
-					'{{WRAPPER}} .eael-data-table thead tr th .data-header-icon' => 'top: {{SIZE}}{{UNIT}};'
-				]
+                    ],
+                    '%'  => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'selectors'  => [
+                    '{{WRAPPER}} .eael-data-table thead tr th .data-header-icon' => 'top: {{SIZE}}{{UNIT}};',
+                ],
             ]
-		);
+        );
 
-		$this->add_responsive_control(
+        $this->add_responsive_control(
             'header_icon_space',
             [
-                'label'                 => __( 'Icon Space', 'essential-addons-for-elementor-lite'),
-				'type'                  => Controls_Manager::SLIDER,
-                'size_units'            => [ 'px' ],
-                'range'                 => [
+                'label'      => __('Icon Space', 'essential-addons-for-elementor-lite'),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range'      => [
                     'px' => [
                         'min' => 1,
                         'max' => 70,
@@ -654,7 +756,7 @@ class Data_Table extends Widget_Base {
 					],
 				],
 				'default' => 'left',
-				'prefix_class' => 'eael-dt-th-align-',
+				'prefix_class' => 'eael-dt-th-align%s-',
 			]
 		);
 
@@ -765,7 +867,7 @@ class Data_Table extends Widget_Base {
 				);
 
 			$this->end_controls_tab();
-			
+
 			$this->start_controls_tab('eael_data_table_odd_cell_hover_style', ['label' => esc_html__( 'Hover', 'essential-addons-for-elementor-lite')]);
 
 				$this->add_control(
@@ -939,25 +1041,25 @@ class Data_Table extends Widget_Base {
 		$this->add_responsive_control(
             'mobile_table_header_width',
             [
-                'label'                 => __( 'Width', 'essential-addons-for-elementor-lite'),
-				'type'                  => Controls_Manager::SLIDER,
-                'default'               => [
+                'label'      => __('Width', 'essential-addons-for-elementor-lite'),
+                'type'       => Controls_Manager::SLIDER,
+                'default'    => [
                     'size' => 100,
                     'unit' => 'px',
                 ],
-                'size_units'            => [ 'px' ],
-                'range'                 => [
+                'size_units' => ['px'],
+                'range'      => [
                     'px' => [
                         'min' => 1,
                         'max' => 200,
                     ],
                 ],
-                'selectors'             => [
+                'selectors'  => [
                     '{{WRAPPER}} .eael-data-table .th-mobile-screen' => 'flex-basis: {{SIZE}}px;',
                 ],
-                'condition'	=> [
-                	'eael_enable_responsive_header_styles'	=> 'yes'
-                ]
+                'condition'  => [
+                    'eael_enable_responsive_header_styles' => 'yes',
+                ],
             ]
 		);
 
@@ -1022,9 +1124,9 @@ class Data_Table extends Widget_Base {
 
 	protected function render( ) {
 
-   		$settings = $this->get_settings();
+        $settings = $this->get_settings_for_display();
 
-	  	$table_tr = [];
+        $table_tr = [];
 		$table_td = [];
 
 	  	// Storing Data table content values
@@ -1044,7 +1146,7 @@ class Data_Table extends Widget_Base {
 
 	  			$table_tr_keys = array_keys( $table_tr );
 				  $last_key = end( $table_tr_keys );
-				  
+
 				$tbody_content = ($content_row['eael_data_table_content_type'] == 'editor') ? $content_row['eael_data_table_content_row_content'] : $content_row['eael_data_table_content_row_title'];
 
 	  			$table_td[] = [
@@ -1062,7 +1164,7 @@ class Data_Table extends Widget_Base {
 					'tr_id'			=> $content_row['eael_data_table_content_row_css_id']
 	  			];
 	  		}
-		}  
+		}
 		$table_th_count = count($settings['eael_data_table_header_cols_data']);
 		$this->add_render_attribute('eael_data_table_wrap', [
 			'class'                  => 'eael-data-table-wrap',
@@ -1152,10 +1254,7 @@ class Data_Table extends Widget_Base {
 										<td <?php echo $this->get_render_attribute_string('table_inside_td'.$i.$j); ?>>
 											<div class="td-content-wrapper">
 												<div <?php echo $this->get_render_attribute_string('td_content'); ?>>
-													<?php
-														$eael_frontend = new Frontend;
-														echo $eael_frontend->get_builder_content( intval($table_td[$j]['template']), true );
-													?>
+													<?php echo Plugin::$instance->frontend->get_builder_content(intval($table_td[$j]['template']), true); ?>
 												</div>
 											</div>
 										</td>

@@ -1,5 +1,7 @@
 <?php
 
+use PremiumAddons\Admin\Includes\PA_Rollback;
+
 if( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 
 /**
@@ -25,8 +27,10 @@ function post_premium_addons_rollback() {
     $pa_rollback->run();
 
     wp_die(
-        '', __( 'Rollback to Previous Version', 'premium-addons-for-elementor' ), [
-        'response' => 200,
+        '',
+        __( 'Rollback to Previous Version', 'premium-addons-for-elementor' ),
+        [
+            'response' => 200,
         ]
     );
 }

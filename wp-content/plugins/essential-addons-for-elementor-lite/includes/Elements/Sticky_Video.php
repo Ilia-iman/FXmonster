@@ -1,7 +1,10 @@
 <?php
+
 namespace Essential_Addons_Elementor\Elements;
 
-if (!defined('ABSPATH')) {exit;}
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 use \Elementor\Modules\DynamicTags\Module as TagsModule;
 use \Elementor\Controls_Manager;
@@ -10,7 +13,7 @@ use \Elementor\Widget_Base;
 
 class Sticky_Video extends Widget_Base
 {
-    use \Essential_Addons_Elementor\Traits\Helper;
+    
 
     protected $eaelRElem = 1;
 
@@ -21,17 +24,46 @@ class Sticky_Video extends Widget_Base
 
     public function get_title()
     {
-        return esc_html__('EA Sticky Video', 'essential-addons-for-elementor-lite');
+        return esc_html__('Sticky Video', 'essential-addons-for-elementor-lite');
     }
 
     public function get_icon()
     {
-        return 'eicon-youtube';
+        return 'eaicon-sticky-video';
     }
 
     public function get_categories()
     {
         return ['essential-addons-elementor'];
+    }
+
+    public function get_keywords()
+    {
+        return [
+            'video',
+            'sticky',
+            'ea sticky video',
+            'ea video player',
+            'youtube',
+            'vimeo',
+            'mp4',
+            'mpg',
+            'ogg',
+            'webm',
+            'mov',
+            'avi',
+            'scrollable video',
+            'sticky control',
+            'video player',
+            'youtube content',
+            'ea',
+            'essential addons'
+        ];
+    }
+
+    public function get_custom_help_url()
+    {
+        return 'https://essential-addons.com/elementor/docs/sticky-video/';
     }
 
     public function get_style_depends()
@@ -125,6 +157,7 @@ class Sticky_Video extends Widget_Base
             [
                 'label' => __('Link', 'essential-addons-for-elementor-lite'),
                 'type' => Controls_Manager::TEXT,
+                'dynamic'   => ['active' => true],
                 'placeholder' => __('Enter your URL (YouTube)', 'essential-addons-for-elementor-lite'),
                 'label_block' => true,
                 'default' => 'https://www.youtube.com/watch?v=uuyXfUDqRZM',
@@ -139,6 +172,7 @@ class Sticky_Video extends Widget_Base
             [
                 'label' => __('Link', 'essential-addons-for-elementor-lite'),
                 'type' => Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
                 'placeholder' => __('Enter your URL (Vimeo)', 'essential-addons-for-elementor-lite'),
                 'label_block' => true,
                 'default' => 'https://vimeo.com/235215203',
@@ -153,6 +187,7 @@ class Sticky_Video extends Widget_Base
             [
                 'label' => __('Link', 'essential-addons-for-elementor-lite'),
                 'type' => Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
                 'placeholder' => __('Enter your URL (Dailymotion)', 'essential-addons-for-elementor-lite'),
                 'label_block' => true,
                 'condition' => [
@@ -197,6 +232,7 @@ class Sticky_Video extends Widget_Base
             [
                 'label' => __('Link', 'essential-addons-for-elementor-lite'),
                 'type' => Controls_Manager::TEXT,
+                'dynamic'     => [ 'active' => true ],
                 'placeholder' => __('Enter your URL', 'essential-addons-for-elementor-lite'),
                 'label_block' => true,
                 'show_label' => false,
@@ -398,7 +434,7 @@ class Sticky_Video extends Widget_Base
             ]
         );
 
-        
+
         $this->add_control(
             'eaelsv_sticky_width',
             [
@@ -430,12 +466,12 @@ class Sticky_Video extends Widget_Base
                     'eaelsv_is_sticky' => 'yes',
                 ],
                 'selectors' => [
-                   '{{WRAPPER}} .eael-sticky-video-player2.out' => 'height: {{VALUE}}px!important;',
+                    '{{WRAPPER}} .eael-sticky-video-player2.out' => 'height: {{VALUE}}px!important;',
                 ],
             ]
         );
 
-        
+
 
         $this->add_control(
             'eaelsv_scroll_height_display_sticky',
@@ -679,45 +715,49 @@ class Sticky_Video extends Widget_Base
         }
 
         echo '<div class="eael-sticky-video-wrapper">';
-			if ('yes' === $settings['eaelsv_overlay_options']) {
-				$autoplay = 'yes';
+        if ('yes' === $settings['eaelsv_overlay_options']) {
+            // $autoplay = 'yes';
+            $icon = '';
+            if ('yes' === $settings['eaelsv_overlay_play_icon']) {
+                if ($iconNew['value'] != '') {
+                    if (is_array($iconNew['value'])) {
+                        $icon = '<img src="' . $iconNew['value']['url'] .  '" width="100">';
+                    } else {
+                        echo $icon = '<i class="' . $iconNew['value'] . '"></i>';
+                    }
+                } else {
+                    $icon = '<i class="eicon-play"></i>';
+                }
+            }
 
-				if ('yes' === $settings['eaelsv_overlay_play_icon']) {
-					if ($iconNew['value'] != '') {
-						$icon = $iconNew['value'];
-					} else {
-						$icon = 'eicon-play';
-					}
-				}
-				
-				$this->add_render_attribute(
-					'esvp_overlay_wrapper',
-					[
-						'class' => 'eaelsv-overlay',
-						'style' => "background-image:url('" . $settings['eaelsv_overlay_image']['url'] . "');",
-					]
-				);
+            $this->add_render_attribute(
+                'esvp_overlay_wrapper',
+                [
+                    'class' => 'eaelsv-overlay',
+                    'style' => "background-image:url('" . $settings['eaelsv_overlay_image']['url'] . "');",
+                ]
+            );
 
-				echo '<div ' . $this->get_render_attribute_string('esvp_overlay_wrapper') . '>
-					<div class="eaelsv-overlay-icon"><i class="' . esc_attr($icon) . '"></i></div>
+            echo '<div ' . $this->get_render_attribute_string('esvp_overlay_wrapper') . '>
+					<div class="eaelsv-overlay-icon">' . $icon . '</div>
 				</div>';
-			}
+        }
 
-			$this->add_render_attribute(
-				'esvp_overlay_wrapper2',
-				[
-					'class' => 'eael-sticky-video-player2',
-					'data-sticky' => $sticky,
-					'data-position' => $settings['eaelsv_sticky_position'],
-					'data-sheight' => $settings['eaelsv_sticky_height']['size'],
-                    'data-swidth' => $settings['eaelsv_sticky_width']['size'],
-                    'data-scroll_height' => $settings['eaelsv_scroll_height_display_sticky']['size'],
-					'data-autoplay' => $autoplay,
-					'data-overlay' => ($settings['eaelsv_overlay_options'] == 'yes') ? $settings['eaelsv_overlay_options'] : 'no',
-				]
-			);
+        $this->add_render_attribute(
+            'esvp_overlay_wrapper2',
+            [
+                'class' => 'eael-sticky-video-player2',
+                'data-sticky' => $sticky,
+                'data-position' => $settings['eaelsv_sticky_position'],
+                'data-sheight' => $settings['eaelsv_sticky_height'],
+                'data-swidth' => $settings['eaelsv_sticky_width'],
+                'data-scroll_height' => $settings['eaelsv_scroll_height_display_sticky']['size'],
+                'data-autoplay' => $autoplay,
+                'data-overlay' => ($settings['eaelsv_overlay_options'] == 'yes') ? $settings['eaelsv_overlay_options'] : 'no',
+            ]
+        );
 
-        	echo '<div ' . $this->get_render_attribute_string('esvp_overlay_wrapper2') . '>
+        echo '<div ' . $this->get_render_attribute_string('esvp_overlay_wrapper2') . '>
 				' . $eaelsvPlayer . '
 				<span class="eaelsv-sticky-player-close"><i class="fas fa-times-circle"></i></span>
 			</div>
@@ -732,22 +772,14 @@ class Sticky_Video extends Widget_Base
         $mute = $settings['eaelsv_mute'];
         $loop = $settings['eaelsv_loop'];
 
-        if ($autoplay == 'yes') {
-            $am = '"autoplay":1, "muted":1';
-        }
-        if (('yes' == $mute) && ($autoplay == 'yes')) {
-            $am = '"autoplay":1, "muted":1';
-        }
-        if (('yes' != $mute) && ($autoplay != 'yes')) {
-            $am = '"autoplay":0, "muted":0';
-        }
-        if (('yes' == $mute) && ($autoplay != 'yes')) {
-            $am = '"autoplay":0, "muted":1';
-        }
+        $am = '';
+        $am .= ($autoplay == 'yes' ? '"autoplay":1' : '"autoplay":0');
+        $am .= ($mute == 'yes' ? ', "muted":1' : ', "muted":0');
+
         if ('yes' == $loop) {
-			$lp = '"loop": {"active": true}';
+            $lp = '"loop": {"active": true}';
         } else {
-			$lp = '"loop": {"active": false}';
+            $lp = '"loop": {"active": false}';
         }
 
         return '<div
@@ -766,22 +798,14 @@ class Sticky_Video extends Widget_Base
         $mute = $settings['eaelsv_mute'];
         $loop = $settings['eaelsv_loop'];
 
-        if ($autoplay == 'yes') {
-            $am = '"autoplay":1, "muted":1';
-        }
-        if (('yes' == $mute) && ($autoplay == 'yes')) {
-            $am = '"autoplay":1, "muted":1';
-        }
-        if (('yes' != $mute) && ($autoplay != 'yes')) {
-            $am = '"autoplay":0, "muted":0';
-        }
-        if (('yes' == $mute) && ($autoplay != 'yes')) {
-            $am = '"autoplay":0, "muted":1';
-        }
+        $am = '';
+        $am .= ($autoplay == 'yes' ? '"autoplay":1' : '"autoplay":0');
+        $am .= ($mute == 'yes' ? ', "muted":1' : ', "muted":0');
+
         if ('yes' == $loop) {
-			$lp = '"loop": {"active": true}';
+            $lp = '"loop": {"active": true}';
         } else {
-			$lp = '"loop": {"active": false}';
+            $lp = '"loop": {"active": false}';
         }
 
         return '<div
@@ -795,7 +819,7 @@ class Sticky_Video extends Widget_Base
     protected function eaelsv_load_player_self_hosted()
     {
         $settings = $this->get_settings_for_display();
-		$video = ($settings['eaelsv_external_url'] != '') ? $settings['eaelsv_external_url'] : $settings['eaelsv_hosted_url']['url'];
+        $video = ($settings['eaelsv_external_url'] != '') ? $settings['eaelsv_external_url'] : $settings['eaelsv_hosted_url']['url'];
         $controlBars = $settings['eaelsv_sh_show_bar'];
         $autoplay = $settings['eaelsv_autopaly'];
         $mute = $settings['eaelsv_mute'];
@@ -804,22 +828,14 @@ class Sticky_Video extends Widget_Base
         $startTime = $settings['eaelsv_start_time'];
         $endTime = $settings['eaelsv_end_time'];
 
-        if ($autoplay == 'yes') {
-            $am = '"autoplay":1, "muted":1';
-        }
-        if (('yes' == $mute) && ($autoplay == 'yes')) {
-            $am = '"autoplay":1, "muted":1';
-        }
-        if (('yes' != $mute) && ($autoplay != 'yes')) {
-            $am = '"autoplay":0, "muted":0';
-        }
-        if (('yes' == $mute) && ($autoplay != 'yes')) {
-            $am = '"autoplay":0, "muted":1';
-        }
+        $am = '';
+        $am .= ($autoplay == 'yes' ? '"autoplay":1' : '"autoplay":0');
+        $am .= ($mute == 'yes' ? ', "muted":1' : ', "muted":0');
+
         if ('yes' == $loop) {
-			$lp = '"loop": {"active": true}';
+            $lp = '"loop": {"active": true}';
         } else {
-			$lp = '"loop": {"active": false}';
+            $lp = '"loop": {"active": false}';
         }
 
         return '<video class="eaelsv-player" id="eaelsv-player-' . $this->get_id() . '" playsinline controls data-plyr-config="{' . esc_attr($am) . ', ' . esc_attr($lp) . '}">
@@ -848,8 +864,8 @@ class Sticky_Video extends Widget_Base
             } else {
                 $id = $settings['eaelsv_hosted_url']['url'];
             }
-		}
-		
+        }
+
         return $id;
     }
 }

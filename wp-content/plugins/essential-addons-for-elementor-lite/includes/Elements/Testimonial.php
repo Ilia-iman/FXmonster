@@ -6,13 +6,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use \Elementor\Controls_Manager as Controls_Manager;
-use \Elementor\Group_Control_Border as Group_Control_Border;
-use \Elementor\Group_Control_Image_Size as Group_Control_Image_Size;
-use \Elementor\Group_Control_Typography as Group_Control_Typography;
-use \Elementor\Utils as Utils;
-use \Elementor\Widget_Base as Widget_Base;
-use \Essential_Addons_Elementor\Classes\Bootstrap;
+use \Elementor\Controls_Manager;
+use \Elementor\Group_Control_Border;
+use \Elementor\Group_Control_Image_Size;
+use \Elementor\Group_Control_Typography;
+use \Elementor\Utils;
+use \Elementor\Widget_Base;
 
 class Testimonial extends Widget_Base {
 
@@ -21,16 +20,41 @@ class Testimonial extends Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'EA Testimonial', 'essential-addons-for-elementor-lite');
+		return esc_html__( 'Testimonial', 'essential-addons-for-elementor-lite');
 	}
 
 	public function get_icon() {
-		return 'eicon-testimonial';
+		return 'eaicon-testimonial';
 	}
 
    	public function get_categories() {
 		return [ 'essential-addons-elementor' ];
 	}
+
+	public function get_keywords()
+	{
+        return [
+			'testimonial',
+			'ea testimonial',
+			'ea testimonials',
+			'testimony',
+			'review',
+			'endorsement',
+			'recommendation',
+			'reference',
+			'appreciation',
+			'feedback',
+			'star rating',
+			'social proof',
+			'ea',
+			'essential addons'
+		];
+    }
+
+	public function get_custom_help_url()
+	{
+        return 'https://essential-addons.com/elementor/docs/testimonials/';
+    }
 
 	public function get_style_depends()
     {
@@ -189,7 +213,7 @@ class Testimonial extends Widget_Base {
 					'label' => __( 'Go Premium for More Features', 'essential-addons-for-elementor-lite')
 				]
 			);
-		
+
 			$this->add_control(
 				'eael_control_get_pro',
 				[
@@ -197,7 +221,7 @@ class Testimonial extends Widget_Base {
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'1' => [
-							'title' => __( '', 'essential-addons-for-elementor-lite'),
+							'title' => '',
 							'icon' => 'fa fa-unlock-alt',
 						],
 					],
@@ -205,7 +229,7 @@ class Testimonial extends Widget_Base {
 					'description' => '<span class="pro-feature"> Get the  <a href="https://wpdeveloper.net/in/upgrade-essential-addons-elementor" target="_blank">Pro version</a> for more stunning elements and customization options.</span>'
 				]
 			);
-			
+
 			$this->end_controls_section();
 		}
 
@@ -401,11 +425,11 @@ class Testimonial extends Widget_Base {
 
 		$this->end_controls_section();
 
-
+		// color, Typography & Spacing
 		$this->start_controls_section(
 			'eael_section_testimonial_typography',
 			[
-				'label' => esc_html__( 'Color &amp; Typography', 'essential-addons-for-elementor-lite'),
+				'label' => esc_html__( 'Color, Typography &amp; Spacing', 'essential-addons-for-elementor-lite'),
 				'tab' => Controls_Manager::TAB_STYLE
 			]
 		);
@@ -439,6 +463,18 @@ class Testimonial extends Widget_Base {
 		);
 
 		$this->add_control(
+			'eael_testimonial_name_margin',
+			[
+				'label' => esc_html__( 'Margin', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors' => [
+					'{{WRAPPER}} .eael-testimonial-content .eael-testimonial-user' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_control(
 			'eael_testimonial_company_heading',
 			[
 				'label' 	=> __( 'Company Name', 'essential-addons-for-elementor-lite'),
@@ -468,6 +504,18 @@ class Testimonial extends Widget_Base {
 		);
 
 		$this->add_control(
+			'eael_testimonial_company_margin',
+			[
+				'label' => esc_html__( 'Margin', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors' => [
+					'{{WRAPPER}} .eael-testimonial-content .eael-testimonial-user-company' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_control(
 			'eael_testimonial_description_heading',
 			[
 				'label' => __( 'Testimonial Text', 'essential-addons-for-elementor-lite'),
@@ -491,8 +539,53 @@ class Testimonial extends Widget_Base {
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
-             'name' => 'eael_testimonial_description_typography',
+             	'name' => 'eael_testimonial_description_typography',
 				'selector' => '{{WRAPPER}} .eael-testimonial-content .eael-testimonial-text',
+			]
+		);
+
+		$this->add_control(
+			'eael_testimonial_description_margin',
+			[
+				'label' => esc_html__( 'Margin', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors' => [
+					'{{WRAPPER}} .eael-testimonial-content .eael-testimonial-text' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_control(
+			'eael_testimonial_rating_heading',
+			[
+				'label' => __( 'Rating', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::HEADING,
+				'separator'	=> 'before'
+			]
+		);
+
+		$this->add_control(
+			'eael_testimonial_rating_item_distance',
+			[
+				'label' => esc_html__( 'Distance Between Rating Item', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors' => [
+					'{{WRAPPER}} .eael-testimonial-content .testimonial-star-rating li' => 'margin-right: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_control(
+			'eael_testimonial_rating_margin',
+			[
+				'label' => esc_html__( 'Margin', 'essential-addons-for-elementor-lite'),
+				'type' => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors' => [
+					'{{WRAPPER}} .eael-testimonial-content .testimonial-star-rating' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
 			]
 		);
 
@@ -572,7 +665,7 @@ class Testimonial extends Widget_Base {
 
 		$this->end_controls_section();
 	}
-	
+
 	protected function render_testimonial_image() {
 		$settings = $this->get_settings();
 		$image = Group_Control_Image_Size::get_attachment_image_html( $settings );
@@ -647,7 +740,7 @@ class Testimonial extends Widget_Base {
 	$this->add_render_attribute('eael_testimonial_user', 'class', 'eael-testimonial-user');
 	if ( ! empty( $settings['eael_testimonial_user_display_block'] ) )
 		$this->add_render_attribute('eael_testimonial_user', 'style', 'display: block; float: none;');
-	
+
 
 	?>
 

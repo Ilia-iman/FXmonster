@@ -2,9 +2,7 @@
  * External dependencies
  */
 import { __, _n, sprintf } from '@wordpress/i18n';
-import {
-	InspectorControls,
-} from '@wordpress/editor';
+import { InspectorControls } from '@wordpress/block-editor';
 import {
 	Button,
 	PanelBody,
@@ -15,27 +13,38 @@ import {
 import { SearchListItem } from '@woocommerce/components';
 import { Fragment } from '@wordpress/element';
 import PropTypes from 'prop-types';
+import ProductCategoryControl from '@woocommerce/editor-components/product-category-control';
+import { Icon, review } from '@woocommerce/icons';
 
 /**
  * Internal dependencies
  */
-import ProductCategoryControl from '../../../components/product-category-control';
-import { IconReviewsByCategory } from '../../../components/icons';
 import EditorContainerBlock from '../editor-container-block.js';
 import NoReviewsPlaceholder from './no-reviews-placeholder.js';
-import { getBlockControls, getSharedReviewContentControls, getSharedReviewListControls } from '../edit-utils.js';
+import {
+	getBlockControls,
+	getSharedReviewContentControls,
+	getSharedReviewListControls,
+} from '../edit-utils.js';
 
 /**
  * Component to handle edit mode of "Reviews by Category".
+ *
+ * @param {Object} props Incoming props for the component.
+ * @param {Object} props.attributes Incoming block attributes.
+ * @param {function(any):any} props.debouncedSpeak
+ * @param {function(any):any} props.setAttributes Setter for block attributes.
  */
-const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } ) => {
+const ReviewsByCategoryEditor = ( {
+	attributes,
+	debouncedSpeak,
+	setAttributes,
+} ) => {
 	const { editMode, categoryIds } = attributes;
 
 	const renderCategoryControlItem = ( args ) => {
 		const { item, search, depth = 0 } = args;
-		const classes = [
-			'woocommerce-product-categories__item',
-		];
+		const classes = [ 'woocommerce-product-categories__item' ];
 		if ( search.length ) {
 			classes.push( 'is-searching' );
 		}
@@ -43,9 +52,9 @@ const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } 
 			classes.push( 'is-skip-level' );
 		}
 
-		const accessibleName = ! item.breadcrumbs.length ?
-			item.name :
-			`${ item.breadcrumbs.join( ', ' ) }, ${ item.name }`;
+		const accessibleName = ! item.breadcrumbs.length
+			? item.name
+			: `${ item.breadcrumbs.join( ', ' ) }, ${ item.name }`;
 
 		return (
 			<SearchListItem
@@ -53,9 +62,10 @@ const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } 
 				{ ...args }
 				showCount
 				aria-label={ sprintf(
+					// Translators: %1$s is the search term name, %2$d is the number of products returned for search query.
 					_n(
-						'%s, has %d product',
-						'%s, has %d products',
+						'%1$s, has %2$d product',
+						'%1$s, has %2$d products',
 						item.count,
 						'woocommerce'
 					),
@@ -82,15 +92,32 @@ const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } 
 						renderItem={ renderCategoryControlItem }
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content', 'woocommerce' ) }>
+				<PanelBody
+					title={ __( 'Content', 'woocommerce' ) }
+				>
 					<ToggleControl
-						label={ __( 'Product name', 'woocommerce' ) }
+						label={ __(
+							'Product name',
+							'woocommerce'
+						) }
 						checked={ attributes.showProductName }
-						onChange={ () => setAttributes( { showProductName: ! attributes.showProductName } ) }
+						onChange={ () =>
+							setAttributes( {
+								showProductName: ! attributes.showProductName,
+							} )
+						}
 					/>
-					{ getSharedReviewContentControls( attributes, setAttributes ) }
+					{ getSharedReviewContentControls(
+						attributes,
+						setAttributes
+					) }
 				</PanelBody>
-				<PanelBody title={ __( 'List Settings', 'woocommerce' ) }>
+				<PanelBody
+					title={ __(
+						'List Settings',
+						'woocommerce'
+					) }
+				>
 					{ getSharedReviewListControls( attributes, setAttributes ) }
 				</PanelBody>
 			</InspectorControls>
@@ -110,8 +137,17 @@ const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } 
 
 		return (
 			<Placeholder
-				icon={ <IconReviewsByCategory className="block-editor-block-icon" /> }
-				label={ __( 'Reviews by Category', 'woocommerce' ) }
+				icon={
+					<Icon
+						srcElement={ review }
+						className="block-editor-block-icon"
+					/>
+				}
+				label={ __(
+					'Reviews by Category',
+					'woocommerce'
+				) }
+				className="wc-block-reviews-by-category"
 			>
 				{ __(
 					'Show product reviews from specific categories.',
@@ -124,8 +160,9 @@ const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } 
 							const ids = value.map( ( { id } ) => id );
 							setAttributes( { categoryIds: ids } );
 						} }
+						showReviewCount={ true }
 					/>
-					<Button isDefault onClick={ onDone }>
+					<Button isPrimary onClick={ onDone }>
 						{ __( 'Done', 'woocommerce' ) }
 					</Button>
 				</div>
@@ -143,9 +180,16 @@ const ReviewsByCategoryEditor = ( { attributes, debouncedSpeak, setAttributes } 
 			{ getInspectorControls() }
 			<EditorContainerBlock
 				attributes={ attributes }
-				className="wc-block-reviews-by-category"
-				icon={ <IconReviewsByCategory className="block-editor-block-icon" /> }
-				name={ __( 'Reviews by Category', 'woocommerce' ) }
+				icon={
+					<Icon
+						srcElement={ review }
+						className="block-editor-block-icon"
+					/>
+				}
+				name={ __(
+					'Reviews by Category',
+					'woocommerce'
+				) }
 				noReviewsPlaceholder={ NoReviewsPlaceholder }
 			/>
 		</Fragment>

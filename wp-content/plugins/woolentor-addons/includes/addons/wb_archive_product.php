@@ -21,6 +21,16 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
         return [ 'woolentor-addons' ];
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['archive','shop','product archive','default archive'];
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -311,13 +321,9 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                         [
                             'label' => __( 'Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
-                            'default'=>'#000000',
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .woocommerce-loop-product__title' => 'color: {{VALUE}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .woocommerce-loop-product__title' => 'color: {{VALUE}} !important',
                             ],
                         ]
                     );
@@ -328,6 +334,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'name' => 'product_title_typography',
                             'scheme' => Scheme_Typography::TYPOGRAPHY_1,
                             'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .woocommerce-loop-product__title',
+                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .woocommerce-loop-product__title',
                         ]
                     );
 
@@ -339,6 +346,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'size_units' => [ 'px', '%' ],
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .woocommerce-loop-product__title' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .woocommerce-loop-product__title' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                             ],
                         ]
                     );
@@ -351,6 +359,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'size_units' => [ 'px', '%' ],
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .woocommerce-loop-product__title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .woocommerce-loop-product__title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                             ],
                         ]
                     );
@@ -370,13 +379,9 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                         [
                             'label' => __( 'Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
-                            'default'=>'#000000',
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .woocommerce-loop-product__title:hover' => 'color: {{VALUE}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .woocommerce-loop-product__title:hover' => 'color: {{VALUE}} !important',
                             ],
                         ]
                     );
@@ -409,15 +414,14 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
-                    'default'=>'#000000',
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price' => 'color: {{VALUE}} !important',
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price ins' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price ins' => 'color: {{VALUE}} !important',
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price ins .amount' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price ins .amount' => 'color: {{VALUE}} !important',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price .amount' => 'color: {{VALUE}} !important',
                     ],
                 ]
             );
@@ -427,7 +431,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                 [
                     'name' => 'product_price_typography',
                     'scheme' => Scheme_Typography::TYPOGRAPHY_1,
-                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price',
+                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price,{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price',
                 ]
             );
 
@@ -446,14 +450,11 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
-                    'default'=>'#000000',
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del' => 'color: {{VALUE}}',
-                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del .amount' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price del' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del .amount' => 'color: {{VALUE}} !important',                        
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price del .amount' => 'color: {{VALUE}} !important',
                     ],
                 ]
             );
@@ -463,8 +464,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                 [
                     'name' => 'product_regular_price_typography',
                     'scheme' => Scheme_Typography::TYPOGRAPHY_1,
-                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del .amount  ',
-                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del ',
+                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del .amount, {{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .price del, {{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .price del',
                 ]
             );
 
@@ -486,6 +486,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .star-rating' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .star-rating' => 'color: {{VALUE}} !important',
                     ],
                 ]
             );
@@ -497,6 +498,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .star-rating::before' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .star-rating::before' => 'color: {{VALUE}} !important',
                     ],
                 ]
             );
@@ -509,6 +511,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'size_units' => [ 'px', 'em', '%'],
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .star-rating' => 'font-size: {{SIZE}}{{UNIT}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .star-rating' => 'font-size: {{SIZE}}{{UNIT}} !important',
                     ],
                 ]
             );
@@ -521,6 +524,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'size_units' => [ 'px', '%' ],
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .star-rating' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .star-rating' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                     ],
                 ]
             );
@@ -552,6 +556,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'default' => '',
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button' => 'color: {{VALUE}};',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button' => 'color: {{VALUE}} !important;',
                             ],
                         ]
                     );
@@ -563,6 +568,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'type' => Controls_Manager::COLOR,
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button' => 'background-color: {{VALUE}};',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button' => 'background-color: {{VALUE}} !important;',
                             ],
                         ]
                     );
@@ -572,7 +578,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                         [
                             'name' => 'atc_button_border',
                             'label' => __( 'Border', 'woolentor' ),
-                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button',
+                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button,{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button',
                         ]
                     );
 
@@ -584,6 +590,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'size_units' => [ 'px', '%' ],
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                             ],
                         ]
                     );
@@ -593,7 +600,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                         [
                             'name' => 'atc_button_typography',
                             'scheme' => Scheme_Typography::TYPOGRAPHY_4,
-                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button',
+                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button,{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button',
                         ]
                     );
 
@@ -605,6 +612,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'size_units' => [ 'px', '%' ],
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
                             ],
                         ]
                     );
@@ -617,6 +625,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'size_units' => [ 'px', '%' ],
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                             ],
                         ]
                     );
@@ -637,6 +646,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'type' => Controls_Manager::COLOR,
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button:hover' => 'color: {{VALUE}};',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button:hover' => 'color: {{VALUE}} !important;',
                             ],
                         ]
                     );
@@ -648,6 +658,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                             'type' => Controls_Manager::COLOR,
                             'selectors' => [
                                 '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button:hover' => 'background-color: {{VALUE}};',
+                                '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button:hover' => 'background-color: {{VALUE}} !important;',
                             ],
                         ]
                     );
@@ -657,7 +668,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                         [
                             'name' => 'atc_button_hover_border',
                             'label' => __( 'Border', 'woolentor' ),
-                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button:hover',
+                            'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product .button:hover,{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons .button:hover',
                         ]
                     );
 
@@ -796,6 +807,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'return_value' => 'yes',
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale' => 'display: block',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale' => 'display: block !important',
                     ],
                 ]
             );
@@ -807,6 +819,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale' => 'color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale' => 'color: {{VALUE}} !important',
                     ],
                     'condition' => [
                         'product_show_onsale_flash' => 'yes',
@@ -821,6 +834,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale' => 'background-color: {{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale' => 'background-color: {{VALUE}} !important',
                     ],
                     'condition' => [
                         'product_show_onsale_flash' => 'yes',
@@ -832,7 +846,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                 Group_Control_Typography::get_type(),
                 [
                     'name' => 'product_onsale_typography',
-                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale',
+                    'selector' => '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale,{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale',
                     'condition' => [
                         'product_show_onsale_flash' => 'yes',
                     ],
@@ -847,6 +861,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'size_units' => [ 'px', '%' ],
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                     ],
                     'condition' => [
                         'product_show_onsale_flash' => 'yes',
@@ -862,6 +877,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     'size_units' => [ 'px', '%' ],
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important',
                     ],
                     'condition' => [
                         'product_show_onsale_flash' => 'yes',
@@ -887,6 +903,7 @@ class Woolentor_Elementor_Widget_Archive_Product extends Widget_Base {
                     ],
                     'selectors' => [
                         '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons ul.products li.product span.onsale' => '{{VALUE}}',
+                        '{{WRAPPER}}.elementor-widget-woolentor-product-archive-addons span.onsale' => '{{VALUE}} !important',
                     ],
                     'selectors_dictionary' => [
                         'left' => 'right: auto; left: 0',

@@ -22,6 +22,16 @@ class WL_Product_Suggest_Price_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['suggest price','price'];
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -31,7 +41,7 @@ class WL_Product_Suggest_Price_Element extends Widget_Base {
             ]
         );
 
-             // input field plceholder text
+            // input field plceholder text
             $this->add_control(
                 'open_close_btn_text',
                 [

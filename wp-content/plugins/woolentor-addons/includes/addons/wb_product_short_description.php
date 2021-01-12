@@ -21,6 +21,16 @@ class WL_Product_Short_Description_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['short description','description','product short description'];
+    }
+
     protected function _register_controls() {
 
 
@@ -69,6 +79,7 @@ class WL_Product_Short_Description_Element extends Widget_Base {
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '.woocommerce {{WRAPPER}} .woocommerce-product-details__short-description' => 'color: {{VALUE}}',
+                        '.woocommerce {{WRAPPER}} .woocommerce-product-details__short-description p' => 'color: {{VALUE}}',
                     ],
                 ]
             );
@@ -78,7 +89,7 @@ class WL_Product_Short_Description_Element extends Widget_Base {
                 [
                     'name' => 'text_typography',
                     'label' => __( 'Typography', 'woolentor' ),
-                    'selector' => '.woocommerce {{WRAPPER}} .woocommerce-product-details__short-description',
+                    'selector' => '.woocommerce {{WRAPPER}} .woocommerce-product-details__short-description,.woocommerce {{WRAPPER}} .woocommerce-product-details__short-description p',
                 ]
             );
 
@@ -91,7 +102,7 @@ class WL_Product_Short_Description_Element extends Widget_Base {
         global $product;
         $product = wc_get_product();
         if ( Plugin::instance()->editor->is_edit_mode() ) {
-            echo '<div class="woocommerce-product-details__short-description"><p>This is a simple product.</p></div>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         }else{
             if ( empty( $product ) ) {
                 return;

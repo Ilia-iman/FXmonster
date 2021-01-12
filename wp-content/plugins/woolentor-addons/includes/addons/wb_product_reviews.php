@@ -21,6 +21,16 @@ class WL_Product_Reviews_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['reviews','product review','review form','form'];
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -52,7 +62,7 @@ class WL_Product_Reviews_Element extends Widget_Base {
         $product = wc_get_product();
 
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo '<div class="review-form">'.__( 'Review From','woolentor' ).'</div>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         } else{
             if ( empty( $product ) ) { return; }
             add_filter( 'comments_template', array( 'WC_Template_Loader', 'comments_template_loader' ) );

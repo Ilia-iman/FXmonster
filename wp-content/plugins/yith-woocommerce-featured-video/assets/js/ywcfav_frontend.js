@@ -1,4 +1,4 @@
-jQuery(document).ready(function ($) {
+jQuery(function ($) {
 
     var featured_index = $(document).find(ywcfav_params.img_class_container + '.yith_featured_content').index(),
         featured_gallery_thumbnail = $(ywcfav_params.thumbnail_gallery_class_element).get(featured_index);

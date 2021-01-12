@@ -1,15 +1,17 @@
 <?php
 
+/**
+ * PA Premium Templates
+ */
 namespace PremiumAddons\Includes\Templates;
 
 if ( ! defined('ABSPATH') ) exit;
 
-// If class `Premium_Templates` not created.
 if ( ! class_exists('Premium_Templates') ) {
     
     /**
-	 * Sets up and initializes the plugin.
-	 */
+     * Class Premium_Templates
+     */
     class Premium_Templates {
         
         /*

@@ -67,7 +67,7 @@ class HTMega_Elementor_Widget_Post_Grid_Tab extends Widget_Base {
                 [
                     'label' => esc_html__( 'Content Sourse', 'htmega-addons' ),
                     'type' => Controls_Manager::SELECT2,
-                    'label_block' => false,
+                    'label_block' => true,
                     'options' => htmega_get_post_types(),
                 ]
             );
@@ -300,7 +300,7 @@ class HTMega_Elementor_Widget_Post_Grid_Tab extends Widget_Base {
                     ],
                     'default'=>'#494849',
                     'selectors' => [
-                        '{{WRAPPER}} .single-post-grid-tab .post-inner h2' => 'color: {{VALUE}}',
+                        '{{WRAPPER}} .single-post-grid-tab .post-inner h2 a' => 'color: {{VALUE}}',
                     ],
                 ]
             );

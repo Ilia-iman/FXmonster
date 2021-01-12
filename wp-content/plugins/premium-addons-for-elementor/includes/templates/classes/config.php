@@ -2,8 +2,8 @@
 
 namespace PremiumAddons\Includes\Templates\Classes;
 
-use PremiumAddons\Helper_Functions;
-use PremiumAddonsPro\License\Admin;
+use PremiumAddons\Includes\Helper_Functions;
+use PremiumAddonsPro\Admin\Includes\Admin_Helper;
 
 
 if( ! defined( 'ABSPATH' ) ) exit; // No access of directly access
@@ -93,11 +93,11 @@ if( ! class_exists('Premium_Templates_Core_Config') ) {
          */
         public function get_license_key() {
             
-            if( ! defined ('PREMIUM_PRO_ADDONS_VERSION') ) {
+            if( ! Helper_Functions::check_papro_version() ) {
                 return;
             }
             
-            $key = Admin::get_license_key();
+            $key = Admin_Helper::get_license_key();
             
             return $key;
             
@@ -115,11 +115,11 @@ if( ! class_exists('Premium_Templates_Core_Config') ) {
          */
         public function get_license_status() {
             
-            if( ! defined ('PREMIUM_PRO_ADDONS_VERSION') ) {
+            if( ! Helper_Functions::check_papro_version() ) {
                 return;
             }
             
-            $status = Admin::get_license_status();
+            $status = Admin_Helper::get_license_status();
             
             return $status;
             
@@ -137,7 +137,7 @@ if( ! class_exists('Premium_Templates_Core_Config') ) {
          */
         public function get_license_page() {
             
-            if( defined ('PREMIUM_PRO_ADDONS_VERSION') ) {
+            if( Helper_Functions::check_papro_version() ) {
                 
                 return add_query_arg(
                     array(
@@ -148,9 +148,7 @@ if( ! class_exists('Premium_Templates_Core_Config') ) {
                 
             } else {
                 
-                $theme_slug = Helper_Functions::get_installed_theme();
-                
-                $url = sprintf('https://premiumaddons.com/pro/?utm_source=premium-templates&utm_medium=wp-dash&utm_campaign=get-pro&utm_term=%s', $theme_slug);
+                $url = Helper_Functions::get_campaign_link( 'https://premiumaddons.com/pro', 'premium-templates', 'wp-dash', 'get-pro' ); 
                 
                 return $url;
                 
@@ -169,7 +167,7 @@ if( ! class_exists('Premium_Templates_Core_Config') ) {
          */
         public function get_pro_message() {
             
-            if( defined ('PREMIUM_PRO_ADDONS_VERSION') ) {
+            if( Helper_Functions::check_papro_version() ) {
                 return __('Activate License', 'premium-addons-for-elementor');
             } else {
                 return __('Get Pro', 'premium-addons-for-elementor');

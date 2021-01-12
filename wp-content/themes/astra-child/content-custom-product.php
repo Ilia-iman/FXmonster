@@ -54,7 +54,7 @@ if ( ! is_a( $product, 'WC_Product' ) ) {
 }
 $gif = get_field('gif', $product->get_id());
 ?>
-<script type="text/javascript">lazyload();</script>
+
 <li class="mainWidgetProducts">
 	<?php do_action( 'woocommerce_widget_product_item_start', $args ); ?>
 		<a class="<?php echo ($gif['id'] > 0) ? 'product-preview-image' : ''; ?>" href="<?php echo esc_url( $product->get_permalink() ); ?>">

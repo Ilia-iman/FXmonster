@@ -21,6 +21,16 @@ class WL_Product_Stock_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['product','stock','product stock'];
+    }
+
     protected function _register_controls() {
 
         // Product Price Style
@@ -37,7 +47,7 @@ class WL_Product_Stock_Element extends Widget_Base {
                     'label' => __( 'Text Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
-                        '.woocommerce {{WRAPPER}} .stock' => 'color: {{VALUE}}',
+                        '.woocommerce {{WRAPPER}} .stock' => 'color: {{VALUE}} !important',
                     ],
                 ]
             );
@@ -58,7 +68,7 @@ class WL_Product_Stock_Element extends Widget_Base {
                     'type' => Controls_Manager::DIMENSIONS,
                     'size_units' => [ 'px', 'em' ],
                     'selectors' => [
-                        '{{WRAPPER}} .stock' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        '{{WRAPPER}} .stock' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
                     ],
                 ]
             );
@@ -75,7 +85,7 @@ class WL_Product_Stock_Element extends Widget_Base {
         $product = wc_get_product();
         
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo '<p>'.__('Product Stock','woolentor').'</p>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         } else{
             if ( empty( $product ) ) { return; }
             echo wc_get_stock_html( $product );

@@ -83,6 +83,7 @@ if( !function_exists('htmega_get_taxonomies') ){
             'taxonomy' => $htmega_texonomy,
             'hide_empty' => true,
         ));
+        $options = array();
         if ( ! empty( $terms ) && ! is_wp_error( $terms ) ){
             foreach ( $terms as $term ) {
                 $options[ $term->slug ] = $term->name;
@@ -107,6 +108,9 @@ if( !function_exists('htmega_get_post_types') ){
         $_post_types = get_post_types( $post_type_args , 'objects' );
 
         $post_types  = [];
+        if( !empty( $args['defaultadd'] ) ){
+            $post_types[ strtolower($args['defaultadd']) ] = ucfirst($args['defaultadd']);
+        }
         foreach ( $_post_types as $post_type => $object ) {
             $post_types[ $post_type ] = $object->label;
         }
@@ -262,6 +266,7 @@ if( !function_exists('htmega_caldera_forms_options') ){
 global $user;
 if ( empty( $user->ID ) ) {
     add_action('elementor/init', 'htmega_ajax_login_init' );
+    add_action( 'elementor/init', 'htmega_ajax_register_init' );
 }
 
 /*
@@ -285,9 +290,89 @@ function htmega_ajax_login(){
     if ( is_wp_error($user_signon) ){
         echo json_encode( [ 'loggeauth'=>false, 'message'=> esc_html__('Invalid username or password!', 'htmega-addons') ] );
     } else {
-        echo json_encode( [ 'loggeauth'=>true, 'message'=> esc_html__('Login successfully, Redirecting...', 'htmega-addons') ] );
+        echo json_encode( [ 'loggeauth'=>true, 'message'=> esc_html__('Login Successfully', 'htmega-addons') ] );
     }
     wp_die();
+}
+
+/*
+ * wp_ajax_nopriv Register Function
+ */
+function htmega_ajax_register_init() {
+    add_action( 'wp_ajax_nopriv_htmega_ajax_register', 'htmega_ajax_register' );
+}
+
+/*
+* Ajax Register Call back
+*/
+function htmega_ajax_register(){
+
+    $user_data = array(
+        'user_login'    => !empty( $_POST['reg_name'] ) ? $_POST['reg_name']: "",
+        'user_pass'     => !empty( $_POST['reg_password'] ) ? $_POST['reg_password']: "",
+        'user_email'    => !empty( $_POST['reg_email'] ) ? $_POST['reg_email']: "",
+        'user_url'      => !empty( $_POST['reg_website'] ) ? $_POST['reg_website']: "",
+        'first_name'    => !empty( $_POST['reg_fname'] ) ? $_POST['reg_fname']: "",
+        'last_name'     => !empty( $_POST['reg_lname'] ) ? $_POST['reg_lname']: "",
+        'nickname'      => !empty( $_POST['reg_nickname'] ) ? $_POST['reg_nickname']: "",
+        'description'   => !empty( $_POST['reg_bio'] ) ? $_POST['reg_bio']: "",
+    );
+
+    if( htmega_validation_data( $user_data ) !== true ){
+        echo htmega_validation_data( $user_data );
+    }else{
+        $register_user = wp_insert_user( $user_data );
+        if ( is_wp_error( $register_user ) ){
+            echo json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Something is wrong please check again!', 'htmega-addons') ] );
+        } else {
+            echo json_encode( [ 'registerauth' =>true, 'message'=> esc_html__('Successfully Register', 'htmega-addons') ] );
+        }
+    }
+    wp_die();
+
+}
+
+// Register Data Validation
+function htmega_validation_data( $user_data ){
+
+    if( empty( $user_data['user_login'] ) || empty( $_POST['reg_email'] ) || empty( $_POST['reg_password'] ) ){
+        return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Username, Password and E-Mail are required', 'htmega-addons') ] );
+    }
+    if( !empty( $user_data['user_login'] ) ){
+
+        if ( 4 > strlen( $user_data['user_login'] ) ) {
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Username too short. At least 4 characters is required', 'htmega-addons') ] );
+        }
+
+        if ( username_exists( $user_data['user_login'] ) ){
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Sorry, that username already exists!', 'htmega-addons') ] );
+        }
+
+        if ( !validate_username( $user_data['user_login'] ) ) {
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Sorry, the username you entered is not valid', 'htmega-addons') ] );
+        }
+
+    }
+    if( !empty( $user_data['user_pass'] ) ){
+        if ( 5 > strlen( $user_data['user_pass'] ) ) {
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Password length must be greater than 5', 'htmega-addons') ] );
+        }
+    }
+    if( !empty( $user_data['user_email'] ) ){
+        if ( !is_email( $user_data['user_email'] ) ) {
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Email is not valid', 'htmega-addons') ] );
+        }
+        if ( email_exists( $user_data['user_email'] ) ) {
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Email Already in Use', 'htmega-addons') ] );
+        }
+    }
+    if( !empty( $user_data['user_url'] ) ){
+        if ( !filter_var( $user_data['user_url'], FILTER_VALIDATE_URL ) ) {
+            return json_encode( [ 'registerauth' =>false, 'message'=> esc_html__('Website is not a valid URL', 'htmega-addons') ] );
+        }
+    }
+    return true;
+
 }
 
 /*

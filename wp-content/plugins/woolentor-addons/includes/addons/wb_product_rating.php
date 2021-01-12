@@ -21,6 +21,16 @@ class WL_Product_Rating_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['product rating','rating'];
+    }
+
     protected function _register_controls() {
 
         // Product Rating Style
@@ -37,7 +47,8 @@ class WL_Product_Rating_Element extends Widget_Base {
                     'label'     => __( 'Star Color', 'woolentor' ),
                     'type'      => Controls_Manager::COLOR,
                     'selectors' => [
-                        '{{WRAPPER}} .star-rating' => 'color: {{VALUE}};',
+                        '{{WRAPPER}} .star-rating' => 'color: {{VALUE}} !important;',
+                        '{{WRAPPER}} .woocommerce-product-rating' => 'color: {{VALUE}} !important;',
                     ],
                 ]
             );
@@ -48,7 +59,7 @@ class WL_Product_Rating_Element extends Widget_Base {
                     'label'     => __( 'Link Color', 'woolentor' ),
                     'type'      => Controls_Manager::COLOR,
                     'selectors' => [
-                        '{{WRAPPER}} a.woocommerce-review-link' => 'color: {{VALUE}};',
+                        '{{WRAPPER}} a.woocommerce-review-link' => 'color: {{VALUE}} !important;',
                     ],
                 ]
             );
@@ -69,7 +80,7 @@ class WL_Product_Rating_Element extends Widget_Base {
                     'type' => Controls_Manager::DIMENSIONS,
                     'size_units' => [ 'px', 'em' ],
                     'selectors' => [
-                        '.woocommerce {{WRAPPER}} .woocommerce-product-rating' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        '.woocommerce {{WRAPPER}} .woocommerce-product-rating' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
                     ],
                 ]
             );
@@ -86,7 +97,7 @@ class WL_Product_Rating_Element extends Widget_Base {
         $product = wc_get_product();
 
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo '<div class="ratting">'.__( 'Product Rating','woolentor' ).'</div>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         } else{
             if ( empty( $product ) ) { return; }
             woocommerce_template_single_rating();

@@ -21,6 +21,12 @@ class HTMega_Elementor_Widget_Gallery_Justify extends Widget_Base {
         return [ 'htmega-addons' ];
     }
 
+    public function get_style_depends() {
+        return [
+            'justify-gallery',
+        ];
+    }
+
     public function get_script_depends() {
         return [
             'justified-gallery',
@@ -47,7 +53,7 @@ class HTMega_Elementor_Widget_Gallery_Justify extends Widget_Base {
             $this->add_control(
                 'row_height',
                 [
-                    'label' => __( 'Row Height', 'plugin-domain' ),
+                    'label' => __( 'Row Height', 'htmega-addons' ),
                     'type' => Controls_Manager::NUMBER,
                     'default' => 300,
                 ]
@@ -56,7 +62,7 @@ class HTMega_Elementor_Widget_Gallery_Justify extends Widget_Base {
             $this->add_control(
                 'space_margin',
                 [
-                    'label' => __( 'Space', 'plugin-domain' ),
+                    'label' => __( 'Space', 'htmega-addons' ),
                     'type' => Controls_Manager::NUMBER,
                     'default' => 20,
                 ]

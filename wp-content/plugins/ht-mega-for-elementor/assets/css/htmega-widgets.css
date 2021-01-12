@@ -838,10 +838,11 @@ ul.accordion--4 li .bgDescription {
 .accordion--5 .single_accordion .va-title {
   text-transform: uppercase;
   font-size: 40px;
-  margin-left: 20px;
+  margin-left: 5px;
   color: #ffffff;
   display: inline-block;
-  margin-top: 0;
+  margin-top: 15px;
+  margin-right: 5px;
 }
 
 .accordion--5 .single_accordion .va-title div {
@@ -1993,7 +1994,7 @@ span.ht-count {
 }
 
 .htmega-pricing-style-1 .htmega-pricing-heading .price h4 span.separator {
-    margin-right: -10px;
+    margin-right: -5px;
 }
 
 .htmega-pricing-style-1 .htmega-pricing-body {
@@ -5829,6 +5830,11 @@ blockquote cite {
 .htmega-blockquote blockquote img,.htmega-blockquote blockquote .blockquote_icon{
   position: absolute;
 }
+.htmega-blockquote blockquote img{
+  position: absolute;
+  width: 100px;
+  z-index: 0;
+}
 .htmega-blockquote blockquote p{
   margin: 0;
 }
@@ -5898,6 +5904,8 @@ blockquote cite {
     font-weight: 600;
     margin-bottom: 17px;
     margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
 }
 
 .htmega-blockquote blockquote cite {
@@ -6005,7 +6013,7 @@ a.instagram_follow_btn:hover {
 a.instagram_follow_btn i {
     background: #e4405f;
     width: 42px;
-    height: 42px;
+    height: 43px;
     line-height: 42px;
     font-size: 16px;
     text-align: center;
@@ -6302,6 +6310,9 @@ a.instagram_follow_btn.possition-center span {
     z-index: 1;
     position: relative;
     font-family: "Montserrat", sans-serif;
+}
+.htmega-switcher-nav a i{
+  margin-right: 5px;
 }
 .htmega-switcher-nav svg {
   width: 20px;
@@ -12075,6 +12086,9 @@ button.htmega-notify-button {
 /*----------------------
     Slick Dot
 -----------------------*/
+.htmega-carousel-activation .slick-arrow{
+  padding: 0;
+}
 .htmega-carousel-activation .slick-dots {
     text-align: center;
     bottom: -60px;
@@ -12991,7 +13005,7 @@ a.htmega-downloadbtn {
   color: #fff;
   font-size: 30px;
   height: 50px;
-  left: -80px;
+  left: -20px;
   margin: 0;
   padding: 0;
   position: absolute;
@@ -13000,11 +13014,12 @@ a.htmega-downloadbtn {
   transition: all 0.4s ease-in-out 0s;
   width: 50px;
   line-height: 0;
+  z-index: 9999;
 }
 
 .post-carousel-wrapper button.htmega-carosul-next.slick-arrow {
   left: auto;
-  right: -80px;
+  right: -20px;
 }
 
 .post-carousel-wrapper .htmega-single-post-slide .content .post-inner ul.meta li{
@@ -13223,6 +13238,10 @@ a.htmega-downloadbtn {
 .post-carousel-wrapper .htmega-postslider-layout-5 .content {
   background: transparent;
   padding: 0;
+}
+
+.post-carousel-wrapper .content .post-inner h2 {
+    word-break: break-word;
 }
 
 .post-carousel-wrapper .htmega-postslider-layout-5 .content .post-inner ul {
@@ -15274,6 +15293,15 @@ a{
     width: 16.66%;
   }
 
+  .htmega-process-area{
+    background-image: none !important;
+  }
+
+  .htmega-process-column-5 .htmega-single-process-area {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
 
 }
 
@@ -15361,7 +15389,7 @@ a{
   }
 
   .htmega-countbox .ht-count {
-    margin: 0 22px 15px;
+    margin: 0 22px 15px !important;
   }
 
   .htmega-carousel-style-1 .slick-slide.slick-center .single-custom-carousel {
@@ -15454,7 +15482,10 @@ a{
     padding-left: 60px;
     width: 100%;
   }
-  .htmega-process-column-4 .htmega-single-process-area {
+  .htmega-process-area{
+    background-image: none !important;
+  }
+  .htmega-process-column-4 .htmega-single-process-area,.htmega-process-column-5 .htmega-single-process-area {
     flex: 0 0 100%;
     max-width: 100%;
   }
@@ -15562,6 +15593,18 @@ a{
 
   .htmegainstagram-column-mobile-6 .htmega-instragram ul.htmega-instagram-list li{
     width: 16.66%;
+  }
+
+  .htmega-postslider-layout-1 .content,.htmega-postslider-layout-3 .content,.htmega-postslider-layout-4 .content {
+    position: static;
+    max-width: 100%;
+    padding: 0;
+  }
+  .htmega-postslider-layout-3 .content{
+    transform: translateY(0%);
+  }
+  .htmega-postslider-layout-3 .content .post-inner h2 {
+    padding: 0;
   }
 
 

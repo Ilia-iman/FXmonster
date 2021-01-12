@@ -1,9 +1,9 @@
 ﻿=== WooLentor - WooCommerce Elementor Addons + Builder ===
-Contributors: hasthemes, htplugins, devitemsllc
+Contributors: hasthemes, htplugins, devitemsllc, tarekht
 Tags: Elementor, WooCommerce, WooCommerce Elementor, WooCommerce Builder, WooCommerce Product
 Requires at least: 4.7
-Tested up to: 5.3.2
-Stable tag: 1.5.2
+Tested up to: 5.5.3
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,24 +13,62 @@ WooLentor is a Elementor Addons for WooCommerce Product.
 WooLentor is a WooCommerce Addons for Elementor Page Builder. WooCommerce Builder is included in this plugin to build custom product page and archive page.
 42 product layouts, awsome style options. It can show latest products, Best Selling products, On Sale Products, Featured products, Category products. This plugin has the options to add unlimited background colors and images to make your product slider/Tab more professional.
 
+[Live Demo](https://woolentor.com/) | [Documentation](https://help.hasthemes.com/woolentor/documentation/) | [Purchase Pro](https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?wporg)
+
 == WooCommerce Builder Includes ==
-* Option to select single product layout.
-* Three product page layout included.
-* Option to select archive page template.
-* Option to build unlimited custom design for WooCommerce pages.
+🛍️ Single Product page builder.
+🛍️ Custom Product Template Builder for Individual Product(Pro).
+🛍️ Shop / Archive page builder.
+🛍️ Individual Archive Page Builder (pro).
+🛍️ Cart / Checkout / My account / Thankyou page builder (Pro)
 
-You can see the plugin demo here : [Live Demo](https://woolentor.com/)
+You can see the plugin demo here : [Live Demo](https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd)
 
-== Features: ==
-* WooCommerce Teplate Builder (Basic)
-* WooCommerce Featured, Recent, Best Selling, On Sale, Top Rated, Category Wise products slider / Tab.
-* 42 product styles.
+== Free Features (25): ==
+
+* WooCommerce Template Builder (Basic)
+* Product Grid
+* Product Slider
+* Product Tab
 * Action Buttons in different Positions
 * Sale / Discount Schedule Counter
 * Enable / Disable Product Gallery
 * Unlimited Color and font Variations.
-* Slider Control Options 
-* Product Grid in a Tab option.
+* Slider Control Options
+* Sales Notification (Real)
+* Sales Notification (Custom)
+* Rename labels
+* Call for Price
+* Suggest Price
+* Special Day offer banner
+* Product QR Code
+* Custom Product Template Builder
+* Product Grid (Curvy)
+* Product Accordion Listing
+* Product Image Accordion
+* Shop Page Builder
+* Ajax Search Widget
+* Ajax Add to Cart (In Product Detail Page)
+* Template Library (Basic)
+* Free WooCommerce Themes
+
+
+== Premium Features (14): ==
+
+✓ Rename Label (Advanced)
+✓ Custom Product Template Builder for Individual Product
+✓ Individual Archive Page Builder
+✓ Custom Cart Page Builder
+✓ Custom Checkout Page Builder
+✓ Custom My Account Page Builder
+✓ Sticky Add to cart
+✓ Template Library (Premium)
+✓ 5 Premium WooCommerce Themes
+✓ WooCommerce Template Builder (Advanced)
+✓ Phone Call Support
+✓ Premium Support
+✓ Zoom/Skype/TeamViewer Support
+✓ Free Store Setup (Maximum 2)
 
 == Key Features: ==
 <strong>[Sales Notification](https://hasthemes.com/woocommerce-sales-notification-using-woolentor/)</strong>
@@ -48,6 +86,12 @@ Your customer can suggest a price for your products. You can add this button any
 <strong>[Special Day Offer Banner](https://hasthemes.com/how-to-add-special-day-offer-in-woocommerce-using-woolentor/)</strong>
 There are many special days like Black Friday, Chrismas Day, Haloween day. Discounts and offers can increase store sales these days. a banner can attract attention of visitors and sometimes it increases a 15-30% conversion rate. Recently we add a widget for adding a special day offer.
 
+<strong>[WooCommerce Checkout Page Customization and Field Editor (Pro)](https://hasthemes.com/how-to-customize-woocommerce-checkout-page-and-field/)</strong>
+WooLentor Pro allows us to customize the checkout page to reduce the bounce rate and increase the conversion rate. Sometimes, a custom checkout page is necessary for an eCommerce store. WooLentor Pro makes it easy. Besides creating a custom checkout page, WooLentor allowing remove or edit checkout page fields (billing and shopping fields).
+
+<strong>[customize WooCommerce single product template](https://hasthemes.com/how-to-build-a-custom-product-template-using-woolentor-plugin/)</strong>
+WooLentor allows us to create a custom single product template. Create a unique design for your product page. Free version has the option to create a common product page template, the pro version allows to create a different design for each product page.
+
 == WooLentor Pro Features: ==
 * 41 Elements
 * WooCommerce Teplate Builder (Advance)
@@ -59,7 +103,17 @@ There are many special days like Black Friday, Chrismas Day, Haloween day. Disco
 
 == Video Tutorials: ==
 
+[youtube https://youtu.be/_MOgvsZJ6uA]
 [youtube https://youtu.be/MKjhBO2xQzg]
+
+== How to customize woocommerce single product template ==
+[youtube https://youtu.be/yMWtnsufvJk]
+
+== Build Custom My Account Page (Pro Feature) ==
+[youtube https://youtu.be/b7tbEU1NUO8]
+
+<strong>[WooCommerce Checkout Field Editor (Pro Feature)](https://hasthemes.com/how-to-customize-woocommerce-checkout-page-and-field/)</strong>
+[youtube https://youtu.be/jh4HdC7-3_o]
 
 == <a href="https://hasthemes.com/blog-category/woolentor/">More Video</a> ==
 * [Stock Progress bar for WooCommerce Product using WooLentor](https://hasthemes.com/stock-progress-bar-for-woocommerce-product-using-woolentor/)
@@ -70,31 +124,102 @@ There are many special days like Black Friday, Chrismas Day, Haloween day. Disco
 * [How to use Universal Product Grid Layouts](https://hasthemes.com/how-to-use-universal-product-grid-layouts/)
 
 == Free WooCommerce Themes ==
-* 99Fy WooCommerce Theme
+* 99fy is a free WooCommerce theme. 99 demos for 24 niche categories are included in this theme.
 [More Details / Preview](https://hasthemes.com/99fy-free-woocommerce-wordpress-theme/)
 
 * Parlo WooCommerce Theme
 [More Details / Preview](http://bit.ly/2JVA6eR)
 
 == Premium WooCommerce Themes Included in The Pro Version ==
-* Flone - Minimal WooCommerce Theme
-* Homes - Multipurpose WooCommerce Theme
-[More Details](https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/#themes)
+We have included a few premium WooCommerce themes in the WooLentor Pro Package to save money of our customers.
+[Flone](https://demo.hasthemes.com/flone-woo-preview/index.html)
+Flone is one of our most popular WooComemrce Themes using by 1000+ stores.
+[99Fy Pro](https://demo.hasthemes.com/99fy-preview/index.html)
+Pro version of 99fy is included in WooLentor pro. 99 demos for 24 niche categories are included in this theme.
+[Holmes](http://demo.hasthemes.com/wp/holmes-preview.html)
+Holmes is a multipurpose premium WooCommerce Theme.
+[Check all of the themes](https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/#themes), included in the Woolentor Pro version.
 
 == Need Help? ==
 Is there any feature that you want to get in this plugin? 
 Needs assistance to use this plugin? 
 Feel free to [Contact us](https://hasthemes.com/contact-us/)
 
-> ## Ultimate Addons for Elementor Page Builder
-> Don't forgete to check our Unlimite mega addon for Elementor page Builder.
-> [HT Mega – Ultimate Addons for Elementor Page Builder](https://wordpress.org/plugins/ht-mega-for-elementor/)
+> ## Absolute Addons for Elementor Page Builder
+> Don't forgete to check our Absolute mega addon for Elementor page Builder.
+> [HT Mega – Absolute Addons for Elementor Page Builder](https://wordpress.org/plugins/ht-mega-for-elementor/)
 > Includes 360 Blocke & 15 Landing Pages.
 
 == <a href="https://wordpress.org/plugins/elementor/">Elementor</a> page builder is required for this plugin. ==
 Elementor Pro is not required. But you can use wooLentor with Elementor free & Pro.
 
 == Changelog ==
+= Version: 1.7.4 - Date: 2020-11-25 =
+* Product Filter Addon added.
+
+= Version: 1.7.3 - Date: 2020-11-11 =
+* Template Library Improve
+* Rating improve
+* Style css improve
+
+= Version: 1.7.1 - Date: 2020-10-11 =
+* Capability With the latest WordPress and WooCommerce.
+* Spelling improve
+
+= Version: 1.7.0 - Date: 2020-09-15 =
+* Product Curvy addon added
+* Product accordion addon added
+* Product image with accordion added
+* Capability With the latest WordPress and WooCommerce.
+
+= Version: 1.6.9 - Date: 2020-01-02 =
+* Capability With the latest WordPress and WooCommerce.
+* Bug Fixing
+
+= Version: 1.6.8 - Date: 2020-08-13 =
+* Capability With the latest WordPress and WooCommerce.
+
+= Version: 1.6.7 - Date: 2020-07-22 =
+* Image marker addon added.
+* Customer Review addon added.
+
+= Version: 1.6.6 - Date: 2020-07-04 =
+* Add to cart text showing option added in universal layout.
+
+= Version: 1.6.5 - Date: 2020-06-28 =
+* QR Code Generator Addon Added.
+
+= Version: 1.6.4 - Date: 2020-06-27 =
+* Stock Management Progress Bar Option added in universal product layout.
+
+= Version: 1.6.3 - Date: 2020-06-17 =
+* Post Duplicator Option Added.
+
+= Version: 1.6.2 - Date: 2020-05-30 =
+* Category View Addon Added.
+* Brand Logo Addon Added.
+
+= Version: 1.6.0 - Date: 2020-05-06 =
+* Editor Mode default data show.
+* 10 Home page added in template library.
+* Side Mini Cart added.
+* Cross Sale, Upsale Slider issue solved.
+* Default color setting add for universal layout.
+
+= Version: 1.5.8 - Date: 2020-04-24 =
+* Template Library Improve.
+* Mobile and Tablet Column support in Universal Layout.
+* Ajax search autocomplete problem solved. Add CSS clear the 'X' from Chrome and Internet Explorer (thanks to Thomas FABOUX)
+* Admin Promo banner ajax dismiss added.
+
+= Version: 1.5.7 - Date: 2020-04-12 =
+* Quickview Icon Issue Solved
+* Product tab showing issue solved
+
+= Version: 1.5.3 - Date: 2020-02-17 =
+* WooCommerce Brand Plugins Compatibility
+* Full width Page Container Padding Issue solved
+* 10 Home Page Added In library
 
 = Version: 1.5.2 - Date: 2020-01-11 =
 * QuickView Loader Added

@@ -125,8 +125,18 @@
                         $current_container.addClass( 'yith-disabled' );
                         $current_field.attr( 'disabled', true );
                         break;
+                    case 'hideNow':
+                        $current_container.hide();
+                        break;
                     case 'hideme':
                         $current_field.hide();
+                        break;
+                    case 'fadeInOut':
+                    case 'fadeOut':
+                        $current_container.hide( 500 );
+                        break;
+                    case 'fadeIn':
+                        $current_container.hide();
                         break;
                     default:
                         if( ! $current_container.hasClass('fade-in')){
@@ -145,8 +155,18 @@
                         $current_container.removeClass( 'yith-disabled' );
                         $current_field.attr( 'disabled', false );
                         break;
+                    case 'hideNow':
+                        $current_container.show();
+                        break;
                     case 'hideme':
                         $current_field.show();
+                        break;
+                    case 'fadeInOut':
+                    case 'fadeIn':
+                        $current_container.show( 500 );
+                        break;
+                    case 'fadeOut':
+                        $current_container.show();
                         break;
                     default:
                         $current_container.show();

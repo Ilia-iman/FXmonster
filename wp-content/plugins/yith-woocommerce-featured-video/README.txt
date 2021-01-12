@@ -2,9 +2,9 @@
 
 Contributors: yithemes
 Tags: woocommerce, featured video, featured image, featured, product, e-commerce, shop, vimeo, youtube, html5, player, video player, html5 video, responsive, videojs, yit, yith, yithemes
-Requires at least: 3.5.1
-Tested up to: 5.3
-Stable tag: 1.2.9
+Requires at least: 5.3
+Tested up to: 5.6
+Stable tag: 1.2.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,38 @@ If none of the previous listed actions helps you solve the problem, then, submit
 2. The admin field in product configuration.
 
 == Changelog ==
+= 1.2.17 - Released on 28 November 2020 =
+* New: Support for WooCommerce 4.8
+* New: Support for WordPress 5.6
+* Update: Plugin Framework
+= 1.2.16 - Released on 06 November 2020 =
+* New: Support for WooCommerce 4.7
+* Update: Plugin Framework
+= 1.2.15 - Released on 05 October 2020 =
+* New: Support for WooCommerce 4.6
+* Update: Plugin Framework
+
+= 1.2.14 - Released on 17 September 2020 =
+* New: Support for WooCommerce 4.5
+* Update: Plugin Framework
+= 1.2.13 - Released on 19 August 2020 =
+* New: Support for WooCommerce 4.4
+* New: Support for WordPress 5.5
+* Update: Plugin Framework
+
+= 1.2.12 - Released on 01 June 2020 =
+* New: Support for WooCommerce 4.2
+* Update: Plugin Framework
+
+= 1.2.11 - Released on 08 May 2020 =
+* New: Support for WooCommerce 4.1
+* Update: Plugin Framework
+
+= 1.2.10 - Released on 06 March 2020 =
+* New: Support for WooCommerce 4.0
+* New: Support for WordPress 5.4
+* Update: Plugin Framework
+
 = 1.2.9 - Released on 18 December 2019 =
 * New: Support for WooCommerce 3.9
 * Update: Plugin Framework

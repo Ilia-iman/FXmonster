@@ -21,6 +21,15 @@ class WL_Product_Meta_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+    public function get_keywords(){
+        return ['meta','product meta','meta info'];
+    }
+
     protected function _register_controls() {
 
         // Product Price Style
@@ -97,7 +106,7 @@ class WL_Product_Meta_Element extends Widget_Base {
         $product = wc_get_product();
         
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo '<p>'.__('Product Meta','woolentor').'</p>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         } else{
             if ( empty( $product ) ) { return; }
             woocommerce_template_single_meta();

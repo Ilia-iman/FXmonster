@@ -106,6 +106,31 @@ class HTMega_Elementor_Widget_InlineMenu extends Widget_Base {
                 ]
             );
 
+            $this->add_responsive_control(
+                'inline_menu_alignment',
+                [
+                    'label'   => __( 'Alignment', 'htmega-addons' ),
+                    'type'    => Controls_Manager::CHOOSE,
+                    'options' => [
+                        'left'    => [
+                            'title' => __( 'Left', 'htmega-addons' ),
+                            'icon'  => 'fa fa-align-left',
+                        ],
+                        'center' => [
+                            'title' => __( 'Center', 'htmega-addons' ),
+                            'icon'  => 'fa fa-align-center',
+                        ],
+                        'right' => [
+                            'title' => __( 'Right', 'htmega-addons' ),
+                            'icon'  => 'fa fa-align-right',
+                        ],
+                    ],
+                    'selectors' => [
+                        '{{WRAPPER}} .linemenu-nav ul.htmega-mainmenu'   => 'justify-content: {{VALUE}};',
+                    ],
+                ]
+            );
+
             // Menu Style Normal Tabs Start
             $this->start_controls_tabs( 'menu_style_tabs' );
 

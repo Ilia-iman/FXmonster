@@ -21,6 +21,16 @@ class WL_Product_Upsell_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['product','upsell','upsell product'];
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -102,7 +112,7 @@ class WL_Product_Upsell_Element extends Widget_Base {
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
-                        '.woocommerce {{WRAPPER}} h2' => 'color: {{VALUE}}',
+                        '.woocommerce {{WRAPPER}} .up-sells > h2' => 'color: {{VALUE}} !important',
                     ],
                     'condition' => [
                         'wl_show_heading!' => '',
@@ -115,7 +125,7 @@ class WL_Product_Upsell_Element extends Widget_Base {
                 [
                     'name' => 'heading_typography',
                     'label' => __( 'Typography', 'woolentor' ),
-                    'selector' => '.woocommerce {{WRAPPER}} h2',
+                    'selector' => '.woocommerce {{WRAPPER}} .up-sells > h2',
                     'condition' => [
                         'wl_show_heading!' => '',
                     ],
@@ -129,7 +139,7 @@ class WL_Product_Upsell_Element extends Widget_Base {
                     'type' => Controls_Manager::DIMENSIONS,
                     'size_units' => [ 'px', '%', 'em' ],
                     'selectors' => [
-                        '.woocommerce {{WRAPPER}} h2' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        '.woocommerce {{WRAPPER}} .up-sells > h2' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
                     ],
                     'condition' => [
                         'wl_show_heading!' => '',
@@ -158,7 +168,11 @@ class WL_Product_Upsell_Element extends Widget_Base {
         if ( ! empty( $settings['order'] ) ) {
             $order = $settings['order'];
         }
-        woocommerce_upsell_display( $product_per_page, $columns, $orderby, $order );
+        if( Plugin::instance()->editor->is_edit_mode() ){
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name(), $settings );
+        }else{
+            woocommerce_upsell_display( $product_per_page, $columns, $orderby, $order );
+        }
 
     }
 

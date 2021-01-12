@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying product content in the content-woolentorquickview-product.php template
+ * The template for displaying product content in the quickview-product.php template
  *
  */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $product;
 $post_thumbnail_id = $product->get_image_id();
 $attachment_ids = $product->get_gallery_image_ids();
+
 ?>
 <div class="ht-row">
 
@@ -74,22 +75,22 @@ $attachment_ids = $product->get_gallery_image_ids();
     <div class="ht-col-md-7 ht-col-sm-7 ht-col-xs-12">
         <div class="ht-qwick-view-right">
             <div class="qwick-view-content">
-                <?php do_action( 'woocommerce_woolentorquickview_before_summary' ); ?>
+                <?php do_action( 'woolentor_quickview_before_summary' ); ?>
     			<div class="content-woolentorquickview entry-summary">
     				<?php
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_title', 5 );
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_rating', 10 );
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_price', 10 );
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_excerpt', 20 );
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_add_to_cart', 30 );
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_meta', 40 );
-                    add_action( 'woolentor_woocommerce_woolentorquickview_content', 'woocommerce_template_single_sharing', 50 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_title', 5 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_rating', 10 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_price', 10 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_excerpt', 20 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_add_to_cart', 30 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_meta', 40 );
+                        add_action( 'woolentor_quickview_content', 'woocommerce_template_single_sharing', 50 );
 
-                    // Render Content
-                    do_action( 'woolentor_woocommerce_woolentorquickview_content' );
+                        // Render Content
+                        do_action( 'woolentor_quickview_content' );
     				?>
     			</div><!-- .summary -->
-    			<?php do_action( 'woocommerce_woolentorquickview_after_summary' ); ?>
+    			<?php do_action( 'woolentor_quickview_after_summary' ); ?>
             </div>
         </div>
     </div>

@@ -21,6 +21,12 @@ class HTMega_Elementor_Widget_Carousel extends Widget_Base {
         return [ 'htmega-addons' ];
     }
 
+    public function get_style_depends() {
+        return [
+            'slick',
+        ];
+    }
+
     public function get_script_depends() {
         return [
             'slick',
@@ -244,7 +250,7 @@ class HTMega_Elementor_Widget_Carousel extends Widget_Base {
             $this->add_control(
                 'slautolay',
                 [
-                    'label' => __( 'Slider auto play', 'htmega-addons' ),
+                    'label' => __( 'Slider autoplay', 'htmega-addons' ),
                     'type' => Controls_Manager::SWITCHER,
                     'return_value' => 'yes',
                     'separator' => 'before',

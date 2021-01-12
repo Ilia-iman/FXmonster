@@ -5,7 +5,7 @@ if( ! defined( 'ABSPATH' ) ) exit(); // Exit if accessed directly
 class HTMega_Admin_Setting{
 
     public function __construct(){
-        add_action('admin_enqueue_scripts', array( $this, 'htmega_enqueue_admin_scripts' ) );
+        add_action( 'admin_enqueue_scripts', [ $this, 'htmega_enqueue_admin_scripts' ] );
         $this->HTMega_Admin_Settings_page();
     }
 
@@ -49,14 +49,16 @@ class HTMega_Admin_Setting{
     /*
     *   Enqueue admin scripts
     */
-    public function htmega_enqueue_admin_scripts(){
-
-        // wp core styles
-        wp_enqueue_style( 'wp-jquery-ui-dialog' );
-        wp_enqueue_style( 'htmega-admin', HTMEGA_ADDONS_PL_URL . 'admin/assets/css/htmega_admin.css', false, HTMEGA_VERSION );
-        
-        // wp core scripts
-        wp_enqueue_script( 'jquery-ui-dialog' );
+    public function htmega_enqueue_admin_scripts( $hook ){
+        if( $hook === 'htmega-addons_page_htmega_addons_templates_library' || $hook === 'htmega-addons_page_htmega_addons_options' || $hook === 'htmega-addons_page_htmeganotification' || $hook === 'htmega-addons_page_htmegamenubl' ){
+            // wp core styles
+            wp_enqueue_style( 'wp-jquery-ui-dialog' );
+            wp_enqueue_style( 'htmega-admin' );
+            
+            // wp core scripts
+            wp_enqueue_script( 'jquery-ui-dialog' );
+            wp_enqueue_script( 'htmega-admin' );
+        }
 
     }
 

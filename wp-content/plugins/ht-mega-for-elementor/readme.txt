@@ -2,8 +2,8 @@
 Contributors: hasthemes, htplugins, devitemsllc
 Tags: Elementor, Elementor Addons, Elementor Widgets, elementor page builder, Elementor Blocks
 Requires at least: 4.7
-Tested up to: 5.3.2
-Stable tag: 1.3.4
+Tested up to: 5.5
+Stable tag: 1.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,8 @@ The HTMega is a elementor addons package for Elementor page builder plugin for W
 == Description ==
 HTMega is a absolute addons for elementor includes 80+ elements & 360 Blocks with unlimited variations. HT Mega brings limitless possibilities. Embellish your site with the elements of HT Mega.
 
-You can see the plugin demo here : [Demo](http://demo.wphash.com/htmega)
+[Video Tutorial Playlist](https://www.youtube.com/watch?v=d7jAiAYusUg&list=PLk25BQFrj7wEEGUHn9x2zwOql990bZAo_) | [Plugin Live Demo](https://demo.hasthemes.com/ht-mega/index.html) | [Documentation](https://htmega.hasthemes.com/doc/)
 
-== There is a massive feature update with version 1.3.0 ==
 = Advanced Features: =
 = Header/Footer Builder =
 This feature allows for creating a header/footer layout for the full website or specific page. There is an option to select the preferred header/footer globally or for a single page/post.
@@ -27,6 +26,8 @@ This feature allows showing the sales notification or popup to display real/fake
 
 = Menu Builder: =
 This feature allows creating menu or mega menu using the Elementor page builder.
+
+[youtube https://youtu.be/d7jAiAYusUg]
 
 == Avaible Elements ==
 
@@ -188,6 +189,57 @@ August 05 - 2019:
 Visit [HasThemes](https://hasthemes.com/) for more details about HTML, Shopify and WordPress products and services.
 
 == Changelog ==
+
+= Version: 1.4.7 - Date: 2020-08-13 =
+* Capability With latest WordPress Version
+
+= Version: 1.4.6 - Date: 2020-08-11 =
+* Accodion Line height Issue Solved
+
+= Version: 1.4.5 - Date: 2020-07-29 =
+* Instagram Addon Issue Solved
+* Thumbnail Opacity add for style-3 in HT Mega post carousal widget.
+* Add default background in HT Mega button widget.
+* Border radius issue and read-mode border issue fixed in HT Mega button widget.
+* Add dependency for style-2 and style-3 in HT Mega countdown widget.
+* Title Background color issue fixed in HT Mega post grid tab.
+* Add image opacity in HT Mega image marker.
+* Progress bar animation issue and value size issue fixed in HT Mega progress bar.
+* Footer-Background color issue fixed for style-5 in HT Mega pricing table.
+
+= Version: 1.4.3 - Date: 2020-06-17 =
+* Post Duplicator Option Added.
+
+= Version: 1.4.2 - Date: 2020-06-02 =
+* Scroll Navigation addon Scoring issue has been solved.
+* Admin popup console error issue has been solved.
+
+= Version: 1.4.1 - Date: 2020-05-11 =
+* Working process Icon style Option added.
+* Template library blocks search problem solved.
+* Section Wise Blocks Template added.
+* Template library cache remove for plugin multiple activation.
+* Style dependency added in image justify and image compare.
+
+= Version: 1.4.0 - Date: 2020-04-13 =
+* Single Post Title Length option added.
+* Modal Issue solved for mobile device.
+* Image Grid Overlay color Issue solved.
+
+= Version: 1.3.7 - Date: 2020-03-09 =
+* Working Process 5 column responsive issue fixed
+* Post slider responsive issue fixed.
+* Blockquote Icon with issue fixed
+* Template library Improve
+
+= Version: 1.3.6 - Date: 2020-02-20 =
+* Menu position option added in inline menu addon
+* Image grid Style Five Overlay Color issue fixed
+* Image grid spacing option added
+
+= Version: 1.3.5 - Date: 2020-01-16 =
+* Ajax Added in User Login Form.
+* Ajax Added in User Register Form.
 
 = Version: 1.3.4 - Date: 2020-01-14 =
 * Addons Post load limit added.

@@ -14,6 +14,9 @@ class Woolentor_Admin_Settings {
         add_action( 'wsa_form_bottom_woolentor_general_tabs', [ $this, 'woolentor_html_general_tabs' ] );
         add_action( 'wsa_form_top_woolentor_elements_tabs', [ $this, 'woolentor_html_popup_box' ] );
         add_action( 'wsa_form_bottom_woolentor_themes_library_tabs', [ $this, 'woolentor_html_themes_library_tabs' ] );
+
+        add_action( 'wsa_form_top_woolentor_style_tabs', array( $this, 'style_tab_html' ) );
+        add_action( 'wsa_form_bottom_woolentor_style_tabs', array( $this, 'style_tab_bottom_html' ) );
         
         add_action( 'wsa_form_bottom_woolentor_buy_pro_tabs', [ $this, 'woolentor_html_buy_pro_tabs' ] );
 
@@ -94,6 +97,11 @@ class Woolentor_Admin_Settings {
             ),
 
             array(
+                'id'    => 'woolentor_style_tabs',
+                'title' => esc_html__( 'Style', 'woolentor' )
+            ),
+
+            array(
                 'id'    => 'woolentor_buy_pro_tabs',
                 'title' => esc_html__( 'Buy Pro', 'woolentor' )
             ),
@@ -122,18 +130,19 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'shoppageproductlimit',
                     'label' => __( 'Product Limit', 'woolentor' ),
-                    'desc' => wp_kses_post( 'You can Handle Shop page product limit', 'woolentor' ),
+                    'desc' => wp_kses_post( 'You can handle the product limit for the Shop page', 'woolentor' ),
                     'min'               => 1,
                     'max'               => 100,
                     'step'              => '1',
                     'type'              => 'number',
+                    'std'               => '10',
                     'sanitize_callback' => 'floatval'
                 ),
 
                 array(
                     'name'    => 'singleproductpage',
                     'label'   => __( 'Single Product Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom Product details layout', 'woolentor' ),
+                    'desc'    => __( 'You can select a custom template for the product details page layout', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => woolentor_elementor_template()
@@ -142,7 +151,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'productarchivepage',
                     'label'   => __( 'Product Archive Page Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom Product Shop page layout', 'woolentor' ),
+                    'desc'    => __( 'You can select a custom template for the Shop page layout', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => woolentor_elementor_template()
@@ -151,11 +160,11 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'productcartpagep',
                     'label'   => __( 'Cart Page Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom cart page layout <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'You can select a template for the Cart page layout <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => array(
-                        'select'=>'Select Template',
+                        'select'=>'Select a template for the cart page layout',
                     ),
                     'class'=>'proelement',
                 ),
@@ -163,11 +172,11 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'productcheckoutpagep',
                     'label'   => __( 'Checkout Page Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom checkout page layout <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'You can select a template for the Checkout page layout <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => array(
-                        'select'=>'Select Template',
+                        'select'=>'Select a template for the Checkout page layout',
                     ),
                     'class'=>'proelement',
                 ),
@@ -175,11 +184,11 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'productthankyoupagep',
                     'label'   => __( 'Thank You Page Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom thank you page layout <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Select a template for the Thank you page layout <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => array(
-                        'select'=>'Select Template',
+                        'select'=>'Select a template for the Thank you page layout',
                     ),
                     'class'=>'proelement',
                 ),
@@ -187,7 +196,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'productmyaccountpagep',
                     'label'   => __( 'My Account Page Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom my account page layout <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Select a template for the My Account page layout <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => array(
@@ -199,7 +208,19 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'productmyaccountloginpagep',
                     'label'   => __( 'My Account Login page Template', 'woolentor' ),
-                    'desc'    => __( 'You can select Custom my account login page layout <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Select a template for the Login page layout <span>( Pro )</span>', 'woolentor' ),
+                    'type'    => 'select',
+                    'default' => '0',
+                    'options' => array(
+                        'select'=>'Select Template',
+                    ),
+                    'class'=>'proelement',
+                ),
+
+                array(
+                    'name'    => 'productquickviewp',
+                    'label'   => esc_html__( 'Quick View Template', 'woolentor' ),
+                    'desc'    => __( 'Select a template for the product\'s quick view layout <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '0',
                     'options' => array(
@@ -229,6 +250,30 @@ class Woolentor_Admin_Settings {
                 ),
 
                 array(
+                    'name'  => 'product_curvy',
+                    'label'  => __( 'WL: Product Curvy', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'product_image_accordion',
+                    'label'  => __( 'WL: Product Image Accordion', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'product_accordion',
+                    'label'  => __( 'WL: Product Accordion', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
                     'name'  => 'add_banner',
                     'label'  => __( 'Ads Banner', 'woolentor' ),
                     'type'  => 'checkbox',
@@ -245,8 +290,48 @@ class Woolentor_Admin_Settings {
                 ),
 
                 array(
+                    'name'  => 'wb_customer_review',
+                    'label'  => __( 'Customer Review', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'wb_image_marker',
+                    'label'  => __( 'Image Marker', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'wl_category',
+                    'label'  => __( 'Category List', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'wl_brand',
+                    'label'  => __( 'Brand Logo', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
                     'name'  => 'wb_archive_product',
                     'label'  => __( 'Product Archive', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'wl_product_filter',
+                    'label'  => __( 'Product Filter', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'on',
                     'class'=>'woolentor_table_row',
@@ -270,7 +355,7 @@ class Woolentor_Admin_Settings {
 
                 array(
                     'name'  => 'wb_product_add_to_cart',
-                    'label'  => __( 'Add To Cart Button', 'woolentor' ),
+                    'label'  => __( 'Add to Cart Button', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'on',
                     'class'=>'woolentor_table_row',
@@ -374,7 +459,7 @@ class Woolentor_Admin_Settings {
 
                 array(
                     'name'  => 'wb_product_call_for_price',
-                    'label'  => __( 'Call For Price', 'woolentor' ),
+                    'label'  => __( 'Call for Price', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'on',
                     'class'=>'woolentor_table_row',
@@ -383,6 +468,14 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'wb_product_suggest_price',
                     'label'  => __( 'Suggest Price', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'on',
+                    'class'=>'woolentor_table_row',
+                ),
+
+                array(
+                    'name'  => 'wb_product_qr_code',
+                    'label'  => __( 'QR Code', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'on',
                     'class'=>'woolentor_table_row',
@@ -413,8 +506,32 @@ class Woolentor_Admin_Settings {
                 ),
 
                 array(
+                    'name'  => 'wl_cartempty_messagep',
+                    'label'  => __( 'Empty Cart Mes..<span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
+                    'name'  => 'wl_cartempty_shopredirectp',
+                    'label'  => __( 'Empty Cart Re.. Button <span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
                     'name'  => 'wl_cross_sellp',
                     'label'  => __( 'Product Cross Sell <span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
+                    'name'  => 'wl_cross_sell_customp',
+                    'label'  => __( 'Cross Sell ..( Custom ) <span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row pro',
@@ -453,8 +570,32 @@ class Woolentor_Admin_Settings {
                 ),
 
                 array(
+                    'name'  => 'wl_checkout_coupon_formp',
+                    'label'  => __( 'Checkout Co.. Form <span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
+                    'name'  => 'wl_checkout_login_formp',
+                    'label'  => __( 'Checkout lo.. Form <span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
                     'name'  => 'wl_order_reviewp',
                     'label'  => __( 'Checkout Order Review <span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
+                    'name'  => 'wl_myaccount_accountp',
+                    'label'  => __( 'My Account <span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row pro',
@@ -478,7 +619,7 @@ class Woolentor_Admin_Settings {
 
                 array(
                     'name'  => 'wl_myaccount_edit_accountp',
-                    'label'  => __( 'My Account <span>( Pro )</span>', 'woolentor' ),
+                    'label'  => __( 'My Account Edit<span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row pro',
@@ -557,6 +698,14 @@ class Woolentor_Admin_Settings {
                 ),
 
                 array(
+                    'name'  => 'wl_product_advance_thumbnails_zoom_p',
+                    'label'  => __( 'Product Zoom<span>( Pro )</span>', 'woolentor' ),
+                    'type'  => 'checkbox',
+                    'default' => 'off',
+                    'class'=>'woolentor_table_row pro',
+                ),
+
+                array(
                     'name'  => 'wl_social_sherep',
                     'label'  => __( 'Product Social Share <span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
@@ -573,23 +722,23 @@ class Woolentor_Admin_Settings {
                 ),
                 array(
                     'name'  => 'wl_single_product_sale_schedulep',
-                    'label'  => __( 'Product Sale Schedule <span>( Pro )</span>', 'woolentor-pro' ),
+                    'label'  => __( 'Product Sale Schedule <span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row pro',
                 ),
 
                 array(
-                    'name'  => 'wl_cartempty_messagep',
-                    'label'  => __( 'Empty Cart Message <span>( Pro )</span>', 'woolentor' ),
+                    'name'  => 'wl_related_productp',
+                    'label'  => __( 'Related Pro..( Custom ) <span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row pro',
                 ),
 
                 array(
-                    'name'  => 'wl_cartempty_shopredirectp',
-                    'label'  => __( 'Cart Redirect Button <span>( Pro )</span>', 'woolentor' ),
+                    'name'  => 'wl_product_upsell_customp',
+                    'label'  => __( 'Upsell Pro..( Custom ) <span>( Pro )</span>', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row pro',
@@ -618,7 +767,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_shop_add_to_cart_txt',
                     'label'       => __( 'Add to Cart Button Text', 'woolentor' ),
-                    'desc'        => __( 'You Can change the Add to Cart button text.', 'woolentor' ),
+                    'desc'        => __( 'Change the Add to Cart button text for the Shop page.', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Add to Cart', 'woolentor' )
                 ),
@@ -632,7 +781,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_add_to_cart_txt',
                     'label'       => __( 'Add to Cart Button Text', 'woolentor' ),
-                    'desc'        => __( 'You Can change the Add to Cart button text.', 'woolentor' ),
+                    'desc'        => __( 'Change the Add to Cart button text for the Product details page.', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Add to Cart', 'woolentor' )
                 ),
@@ -640,7 +789,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_description_tab_menu_titlep',
                     'label'       => __( 'Description', 'woolentor' ),
-                    'desc'        => __( 'You Can change the description tab title. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the tab title for the product description. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Description', 'woolentor' ),
                     'class'=>'proelement',
@@ -649,7 +798,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_additional_information_tab_menu_titlep',
                     'label'       => __( 'Additional Information', 'woolentor' ),
-                    'desc'        => __( 'You Can change the additional information tab title. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the tab title for the product additional information <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Additiona information', 'woolentor' ),
                     'class'=>'proelement',
@@ -658,7 +807,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_reviews_tab_menu_titlep',
                     'label'       => __( 'Reviews', 'woolentor' ),
-                    'desc'        => __( 'You Can change the review tab title. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the tab title for the product review <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Reviews', 'woolentor' ),
                     'class'=>'proelement',
@@ -673,7 +822,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_firstname_labelp',
                     'label'       => __( 'First name', 'woolentor' ),
-                    'desc'        => __( 'You can change the First name field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the First name field <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'First name', 'woolentor' ),
                     'class'=>'proelement',
@@ -682,7 +831,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_lastname_labelp',
                     'label'       => __( 'Last name', 'woolentor' ),
-                    'desc'        => __( 'You can change the Last name field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Last name field <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Last name', 'woolentor' ),
                     'class'=>'proelement',
@@ -691,7 +840,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_company_labelp',
                     'label'       => __( 'Company name', 'woolentor' ),
-                    'desc'        => __( 'You can change the company field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Company field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Company name', 'woolentor' ),
                     'class'=>'proelement',
@@ -700,7 +849,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_address_1_labelp',
                     'label'       => __( 'Street address', 'woolentor' ),
-                    'desc'        => __( 'You can change the Street address field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Street address field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Street address', 'woolentor' ),
                     'class'=>'proelement',
@@ -709,7 +858,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_address_2_labelp',
                     'label'       => __( 'Address Optional', 'woolentor' ),
-                    'desc'        => __( 'You can change the Address Optional field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Optional address field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Address Optional', 'woolentor' ),
                     'class'=>'proelement',
@@ -718,7 +867,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_city_labelp',
                     'label'       => __( 'Town / City', 'woolentor' ),
-                    'desc'        => __( 'You can change the City field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Town/City field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Town / City', 'woolentor' ),
                     'class'=>'proelement',
@@ -727,7 +876,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_postcode_labelp',
                     'label'       => __( 'Postcode / ZIP', 'woolentor' ),
-                    'desc'        => __( 'You can change the Postcode / ZIP field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Postcode / ZIP field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Postcode / ZIP', 'woolentor' ),
                     'class'=>'proelement',
@@ -736,7 +885,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_state_labelp',
                     'label'       => __( 'State', 'woolentor' ),
-                    'desc'        => __( 'You can change the state field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the State field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'State', 'woolentor' ),
                     'class'=>'proelement',
@@ -745,7 +894,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_phone_labelp',
                     'label'       => __( 'Phone', 'woolentor' ),
-                    'desc'        => __( 'You can change the phone field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Phone field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Phone', 'woolentor' ),
                     'class'=>'proelement',
@@ -754,7 +903,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_email_labelp',
                     'label'       => __( 'Email address', 'woolentor' ),
-                    'desc'        => __( 'You can change the email address field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Email address field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Email address', 'woolentor' ),
                     'class'=>'proelement',
@@ -763,7 +912,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_country_labelp',
                     'label'       => __( 'Country', 'woolentor' ),
-                    'desc'        => __( 'You can change the Country field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Country field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Country', 'woolentor' ),
                     'class'=>'proelement',
@@ -772,7 +921,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_ordernote_labelp',
                     'label'       => __( 'Order Note', 'woolentor' ),
-                    'desc'        => __( 'You can change the Order notes field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Order notes field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Order notes', 'woolentor' ),
                     'class'=>'proelement',
@@ -781,7 +930,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'        => 'wl_checkout_placeorder_btn_txtp',
                     'label'       => __( 'Place order', 'woolentor' ),
-                    'desc'        => __( 'You can change the Place order field label. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'        => __( 'Change the label for the Place order field. <span>( Pro )</span>', 'woolentor' ),
                     'type'        => 'text',
                     'placeholder' => __( 'Place order', 'woolentor' ),
                     'class'=>'proelement',
@@ -816,7 +965,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_posp',
                     'label'   => __( 'Position', 'woolentor' ),
-                    'desc'    => __( 'Sale Notification Position on frontend.( Top Left, Top Right, Bottom Right option are pro features ) <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Set the position of the Sales Notification.( Top Left, Top Right, Bottom Right option are pro features ) <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => 'bottomleft',
                     'options' => array(
@@ -828,7 +977,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_layoutp',
                     'label'   => __( 'Image Position', 'woolentor' ),
-                    'desc'    => __( 'Notification Layout. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Set the image position of the notification. <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => 'imageleft',
                     'options' => array(
@@ -840,7 +989,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_loadduration',
                     'label'   => __( 'Loading Time', 'woolentor' ),
-                    'desc'    => __( 'Notification Loading duration.', 'woolentor' ),
+                    'desc'    => __( 'Set the time duration to load the notifications.', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '3',
                     'options' => array(
@@ -866,7 +1015,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_time_intp',
                     'label'   => __( 'Time Interval', 'woolentor' ),
-                    'desc'    => __( 'Time between notifications. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Set the interval time between notifications. <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '4',
                     'options' => array(
@@ -892,7 +1041,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'              => 'notification_limit',
                     'label'             => __( 'Limit', 'woolentor' ),
-                    'desc'              => __( 'Order Limit for notification.', 'woolentor' ),
+                    'desc'              => __( 'Set the number of notifications to display.', 'woolentor' ),
                     'min'               => 1,
                     'max'               => 100,
                     'default'           => '5',
@@ -905,7 +1054,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_uptodatep',
                     'label'   => __( 'Order Upto', 'woolentor' ),
-                    'desc'    => __( 'Do not show purchases older than.( More Options are Pro features ) <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Do not show purchases older than.( More Options are available in the Pro version ) <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => '7',
                     'options' => array(
@@ -917,7 +1066,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_inanimationp',
                     'label'   => __( 'Animation In', 'woolentor' ),
-                    'desc'    => __( 'Notification Enter Animation. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Choose entrance animation. <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => 'fadeInLeft',
                     'options' => array(
@@ -929,7 +1078,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'    => 'notification_outanimationp',
                     'label'   => __( 'Animation Out', 'woolentor' ),
-                    'desc'    => __( 'Notification Out Animation. <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => __( 'Choose exit animation. <span>( Pro )</span>', 'woolentor' ),
                     'type'    => 'select',
                     'default' => 'fadeOutRight',
                     'options' => array(
@@ -941,7 +1090,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'background_colorp',
                     'label' => __( 'Background Color', 'woolentor' ),
-                    'desc' => wp_kses_post( 'Notification Background Color. <span>( Pro )</span>', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Set the background color of the notification. <span>( Pro )</span>', 'woolentor' ),
                     'type' => 'color',
                     'class'       => 'notification_real proelement',
                 ),
@@ -949,7 +1098,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'heading_colorp',
                     'label' => __( 'Heading Color', 'woolentor' ),
-                    'desc' => wp_kses_post( 'Notification Heading Color. <span>( Pro )</span>', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Set the heading color of the notification. <span>( Pro )</span>', 'woolentor' ),
                     'type' => 'color',
                     'class'       => 'notification_real proelement',
                 ),
@@ -957,7 +1106,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'content_colorp',
                     'label' => __( 'Content Color', 'woolentor' ),
-                    'desc' => wp_kses_post( 'Notification Content Color. <span>( Pro )</span>', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Set the content color of the notification. <span>( Pro )</span>', 'woolentor' ),
                     'type' => 'color',
                     'class'       => 'notification_real proelement',
                 ),
@@ -965,7 +1114,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'cross_colorp',
                     'label' => __( 'Cross Icon Color', 'woolentor' ),
-                    'desc' => wp_kses_post( 'Notification Cross Icon Color. <span>( Pro )</span>', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Set the cross icon color of the notification. <span>( Pro )</span>', 'woolentor' ),
                     'type' => 'color',
                     'class'       => 'proelement',
                 ),
@@ -977,7 +1126,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'loadproductlimit',
                     'label' => __( 'Load Products in Elementor Addons', 'woolentor' ),
-                    'desc' => wp_kses_post( 'Load Products in Elementor Addons', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Set the number of products to load in Elementor Addons', 'woolentor' ),
                     'min'               => 1,
                     'max'               => 100,
                     'step'              => '1',
@@ -990,6 +1139,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'ajaxsearch',
                     'label'  => __( 'Ajax Search Widget', 'woolentor' ),
+                    'desc' => wp_kses_post( 'AJAX Search Widget', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row',
@@ -998,6 +1148,7 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'ajaxcart_singleproduct',
                     'label'  => __( 'Single Product Ajax Add To Cart', 'woolentor' ),
+                    'desc' => wp_kses_post( 'AJAX Add to Cart on Single Product page', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'=>'woolentor_table_row',
@@ -1006,9 +1157,231 @@ class Woolentor_Admin_Settings {
                 array(
                     'name'  => 'single_product_sticky_add_to_cartp',
                     'label'  => __( 'Single Product Sticky Add To Cart <span>( Pro )</span>', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Sticky Add to Cart on Single Product page', 'woolentor' ),
                     'type'  => 'checkbox',
                     'default' => 'off',
                     'class'   => 'woolentor_table_row pro',
+                ),
+
+                array(
+                    'name'   => 'mini_side_cartp',
+                    'label'  => __( 'Side Mini Cart <span>( Pro )</span>', 'woolentor' ),
+                    'type'   => 'checkbox',
+                    'default'=> 'off',
+                    'class'  =>'woolentor_table_row pro',
+                ),
+
+                array(
+                    'name'    => 'mini_cart_positionp',
+                    'label'   => __( 'Mini Cart Position <span>( Pro )</span>', 'woolentor' ),
+                    'desc'    => esc_html__( 'Set the position of the Mini Cart.', 'woolentor' ),
+                    'type'    => 'select',
+                    'default' => 'left',
+                    'options' => array(
+                        'left'   => esc_html__( 'Left','woolentor' ),
+                    ),
+                    'class'  =>'woolentor_table_row proelement',
+                ),
+
+            ),
+
+            'woolentor_style_tabs' => array(
+
+                array(
+                    'name'  => 'content_area_bg',
+                    'label' => __( 'Content area background', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#ffffff',
+                ),
+
+                array(
+                    'name'      => 'section_title_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Title', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'title_color',
+                    'label' => __( 'Title color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#444444',
+                ),
+                array(
+                    'name'  => 'title_hover_color',
+                    'label' => __( 'Title hover color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#dc9a0e',
+                ),
+
+                array(
+                    'name'      => 'section_price_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Price', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'sale_price_color',
+                    'label' => __( 'Sale price color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#444444',
+                ),
+                array(
+                    'name'  => 'regular_price_color',
+                    'label' => __( 'Regular price color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#444444',
+                ),
+
+                array(
+                    'name'      => 'section_category_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Category', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'category_color',
+                    'label' => __( 'Category color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#444444',
+                ),
+                array(
+                    'name'  => 'category_hover_color',
+                    'label' => __( 'Category hover color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#dc9a0e',
+                ),
+
+                array(
+                    'name'      => 'section_short_description_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Short Description', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'desc_color',
+                    'label' => __( 'Description color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#444444',
+                ),
+
+                array(
+                    'name'      => 'section_rating_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Rating', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'empty_rating_color',
+                    'label' => __( 'Empty rating color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#aaaaaa',
+                ),
+                array(
+                    'name'  => 'rating_color',
+                    'label' => __( 'Rating color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#dc9a0e',
+                ),
+
+                array(
+                    'name'      => 'section_badge_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Product Badge', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'badge_color',
+                    'label' => __( 'Badge color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#444444',
+                ),
+
+                array(
+                    'name'      => 'section_action_btn_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Quick Action Button', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'tooltip_color',
+                    'label' => __( 'Tool tip color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#ffffff',
+                ),
+                array(
+                    'name'  => 'btn_color',
+                    'label' => __( 'Button color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#000000',
+                ),
+                array(
+                    'name'  => 'btn_hover_color',
+                    'label' => __( 'Button hover color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#dc9a0e',
+                ),
+
+                array(
+                    'name'      => 'section_action_list_btn_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Archive List View Action Button', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'list_btn_color',
+                    'label' => __( 'List View Button color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#000000',
+                ),
+                array(
+                    'name'  => 'list_btn_hover_color',
+                    'label' => __( 'List View Button Hover color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#dc9a0e',
+                ),
+                array(
+                    'name'  => 'list_btn_bg_color',
+                    'label' => __( 'List View Button background color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#ffffff',
+                ),
+                array(
+                    'name'  => 'list_btn_hover_bg_color',
+                    'label' => __( 'List View Button hover background color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#ff3535',
+                ),
+
+                array(
+                    'name'      => 'section_counter_timer_heading',
+                    'type'      => 'title',
+                    'headding'  => esc_html__( 'Counter Timer', 'woolentor' ),
+                    'size'      => 'woolentor_style_seperator',
+                ),
+                array(
+                    'name'  => 'counter_color',
+                    'label' => __( 'Counter timer color', 'woolentor' ),
+                    'desc' => wp_kses_post( 'Default Color for universal layout.', 'woolentor' ),
+                    'type' => 'color',
+                    'default'=>'#ffffff',
                 ),
 
             ),
@@ -1016,6 +1389,32 @@ class Woolentor_Admin_Settings {
             'woolentor_buy_pro_tabs' => array(),
 
         );
+
+        // Post Duplicator Condition
+        if( !is_plugin_active('ht-mega-for-elementor/htmega_addons_elementor.php') ){
+            $settings_fields['woolentor_others_tabs'][] = [
+                'name'  => 'postduplicator',
+                'label'  => esc_html__( 'Post Duplicator', 'woolentor-pro' ),
+                'type'  => 'checkbox',
+                'default'=>'off',
+                'class'=>'woolentor_table_row',
+            ];
+
+            if( woolentor_get_option( 'postduplicator', 'woolentor_others_tabs', 'off' ) === 'on' ){
+                $post_types = woolentor_get_post_types( array('defaultadd'=>'all') );
+                if ( did_action( 'elementor/loaded' ) && defined( 'ELEMENTOR_VERSION' ) ) {
+                    $post_types['elementor_library'] = esc_html__( 'Templates', 'woolentor' );
+                }
+                $settings_fields['woolentor_others_tabs'][] = [
+                    'name'    => 'postduplicate_condition',
+                    'label'   => __( 'Post Duplicator Condition', 'woolentor' ),
+                    'desc'    => __( 'You can enable duplicator for individual post.', 'woolentor' ),
+                    'type'    => 'multiselect',
+                    'default' => '',
+                    'options' => $post_types,
+                ];
+            }
+        }
         
         return array_merge( $settings_fields );
     }
@@ -1024,7 +1423,7 @@ class Woolentor_Admin_Settings {
     function plugin_page() {
 
         echo '<div class="wrap">';
-            echo '<h2>'.esc_html__( 'Woolentor Settings','woolentor' ).'</h2>';
+            echo '<h2>'.esc_html__( 'WooLentor Settings','woolentor' ).'</h2>';
             $this->save_message();
             $this->settings_api->show_navigation();
             $this->settings_api->show_forms();
@@ -1042,6 +1441,29 @@ class Woolentor_Admin_Settings {
     }
 
     // Custom Markup
+    
+    // HTML Style tab Section
+    function style_tab_html(){
+        ob_start();
+        ?>
+        <div class="woolentor-style-tab-title">
+            <h3><?php esc_html_e( 'Universal layout style options', 'woolentor-pro' );?></h3>
+        </div>
+        <?php
+        echo ob_get_clean();
+    }
+    
+    // HTML Style tab bottom Section
+    function style_tab_bottom_html(){
+        ob_start();
+        ?>
+        <div class="woolentor-style-tab-bottom">
+            <h3><?php echo esc_html__( 'Helping Screenshot:', 'woolentor' ); ?></h3>
+            <img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/universal-layout-screen.png" alt="<?php echo esc_attr__( 'Universal layout', 'woolentor' ); ?>">
+        </div>
+        <?php
+        echo ob_get_clean();
+    }
 
     // General tab
     function woolentor_html_general_tabs(){
@@ -1087,7 +1509,7 @@ class Woolentor_Admin_Settings {
                                 <li class="wldel"><del><?php echo esc_html__( 'My Account Page Builder', 'woolentor' ); ?></del></li>
                                 <li class="wldel"><del><?php echo esc_html__( 'My Account Login page Builder', 'woolentor' ); ?></del></li>
                             </ul>
-                            <a class="button button-primary" href="<?php echo esc_url( admin_url() ); ?>/plugin-install.php" target="_blank"><?php echo esc_html__( 'Install Now', 'woolenror' ); ?></a>
+                            <a class="button button-primary" href="<?php echo esc_url( admin_url() ); ?>plugin-install.php?s=woolentor-addons&tab=search&type=term" target="_blank"><?php echo esc_html__( 'Install Now', 'woolenror' ); ?></a>
                         </div>
                         <div class="features-list-area">
                             <h3><?php echo esc_html__( 'WooLentor Pro', 'woolentor' ); ?></h3>
@@ -1105,7 +1527,7 @@ class Woolentor_Admin_Settings {
                                 <li><?php echo esc_html__( 'My Account Page Builder', 'woolentor' ); ?></li>
                                 <li><?php echo esc_html__( 'My Account Login page Builder', 'woolentor' ); ?></li>
                             </ul>
-                            <a class="button button-primary" href="http://bit.ly/2HObEeB" target="_blank"><?php echo esc_html__( 'Buy Now', 'woolenror' ); ?></a>
+                            <a class="button button-primary" href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><?php echo esc_html__( 'Buy Now', 'woolenror' ); ?></a>
                         </div>
                     </div>
 
@@ -1125,7 +1547,7 @@ class Woolentor_Admin_Settings {
                     <span><i class="dashicons dashicons-warning"></i></span>
                     <p>
                         <?php
-                            echo __('Purchase our','woolentor').' <strong><a href="'.esc_url( 'http://bit.ly/2HObEeB' ).'" target="_blank" rel="nofollow">'.__( 'premium version', 'woolentor' ).'</a></strong> '.__('to unlock these pro elements!','woolentor');
+                            echo __('Purchase our','woolentor').' <strong><a href="'.esc_url( 'https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd' ).'" target="_blank" rel="nofollow">'.__( 'premium version', 'woolentor' ).'</a></strong> '.__('to unlock these pro elements!','woolentor');
                         ?>
                     </p>
                 </div>
@@ -1166,45 +1588,67 @@ class Woolentor_Admin_Settings {
 
                     <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/99fy.png" alt="">
                         <div class="woolentor-theme-content">
-                            <h3><?php echo esc_html__( '99Fy - WooCommerce Theme', 'woolentor' ); ?></h3>
+                            <h3><?php echo esc_html__( '99Fy - Free', 'woolentor' ); ?></h3>
+                            <p><?php echo esc_html__( '99fy is a free WooCommerce theme. 99 demos for 24 niche categories are included in this theme.', 'woolentor' ); ?></p>
                             <a href="https://demo.hasthemes.com/99fy-preview/index.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
-                            <a href="https://downloads.wordpress.org/theme/99fy.3.1.1.zip" class="woolentor-button"><?php echo esc_html__( 'Download', 'woolentor' ); ?></a>
+                            <a href="https://hasthemes.com/download-99fy" class="woolentor-button"><?php echo esc_html__( 'Download', 'woolentor' ); ?></a>
                         </div>
                     </div>
-                    
+
                     <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/parlo.png" alt="">
                         <div class="woolentor-theme-content">
-                            <h3><?php echo esc_html__( 'Parlo - WooCommerce Theme', 'woolentor' ); ?></h3>
-                            <a href="http://demo.shrimpthemes.com/1/parlo/" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
+                            <h3><?php echo esc_html__( 'Parlo - Free', 'woolentor' ); ?></h3>
+                            <p><?php echo esc_html__( 'Parlo is a free WooCommerce theme developed by our team. You can use this for your store.', 'woolentor' );?></p>
+                            <a href="http://demo.hasthemes.com/wp/parlo-preview.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
                             <a href="https://freethemescloud.com/item/parlo-free-woocommerce-theme/" class="woolentor-button"><?php echo esc_html__( 'Download', 'woolentor' ); ?></a>
+                        </div>
+                    </div>
+
+                    <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/99fy-pro.png" alt="">
+                        <div class="woolentor-theme-content">
+                            <h3><?php echo esc_html__( '99Fy Pro - included in WooLentor Pro', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
+                            <p><?php echo esc_html__( 'Pro version of 99fy is included in WooLentor pro. It will save money for the WooLentor pro users.', 'woolentor' ); ?></p>
+                            <a href="https://demo.hasthemes.com/99fy-preview/index.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
                         </div>
                     </div>
 
                     <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/flone.png" alt="">
                         <div class="woolentor-theme-content">
-                            <h3><?php echo esc_html__( 'Flone – Minimal WooCommerce Theme', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
-                            <a href="http://demo.shrimpthemes.com/2/flone/" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
+                            <h3><?php echo esc_html__( 'Flone - included in WooLentor Pro', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
+                            <p><?php echo esc_html__( 'Flone is one of our most popular WooComemrce Themes using by 1000+ stores.', 'wooLentor' );?></p>
+                            <a href="https://demo.hasthemes.com/flone-woo-preview/index.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
+                        </div>
+                    </div>
+
+                    <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/parlo.png" alt="">
+                        <div class="woolentor-theme-content">
+                            <h3><?php echo esc_html__( 'Parlo Pro - included in WooLentor Pro', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
+                            <p><?php echo esc_html__( 'Pro version of Parlo is included in WooLentor pro. It will save money for the WooLentor pro users.', 'wooLentor' );?></p>
+                            <a href="http://demo.hasthemes.com/wp/parlo-preview.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
                         </div>
                     </div>
 
                     <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/holmes.png" alt="">
                         <div class="woolentor-theme-content">
-                            <h3><?php echo esc_html__( 'Homes - Multipurpose WooCommerce Theme', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
-                            <a href="http://demo.shrimpthemes.com/1/holmes/" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
+                            <h3><?php echo esc_html__( 'Holmes - included in WooLentor Pro', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
+                            <p><?php echo esc_html__( 'Holmes is a preimum woocommerce theme included in WooLentor pro. It will save money for the WooLentor pro users.', 'woolentor' );?></p>
+                            <a href="http://demo.hasthemes.com/wp/holmes-preview.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
                         </div>
                     </div>
                     
                     <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/daniel-home-1.png" alt="">
                         <div class="woolentor-theme-content">
-                            <h3><?php echo esc_html__( 'Daniel - WooCommerce Theme', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
-                            <a href="http://demo.shrimpthemes.com/2/daniel/" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
+                            <h3><?php echo esc_html__( 'Daniel - included in WooLentor Pro', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
+                            <p><?php echo esc_html__( 'Daniel is a preimum woocommerce theme included in WooLentor pro. It will save money for the WooLentor pro users.', 'woolentor' ); ?></p>
+                            <a href="http://demo.hasthemes.com/wp/daniel-preview.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
                         </div>
                     </div>
                     
                     <div class="woolentor-single-theme"><img src="<?php echo WOOLENTOR_ADDONS_PL_URL; ?>/includes/admin/assets/images/hurst-home-1.png" alt="">
                         <div class="woolentor-theme-content">
-                            <h3><?php echo esc_html__( 'Hurst - WooCommerce Theme', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
-                            <a href="http://demo.shrimpthemes.com/4/hurstem/" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
+                            <h3><?php echo esc_html__( 'Hurst - included in WooLentor Pro', 'woolentor' ); ?> <span><?php echo esc_html__( '( Pro )', 'woolentor' ); ?></span></h3>
+                            <p><?php echo esc_html__( 'Hurst is a preimum woocommerce theme included in WooLentor pro. It will save money for the WooLentor pro users.', 'woolentor' ); ?></p>
+                            <a href="http://demo.hasthemes.com/wp/hurst-preview.html" class="woolentor-button" target="_blank"><?php echo esc_html__( 'Preview', 'woolentor' ); ?></a>
                         </div>
                     </div>
 
@@ -1230,15 +1674,15 @@ class Woolentor_Admin_Settings {
                 <div class="woolentor-admin-row">
 
                     <div class="woolentor-price-plan">
-                        <a href="http://bit.ly/2HObEeB" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/one_year_single_website.png" alt="<?php echo esc_attr__( 'One Year Single Website','woolentor' );?>"></a>
+                        <a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/one_year_single_website.png" alt="<?php echo esc_attr__( 'One Year Single Website','woolentor' );?>"></a>
                     </div>
 
                     <div class="woolentor-price-plan">
-                        <a href="http://bit.ly/2HObEeB" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/one_year_elementor_guru.png" alt="<?php echo esc_attr__( 'One Year Unlimited Website','woolentor' );?>"></a>
+                        <a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/one_year_elementor_guru.png" alt="<?php echo esc_attr__( 'One Year Unlimited Website','woolentor' );?>"></a>
                     </div>
 
                     <div class="woolentor-price-plan">
-                        <a href="http://bit.ly/2HObEeB" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/one_year_wpbundle.png" alt="<?php echo esc_attr__( 'One Year Unlimited Websites','woolentor' );?>"></a>
+                        <a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/one_year_wpbundle.png" alt="<?php echo esc_attr__( 'One Year Unlimited Websites','woolentor' );?>"></a>
                     </div>
 
                 </div>
@@ -1248,15 +1692,15 @@ class Woolentor_Admin_Settings {
                 
                 <div class="woolentor-admin-row">
                     <div class="woolentor-price-plan">
-                        <a href="http://bit.ly/2HObEeB" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/life_time_single_website.png" alt="<?php echo esc_attr__( 'Life Time Single Website','woolentor' );?>"></a>
+                        <a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/life_time_single_website.png" alt="<?php echo esc_attr__( 'Life Time Single Website','woolentor' );?>"></a>
                     </div>
 
                     <div class="woolentor-price-plan">
-                        <a href="http://bit.ly/2HObEeB" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/life_time_elementor_guru.png" alt="<?php echo esc_attr__( 'Life time Unlimited Website','woolentor' );?>"></a>
+                        <a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/life_time_elementor_guru.png" alt="<?php echo esc_attr__( 'Life time Unlimited Website','woolentor' );?>"></a>
                     </div>
 
                     <div class="woolentor-price-plan">
-                        <a href="http://bit.ly/2HObEeB" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/life_time_wpbundle.png" alt="<?php echo esc_attr__( 'Life Time Unlimited Websites','woolentor' );?>"></a>
+                        <a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank"><img src="https://demo.hasthemes.com/pricing-plan/life_time_wpbundle.png" alt="<?php echo esc_attr__( 'Life Time Unlimited Websites','woolentor' );?>"></a>
                     </div>
                 </div>
 

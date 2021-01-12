@@ -386,6 +386,31 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
                 ]
             );
 
+            $this->add_control(
+                'redirect_page',
+                [
+                    'label' => __( 'Redirect page after register', 'htmega-addons' ),
+                    'type' => Controls_Manager::SWITCHER,
+                    'default' => 'no',
+                    'label_off' => __( 'No', 'htmega-addons' ),
+                    'label_on' => __( 'Yes', 'htmega-addons' ),
+                ]
+            );
+
+            $this->add_control(
+                'redirect_page_url',
+                [
+                    'type'          => Controls_Manager::URL,
+                    'show_label'    => false,
+                    'show_external' => false,
+                    'separator'     => false,
+                    'placeholder'   => 'http://your-link.com/',
+                    'condition'     => [
+                        'redirect_page' => 'yes',
+                    ],
+                ]
+            );
+
         $this->end_controls_section();
 
         // Style tab section
@@ -1031,6 +1056,12 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
         $current_url = remove_query_arg( 'fake_arg' );
         $id = $this->get_id();
 
+        if ( $settings['redirect_page'] == 'yes' && ! empty( $settings['redirect_page_url']['url'] ) ) {
+            $redirect_url = $settings['redirect_page_url']['url'];
+        } else {
+            $redirect_url = $current_url;
+        }
+
         $this->add_render_attribute( 'register_area_attr', 'class', 'htmega-register-wrapper' );
         $this->add_render_attribute( 'register_area_attr', 'class', 'htmega-register-style-'.$settings['register_form_style'] );
        
@@ -1118,6 +1149,14 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
                 );
 
                 $this->add_render_attribute(
+                    'bio_textarea_attr', [
+                        'name'  => 'reg_bio',
+                        'id'    => 'reg_bio'.$id,
+                        'placeholder' => isset( $settings['bio_placeholder_label'] ) ? $settings['bio_placeholder_label'] : 'Biographical Info',
+                    ]
+                );
+
+                $this->add_render_attribute(
                     'submit_input_attr', [
                         'name'  => 'reg_submit'.$id,
                         'id'    => 'reg_submit'.$id,
@@ -1127,31 +1166,10 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
                 );
             ?>
 
+            <div id="htmega_message_<?php echo esc_attr( $id ); ?>" class="htmega_message">&nbsp;</div>
             <div <?php echo $this->get_render_attribute_string( 'register_area_attr' ); ?>>
-                <?php
-                    if ( isset( $_REQUEST['reg_submit'.$id] ) ) {
-
-                        $get_username = isset( $_REQUEST['reg_name'] ) ? $_REQUEST['reg_name'] : NULL;
-                        $get_password = isset( $_REQUEST['reg_password'] ) ? $_REQUEST['reg_password'] : NULL;
-                        $get_email = isset( $_REQUEST['reg_email'] ) ? $_REQUEST['reg_email'] : NULL;
-                        $get_website = isset( $_REQUEST['reg_website'] ) ? $_REQUEST['reg_website'] : NULL;
-                        $get_first_name = isset( $_REQUEST['reg_fname'] ) ? $_REQUEST['reg_fname'] : NULL;
-                        $get_last_name = isset( $_REQUEST['reg_lname'] ) ? $_REQUEST['reg_lname'] : NULL; 
-                        $get_nickname = isset( $_REQUEST['reg_nickname'] ) ? $_REQUEST['reg_nickname'] : NULL;
-                        $get_bio = isset( $_REQUEST['reg_bio'] ) ? $_REQUEST['reg_bio'] : NULL;
-
-                        if ( is_wp_error( $this->htmega_validation( $get_username, $get_password, $get_email, $get_website, $get_first_name, $get_last_name, $get_nickname, $get_bio ) ) ) {
-                            echo '<div class="alert alert-danger">';
-                                echo esc_html__( $this->htmega_validation( $get_username, $get_password, $get_email, $get_website, $get_first_name, $get_last_name, $get_nickname, $get_bio )->get_error_message(),'htmega-addons' );
-                            echo '</div>';
-                        }
-                        else {
-                            $this->htmega_registration( $get_username, $get_password, $get_email, $get_website, $get_first_name, $get_last_name, $get_nickname, $get_bio );
-                        }
-                    }
-                ?>
                 <div class="htmega-register-form">
-                    <form method="post" action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+                    <form id="htmega_register_form_<?php echo esc_attr( $id ); ?>" method="post" action="htmegaregisteraction">
 
                         <?php if( $settings['register_form_style'] == 2 ): ?>
                             <div class="htb-row">
@@ -1224,8 +1242,9 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
                                             if( $settings['show_label'] == 'yes' ){ 
                                                 echo sprintf('<label>%1$s</label>', isset( $settings['bio_label'] ) ? $settings['bio_label'] : 'Biographical Info' );
                                             }
-                                            echo sprintf( '<textarea name="reg_bio" placeholder="%1$s">%2$s</textarea>', ( isset( $settings['bio_placeholder_label'] ) ? $settings['bio_placeholder_label'] : 'Biographical Info'), ( isset( $_REQUEST['reg_bio'] ) ? $_REQUEST['reg_bio'] : NULL ) );
+                                            echo sprintf( '<textarea %1$s>%2$s</textarea>', $this->get_render_attribute_string( 'bio_textarea_attr' ), ( isset( $_REQUEST['reg_bio'] ) ? $_REQUEST['reg_bio'] : NULL ) );
                                         echo '</div>';
+
                                     }
                                 ?>
                                 <div class="htb-col-lg-12">
@@ -1410,7 +1429,8 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
                                         if( $settings['show_label'] == 'yes' ){ 
                                             echo sprintf('<label>%1$s</label>', isset( $settings['bio_label'] ) ? $settings['bio_label'] : 'Biographical Info' );
                                         }
-                                        echo sprintf( '<textarea name="reg_bio" placeholder="%1$s">%2$s</textarea>', ( isset( $settings['bio_placeholder_label'] ) ? $settings['bio_placeholder_label'] : 'Biographical Info'), ( isset( $_REQUEST['reg_bio'] ) ? $_REQUEST['reg_bio'] : NULL ) );
+                                        
+                                        echo sprintf( '<textarea %1$s>%2$s</textarea>', $this->get_render_attribute_string( 'bio_textarea_attr' ), ( isset( $_REQUEST['reg_bio'] ) ? $_REQUEST['reg_bio'] : NULL ) );
                                     }
 
                                 ?>
@@ -1422,78 +1442,65 @@ class HTMega_Elementor_Widget_User_Register_Form extends Widget_Base {
             </div>
 
         <?php
+        $this->htmega_register_request( $id, $settings['redirect_page'], $redirect_url );
 
     }
 
-    public function htmega_registration( $username = NUll, $password = NULL, $email = NULL, $website = NULL, $first_name = NULL, $last_name = NULL, $nickname = NULL, $bio = NULL )
-    {
-     
-        $userdata = array(
-            'user_login' => esc_attr($username),
-            'user_pass' => esc_attr($password),
-            'user_email' => esc_attr($email),
-            'user_url' => esc_attr($website),
-            'first_name' => esc_attr($first_name),
-            'last_name' => esc_attr($last_name),
-            'nickname' => esc_attr($nickname),
-            'description' => esc_attr($bio),
-        );
-        
-        $register_user = wp_insert_user( $userdata );
-        if ( !is_wp_error( $register_user ) ) {
-            echo '<div class="htb-alert htb-alert-success">';
-                echo esc_html__('Successfully Registration complete.','htmega-addons');
-            echo '</div>';
-        } else {
-            echo '<div class="htb-alert htb-alert-danger">';
-                echo esc_html__( $register_user->get_error_message(),'htmega-addons' );
-            echo '</div>';
-        }
+    public function htmega_register_request( $id, $reddirectstatus ,$redirect_url ){
+        ?>
+            <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    "use strict";
+
+                    var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+                    var loadingmessage = '<?php echo esc_html__('Please Wait...','htmega-addons'); ?>';
+                    var form_id = 'form#htmega_register_form_<?php echo esc_attr( $id ); ?>';
+                    var button_id = '#reg_submit<?php echo esc_attr( $id ); ?>';
+                    var nonce = '<?php wp_create_nonce( 'htmega_register_nonce' ) ?>';
+                    var redirect = '<?php echo $reddirectstatus; ?>';
+
+                    $( button_id ).on('click', function(){
+
+                        $('#htmega_message_<?php echo esc_attr( $id ); ?>').html('<span class="htmega_lodding_msg">'+ loadingmessage +'</span>').fadeIn();
+
+                        var data = {
+                            action:         "htmega_ajax_register",
+                            nonce:          nonce,
+                            reg_name:       $( form_id + ' #reg_name<?php echo esc_attr( $id ); ?>').val(),
+                            reg_password:   $( form_id + ' #reg_password<?php echo esc_attr( $id ); ?>').val(),
+                            reg_email:      $( form_id + ' #reg_email<?php echo esc_attr( $id ); ?>').val(),
+                            reg_website:    $( form_id + ' #reg_website<?php echo esc_attr( $id ); ?>').val(),
+                            reg_fname:      $( form_id + ' #reg_fname<?php echo esc_attr( $id ); ?>').val(),
+                            reg_lname:      $( form_id + ' #reg_lname<?php echo esc_attr( $id ); ?>').val(),
+                            reg_nickname:   $( form_id + ' #reg_nickname<?php echo esc_attr( $id ); ?>').val(),
+                            reg_bio:        $( form_id + ' #reg_bio<?php echo esc_attr( $id ); ?>').val(),
+                        };
+
+                        $.ajax({  
+                            type: 'POST',
+                            dataType: 'json',  
+                            url:  ajaxurl,
+                            data: data,
+                            success: function( msg ){
+                                if ( msg.registerauth == true ){
+                                    $('#htmega_message_<?php echo esc_attr( $id ); ?>').html('<div class="htmega_success_msg alert alert-success">'+ msg.message +'</div>').fadeIn();
+                                    if( redirect === 'yes' ){
+                                        document.location.href = '<?php echo esc_url( $redirect_url ); ?>';
+                                    }
+                                }else{
+                                    $('#htmega_message_<?php echo esc_attr( $id ); ?>').html('<div class="htmega_invalid_msg alert alert-danger">'+ msg.message +'</div>').fadeIn();
+                                }
+                            }  
+                        });
+                        return false;
+                      
+                    });
+
+                });
+
+            </script>
+        <?php
     }
 
-    // Form validation
-    public function htmega_validation( $username = NUll, $password = NULL, $email = NULL, $website = NULL, $first_name = NULL, $last_name = NULL, $nickname = NULL, $bio = NULL ){
-
-        if( !empty( $username ) ){
-
-            if ( 4 > strlen( $username ) ) {
-                return new \WP_Error( 'username_length', 'Username too short. At least 4 characters is required' );
-            }
-            if ( username_exists( $username ) ){
-                return new \WP_Error('user_name', 'Sorry, that username already exists!');
-            }
-            if ( ! validate_username( $username ) ) {
-                return new \WP_Error( 'username_invalid', 'Sorry, the username you entered is not valid' );
-            }
-
-        }
-
-        if( !empty($password) ){
-
-            if ( 5 > strlen( $password ) ) {
-                return new \WP_Error( 'password', 'Password length must be greater than 5' );
-            }
-
-        }
-
-        if( !empty( $email ) ){
-            
-            if ( !is_email( $email ) ) {
-                return new \WP_Error( 'email_invalid', 'Email is not valid' );
-            }
-
-            if ( email_exists( $email ) ) {
-                return new \WP_Error( 'email', 'Email Already in use' );
-            }
-        }
-
-        if ( ! empty( $website ) ) {
-            if ( ! filter_var( $website, FILTER_VALIDATE_URL ) ) {
-                return new \WP_Error( 'website', 'Website is not a valid URL' );
-            }
-        }
-
-    }
 
 }
-

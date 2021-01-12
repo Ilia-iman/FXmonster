@@ -1,23 +1,32 @@
 <?php 
 
+/**
+ * Premium Carousel.
+ */
 namespace PremiumAddons\Widgets;
 
-use PremiumAddons\Helper_Functions;
-use PremiumAddons\Includes;
+// Elementor Classes.
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Repeater;
 use Elementor\Scheme_Color;
 use Elementor\Group_Control_Border;
 
+// PremiumAddons Classes.
+use PremiumAddons\Includes\Helper_Functions;
+use PremiumAddons\Includes\Premium_Template_Tags;
+
 if( ! defined( 'ABSPATH' ) ) exit; // No access of directly access
 
+/**
+ * Class Premium_Carousel
+ */
 class Premium_Carousel extends Widget_Base {
 
     protected $templateInstance;
 
 	public function getTemplateInstance() {
-		return $this->templateInstance = Includes\premium_Template_Tags::getInstance();
+		return $this->templateInstance = Premium_Template_Tags::getInstance();
 	}
 
 	public function get_name() {
@@ -33,11 +42,12 @@ class Premium_Carousel extends Widget_Base {
 	}
     
     public function is_reload_preview_required() {
-       return true;
+        return true;
     }
     
     public function get_style_depends() {
         return [
+            'font-awesome-5-all',
             'premium-addons'
         ];
     }
@@ -45,7 +55,7 @@ class Premium_Carousel extends Widget_Base {
 	public function get_script_depends() {
 		return [
             'jquery-slick',
-            'premium-addons-js',
+            'premium-addons',
         ];
 	}
 
@@ -57,8 +67,12 @@ class Premium_Carousel extends Widget_Base {
 		return 'https://premiumaddons.com/support/';
 	}
     
-    // Adding the controls fields for the premium carousel
-    // This will controls the animation, colors and background, dimensions etc
+    /**
+	 * Register Carousel controls.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
 	protected function _register_controls() {
 		$this->start_controls_section('premium_carousel_global_settings',
 			[
@@ -80,16 +94,17 @@ class Premium_Carousel extends Widget_Base {
 		);
 
 		$this->add_control('premium_carousel_slider_content',
-		  	[
-		     	'label'         => __( 'Templates', 'premium-addons-for-elementor' ),
-		     	'description'	=> __( 'Slider content is a template which you can choose from Elementor library. Each template will be a slider content', 'premium-addons-for-elementor' ),
-		     	'type'          => Controls_Manager::SELECT2,
-		     	'options'       => $this->getTemplateInstance()->get_elementor_page_list(),
-		     	'multiple'      => true,
+			[
+				'label'         => __( 'Templates', 'premium-addons-for-elementor' ),
+				'description'	=> __( 'Slider content is a template which you can choose from Elementor library. Each template will be a slider content', 'premium-addons-for-elementor' ),
+				'type'          => Controls_Manager::SELECT2,
+				'options'       => $this->getTemplateInstance()->get_elementor_page_list(),
+				'multiple'      => true,
+                'label_block'   => true,
                 'condition'     => [
                     'premium_carousel_content_type' => 'select'
                 ]
-		  	]
+			]
 		);
         
         $repeater = new REPEATER();
@@ -98,15 +113,25 @@ class Premium_Carousel extends Widget_Base {
             [
                 'label'         => __( 'Content', 'premium-addons-for-elementor' ),
                 'type'          => Controls_Manager::SELECT2,
+                'label_block'   => true,
                 'options'       => $this->getTemplateInstance()->get_elementor_page_list()
             ]
-        );
+		);
+		
+		$repeater->add_control('custom_navigation',
+			[
+				'label'			=> __( 'Custom Navigation Element Selector', 'premium-addons-for-elementor' ),
+				'type'			=> Controls_Manager::TEXT,
+				'label_block'	=> true,
+                'description'	=> __( 'Use this to add an element selector to be used to navigate to this slide. For example #slide-1', 'premium-addons-for-elementor' ),
+			]
+		);
         
         $this->add_control('premium_carousel_templates_repeater',
             [
                 'label'         => __('Templates', 'premium-addons-for-elementor'),
                 'type'          => Controls_Manager::REPEATER,
-                'fields'        => array_values( $repeater->get_controls() ),
+                'fields'        => $repeater->get_controls(),
                 'condition'     => [
                     'premium_carousel_content_type' => 'repeater'
                 ],
@@ -173,16 +198,12 @@ class Premium_Carousel extends Widget_Base {
 				'label'             => __( 'Vertical Offset', 'premium-addons-for-elementor' ),
 				'type'              => Controls_Manager::SLIDER,
                 'size_units'        => ['px', 'em', '%'],
-                'default'           => [
-                    'unit'  => '%',
-                    'size'  => 50
-                ],
                 'selectors'         => [
                     '{{WRAPPER}} .premium-carousel-dots-above ul.slick-dots' => 'top: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} .premium-carousel-dots-below ul.slick-dots' => 'bottom: {{SIZE}}{{UNIT}}',
                 ],
                 'condition'     => [
                     'premium_carousel_dot_navigation_show'  => 'yes',
-                    'premium_carousel_dot_position'         => 'above'
                 ]
 			]
 		);
@@ -250,7 +271,7 @@ class Premium_Carousel extends Widget_Base {
         
         $this->start_controls_section('premium_carousel_slides_settings',
 			[
-				'label' => __( 'Slides\' Settings' , 'premium-addons-for-elementor' )
+				'label' => __( 'Slides Settings' , 'premium-addons-for-elementor' )
 			]
 		);
         
@@ -312,14 +333,13 @@ class Premium_Carousel extends Widget_Base {
 				'condition'		=> [
 					'premium_carousel_autoplay' => 'yes'
 				],
-				'separator'		=> 'after'
 			]
 		);
 
         $this->add_control('premium_carousel_animation_list', 
             [
                 'label'         => __('Animations', 'premium-addons-for-elementor'),
-                'type'          => Controls_Manager::ANIMATION,
+                'type'          => Controls_Manager::HIDDEN,
                 'render_type'   => 'template'
             ]
             );
@@ -422,20 +442,37 @@ class Premium_Carousel extends Widget_Base {
         
         $this->end_controls_section();
         
-        $this->start_controls_section('docs',
+        $this->start_controls_section('section_pa_docs',
             [
-                'label'         => __('Helpful Documentations', 'premium-addons-pro'),
+                'label'         => __('Helpful Documentations', 'premium-addons-for-elementor'),
             ]
         );
         
-        $this->add_control('doc_1',
-            [
-                'type'            => Controls_Manager::RAW_HTML,
-                'raw'             => sprintf( __( '%1$s Issue: I can see the first slide only » %2$s', 'premium-addons-for-elementor' ), '<a href="https://premiumaddons.com/docs/i-can-see-the-first-slide-only-in-carousel-widget/?utm_source=pa-dashboard&utm_medium=pa-editor&utm_campaign=pa-plugin" target="_blank" rel="noopener">', '</a>' ),
-                'content_classes' => 'editor-pa-doc',
-            ]
-        );
-        
+        $docs = [
+            'https://premiumaddons.com/docs/i-can-see-the-first-slide-only-in-carousel-widget' => 'Issue: I can see the first slide only »',
+            'https://premiumaddons.com/docs/how-to-create-elementor-template-to-be-used-with-premium-addons' => 'How to create an Elementor template to be used in Premium Carousel »',
+            'https://premiumaddons.com/docs/why-im-not-able-to-see-elementor-font-awesome-5-icons-in-premium-add-ons/' => 'I\'m not able to see Font Awesome icons in the widget »',
+            'https://premiumaddons.com/docs/how-to-add-entrance-animations-to-elementor-elements-in-premium-carousel-widget/' => 'How to add entrance animations to the elements inside Premium Carousel Widget »',
+            'https://premiumaddons.com/docs/how-to-use-elementor-widgets-to-navigate-through-carousel-widget-slides/' => 'How To Use Elementor Widgets To Navigate Through Carousel Widget Slides »'
+        ];
+
+        $doc_index = 1;
+        foreach( $docs as $url => $title ) {
+
+            $doc_url = Helper_Functions::get_campaign_link( $url, 'editor-page', 'wp-editor', 'get-support' ); 
+
+            $this->add_control('doc_' . $doc_index,
+                [
+                    'type'            => Controls_Manager::RAW_HTML,
+                    'raw'             => sprintf(  '<a href="%s" target="_blank">%s</a>', $doc_url , __( $title, 'premium-addons-for-elementor' ) ),
+                    'content_classes' => 'editor-pa-doc',
+                ]
+            );
+
+            $doc_index++;
+
+        }
+		
         $this->end_controls_section();
         
 		$this->start_controls_section('premium_carousel_navigation_arrows',
@@ -449,131 +486,133 @@ class Premium_Carousel extends Widget_Base {
 		);
         
         $this->add_control('premium_carousel_arrow_icon_next',
-		    [
-		        'label'         => __( 'Right Icon', 'premium-addons-for-elementor' ),
-		        'type'          => Controls_Manager::CHOOSE,
-		        'options'       => [
-		            'right_arrow_bold'          => [
-		                'icon' => 'fas fa-arrow-right',
-		            ],
-		            'right_arrow_long'          => [
-		                'icon' => 'fas fa-long-arrow-alt-right',
-		            ],
-		            'right_arrow_long_circle' 	=> [
-		                'icon' => 'fas fa-arrow-circle-right',
-		            ],
-		            'right_arrow_angle' 		=> [
-		                'icon' => 'fas fa-angle-right',
-		            ],
-		            'right_arrow_chevron' 		=> [
-		                'icon' => 'fas fa-chevron-right',
-		            ]
-		        ],
-		        'default'       => 'right_arrow_angle',
-		        'condition'		=> [
-					'premium_carousel_navigation_show'  => 'yes',
-					'premium_carousel_slider_type!'     => 'vertical'
-				],
+            [
+                'label'         => __( 'Right Icon', 'premium-addons-for-elementor' ),
+                'type'          => Controls_Manager::CHOOSE,
+                'options'       => [
+                    'right_arrow_bold'          => [
+                        'icon' => 'fas fa-arrow-right',
+                    ],
+                    'right_arrow_long'          => [
+                        'icon' => 'fas fa-long-arrow-alt-right',
+                    ],
+                    'right_arrow_long_circle' 	=> [
+                        'icon' => 'fas fa-arrow-circle-right',
+                    ],
+                    'right_arrow_angle' 		=> [
+                        'icon' => 'fas fa-angle-right',
+                    ],
+                    'right_arrow_chevron' 		=> [
+                        'icon' => 'fas fa-chevron-right',
+                    ]
+                ],
+                'default'       => 'right_arrow_angle',
+                'condition'		=> [
+                    'premium_carousel_navigation_show'  => 'yes',
+                    'premium_carousel_slider_type!'     => 'vertical'
+                ],
                 'toggle'        => false
-		    ]
-		);
+            ]
+        );
 
-		$this->add_control('premium_carousel_arrow_icon_next_ver',
-		    [
-		        'label' 	=> __( 'Bottom Icon', 'premium-addons-for-elementor' ),
-		        'type' 		=> Controls_Manager::CHOOSE,
-		        'options' 	=> [
-		            'right_arrow_bold'    		=> [
-		                'icon' => 'fas fa-arrow-down',
-		            ],
-		            'right_arrow_long' 			=> [
-		                'icon' => 'fas fa-long-arrow-alt-down',
-		            ],
-		            'right_arrow_long_circle' 	=> [
-		                'icon' => 'fas fa-arrow-circle-down',
-		            ],
-		            'right_arrow_angle' 		=> [
-		                'icon' => 'fas fa-angle-down',
-		            ],
-		            'right_arrow_chevron' 		=> [
-		                'icon' => 'fas fa-chevron-down',
-		            ]
-		        ],
-		        'default'		=> 'right_arrow_angle',
-		        'condition'		=> [
-					'premium_carousel_navigation_show'  => 'yes',
-					'premium_carousel_slider_type'      => 'vertical',
-				],
+        $this->add_control('premium_carousel_arrow_icon_next_ver',
+            [
+                'label' 	=> __( 'Bottom Icon', 'premium-addons-for-elementor' ),
+                'type' 		=> Controls_Manager::CHOOSE,
+                'options' 	=> [
+                    'right_arrow_bold'    		=> [
+                        'icon' => 'fas fa-arrow-down',
+                    ],
+                    'right_arrow_long' 			=> [
+                        'icon' => 'fas fa-long-arrow-alt-down',
+                    ],
+                    'right_arrow_long_circle' 	=> [
+                        'icon' => 'fas fa-arrow-circle-down',
+                    ],
+                    'right_arrow_angle' 		=> [
+                        'icon' => 'fas fa-angle-down',
+                    ],
+                    'right_arrow_chevron' 		=> [
+                        'icon' => 'fas fa-chevron-down',
+                    ]
+                ],
+                'default'		=> 'right_arrow_angle',
+                'condition'		=> [
+                    'premium_carousel_navigation_show'  => 'yes',
+                    'premium_carousel_slider_type'      => 'vertical',
+                ],
                 'toggle'        => false
-		    ]
-		);
+            ]
+        );
         
-		$this->add_control('premium_carousel_arrow_icon_prev_ver',
-		    [
-		        'label'         => __( 'Top Icon', 'premium-addons-for-elementor' ),
-		        'type'          => Controls_Manager::CHOOSE,
-		        'options'       => [
-		            'left_arrow_bold'    		=> [
-		                'icon' => 'fas fa-arrow-up',
-		            ],
-		            'left_arrow_long' 			=> [
-		                'icon' => 'fas fa-long-arrow-alt-up',
-		            ],
-		            'left_arrow_long_circle' 	=> [
-		                'icon' => 'fas fa-arrow-circle-up',
-		            ],
-		            'left_arrow_angle' 		=> [
-		                'icon' => 'fas fa-angle-up',
-		            ],
-		            'left_arrow_chevron' 		=> [
-		                'icon' => 'fas fa-chevron-up',
-		            ]
-		        ],
-		        'default'		=> 'left_arrow_angle',
-		        'condition'		=> [
-					'premium_carousel_navigation_show'  => 'yes',
-					'premium_carousel_slider_type'      => 'vertical',
-				],
+        $this->add_control('premium_carousel_arrow_icon_prev_ver',
+            [
+                'label'         => __( 'Top Icon', 'premium-addons-for-elementor' ),
+                'type'          => Controls_Manager::CHOOSE,
+                'options'       => [
+                    'left_arrow_bold'    		=> [
+                        'icon' => 'fas fa-arrow-up',
+                    ],
+                    'left_arrow_long' 			=> [
+                        'icon' => 'fas fa-long-arrow-alt-up',
+                    ],
+                    'left_arrow_long_circle' 	=> [
+                        'icon' => 'fas fa-arrow-circle-up',
+                    ],
+                    'left_arrow_angle' 		=> [
+                        'icon' => 'fas fa-angle-up',
+                    ],
+                    'left_arrow_chevron' 		=> [
+                        'icon' => 'fas fa-chevron-up',
+                    ]
+                ],
+                'default'		=> 'left_arrow_angle',
+                'condition'		=> [
+                    'premium_carousel_navigation_show'  => 'yes',
+                    'premium_carousel_slider_type'      => 'vertical',
+                ],
                 'toggle'        => false
-		    ]
-		);
+            ]
+        );
         
-		$this->add_control('premium_carousel_arrow_icon_prev',
-		    [
-		        'label'         => __( 'Left Icon', 'premium-addons-for-elementor' ),
-		        'type'          => Controls_Manager::CHOOSE,
-		        'options'       => [
-		            'left_arrow_bold'    		=> [
-		                'icon' => 'fas fa-arrow-left',
-		            ],
-		            'left_arrow_long' 			=> [
-		                'icon' => 'fas fa-long-arrow-alt-left',
-		            ],
-		            'left_arrow_long_circle' 	=> [
-		                'icon' => 'fas fa-arrow-circle-left',
-		            ],
-		            'left_arrow_angle' 		=> [
-		                'icon' => 'fas fa-angle-left',
-		            ],
-		            'left_arrow_chevron' 		=> [
-		                'icon' => 'fas fa-chevron-left',
-		            ]
-		        ],
-		        'default'		=> 'left_arrow_angle',
-		        'condition'		=> [
-					'premium_carousel_navigation_show' => 'yes',
-					'premium_carousel_slider_type!' => 'vertical',
-				],
+        $this->add_control('premium_carousel_arrow_icon_prev',
+            [
+                'label'         => __( 'Left Icon', 'premium-addons-for-elementor' ),
+                'type'          => Controls_Manager::CHOOSE,
+                'options'       => [
+                    'left_arrow_bold'    		=> [
+                        'icon' => 'fas fa-arrow-left',
+                    ],
+                    'left_arrow_long' 			=> [
+                        'icon' => 'fas fa-long-arrow-alt-left',
+                    ],
+                    'left_arrow_long_circle' 	=> [
+                        'icon' => 'fas fa-arrow-circle-left',
+                    ],
+                    'left_arrow_angle' 		=> [
+                        'icon' => 'fas fa-angle-left',
+                    ],
+                    'left_arrow_chevron' 		=> [
+                        'icon' => 'fas fa-chevron-left',
+                    ]
+                ],
+                'default'		=> 'left_arrow_angle',
+                'condition'		=> [
+                    'premium_carousel_navigation_show' => 'yes',
+                    'premium_carousel_slider_type!' => 'vertical',
+                ],
                 'toggle'        => false
-		    ]
-		);
+            ]
+        );
         
         $this->add_responsive_control('premium_carousel_arrow_size',
 			[
 				'label'         => __( 'Size', 'premium-addons-for-elementor' ),
-				'type'          => Controls_Manager::SLIDER,
+                'type'          => Controls_Manager::SLIDER,
+                'size_units'    => ['px', 'em', 'vw'],
 				'default'       => [
-					'size' => 14,
+                    'size' => 14,
+                    'unit' => 'px'
 				],
 				'range'         => [
 					'px' => [
@@ -602,11 +641,12 @@ class Premium_Carousel extends Widget_Base {
                 ],
                 'condition'		=> [
                     'premium_carousel_navigation_show' => 'yes',
-                    'premium_carousel_slider_type'     => 'horizontal'
 				],
                 'selectors'     => [
                     '{{WRAPPER}} a.carousel-arrow.carousel-next' => 'right: {{SIZE}}px',
                     '{{WRAPPER}} a.carousel-arrow.carousel-prev' => 'left: {{SIZE}}px',
+                    '{{WRAPPER}} a.ver-carousel-arrow.carousel-next' => 'bottom: {{SIZE}}px',
+                    '{{WRAPPER}} a.ver-carousel-arrow.carousel-prev' => 'top: {{SIZE}}px',
                 ]
             ]
         );
@@ -624,8 +664,8 @@ class Premium_Carousel extends Widget_Base {
 				'label' 		=> __( 'Color', 'premium-addons-for-elementor' ),
 				'type' 			=> Controls_Manager::COLOR,
 				'scheme' 		=> [
-				    'type' 	=> Scheme_Color::get_type(),
-				    'value' => Scheme_Color::COLOR_2,
+                    'type' 	=> Scheme_Color::get_type(),
+                    'value' => Scheme_Color::COLOR_2,
 				],
 				'condition'		=> [
 					'premium_carousel_navigation_show' => 'yes'
@@ -678,8 +718,8 @@ class Premium_Carousel extends Widget_Base {
 				'label' 		=> __( 'Color', 'premium-addons-for-elementor' ),
 				'type' 			=> Controls_Manager::COLOR,
 				'scheme' 		=> [
-				    'type' 	=> Scheme_Color::get_type(),
-				    'value' => Scheme_Color::COLOR_2,
+                    'type' 	=> Scheme_Color::get_type(),
+                    'value' => Scheme_Color::COLOR_2,
 				],
 				'condition'		=> [
 					'premium_carousel_navigation_show' => 'yes'
@@ -736,64 +776,64 @@ class Premium_Carousel extends Widget_Base {
 		);
         
         $this->add_control('premium_carousel_dot_icon',
-		    [
-		        'label'         => __( 'Icon', 'premium-addons-for-elementor' ),
-		        'type'          => Controls_Manager::CHOOSE,
-		        'options'       => [
-		            'square_white'    		=> [
-		                'icon' => 'far fa-square',
-		            ],
-		            'square_black' 			=> [
-		                'icon' => 'fas fa-square',
-		            ],
-		            'circle_white' 	=> [
-		                'icon' => 'fas fa-circle',
-		            ],
-		            'circle_thin' 		=> [
-		                'icon' => 'far fa-circle',
-		            ]
-		        ],
-		        'default'		=> 'circle_white',
-		        'condition'		=> [
-					'premium_carousel_dot_navigation_show' => 'yes'
-				],
+            [
+                'label'         => __( 'Icon', 'premium-addons-for-elementor' ),
+                'type'          => Controls_Manager::CHOOSE,
+                'options'       => [
+                    'square_white'    		=> [
+                        'icon' => 'far fa-square',
+                    ],
+                    'square_black' 			=> [
+                        'icon' => 'fas fa-square',
+                    ],
+                    'circle_white' 	=> [
+                        'icon' => 'fas fa-circle',
+                    ],
+                    'circle_thin' 		=> [
+                        'icon' => 'far fa-circle',
+                    ]
+                ],
+                'default'		=> 'circle_white',
+                'condition'		=> [
+                    'premium_carousel_dot_navigation_show' => 'yes'
+                ],
                 'toggle'        => false
-		    ]
-		);
+            ]
+        );
 
-		$this->add_control('premium_carousel_dot_navigation_color',
-			[
-				'label' 		=> __( 'Color', 'premium-addons-for-elementor' ),
-				'type' 			=> Controls_Manager::COLOR,
-				'scheme' 		=> [
-				    'type' 	=> Scheme_Color::get_type(),
-				    'value' => Scheme_Color::COLOR_2,
-				],
-				'condition'		=> [
-					'premium_carousel_dot_navigation_show' => 'yes'
-				],
-				'selectors'		=> [
-					'{{WRAPPER}} ul.slick-dots li' => 'color: {{VALUE}}'
-				]
-			]
-		);
+        $this->add_control('premium_carousel_dot_navigation_color',
+            [
+                'label' 		=> __( 'Color', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::COLOR,
+                'scheme' 		=> [
+                    'type' 	=> Scheme_Color::get_type(),
+                    'value' => Scheme_Color::COLOR_2,
+                ],
+                'condition'		=> [
+                    'premium_carousel_dot_navigation_show' => 'yes'
+                ],
+                'selectors'		=> [
+                    '{{WRAPPER}} ul.slick-dots li' => 'color: {{VALUE}}'
+                ]
+            ]
+        );
 
-		$this->add_control('premium_carousel_dot_navigation_active_color',
-			[
-				'label' 		=> __( 'Active Color', 'premium-addons-for-elementor' ),
-				'type' 			=> Controls_Manager::COLOR,
-				'scheme' 		=> [
-				    'type' 	=> Scheme_Color::get_type(),
-				    'value' => Scheme_Color::COLOR_1,
-				],
-				'condition'		=> [
-					'premium_carousel_dot_navigation_show' => 'yes'
-				],
-				'selectors'		=> [
-					'{{WRAPPER}} ul.slick-dots li.slick-active' => 'color: {{VALUE}}'
-				]
-			]
-		);
+        $this->add_control('premium_carousel_dot_navigation_active_color',
+            [
+                'label' 		=> __( 'Active Color', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::COLOR,
+                'scheme' 		=> [
+                    'type' 	=> Scheme_Color::get_type(),
+                    'value' => Scheme_Color::COLOR_1,
+                ],
+                'condition'		=> [
+                    'premium_carousel_dot_navigation_show' => 'yes'
+                ],
+                'selectors'		=> [
+                    '{{WRAPPER}} ul.slick-dots li.slick-active' => 'color: {{VALUE}}'
+                ]
+            ]
+        );
         
         $this->add_control('premium_carousel_ripple_active_color',
 			[
@@ -827,20 +867,47 @@ class Premium_Carousel extends Widget_Base {
 
 	}
 
+	/**
+	 * Render Carousel widget output on the frontend.
+	 *
+	 * Written in PHP and used to generate the final HTML.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
 	protected function render() {
         
-		$settings = $this->get_settings();
+        $settings = $this->get_settings();
+		
+		$content_type = $settings['premium_carousel_content_type'];
+		
+        $templates = array();
+        
+        if( 'select' === $content_type ) {
+            $templates = $settings['premium_carousel_slider_content'];
+        } else {
+			$custom_navigation = array();
+
+            foreach( $settings['premium_carousel_templates_repeater'] as $template ) {
+				array_push( $templates, $template['premium_carousel_repeater_item'] );
+				array_push( $custom_navigation, $template['custom_navigation'] );
+            }
+        }
+
+        if( empty( $templates ) ) {
+            return;
+        }
         
         $vertical = $settings['premium_carousel_slider_type'] == 'vertical' ? true : false;
 		
 		$slides_on_desk = $settings['premium_carousel_responsive_desktop'];
-		if( $settings['premium_carousel_slides_to_show'] == 'all' ) {
+		if( $settings['premium_carousel_slides_to_show'] === 'all' ) {
 			$slidesToScroll = ! empty( $slides_on_desk ) ? $slides_on_desk : 1;
 		} else {
 			$slidesToScroll = 1;
 		}
 
-		$slidesToShow = !empty($slides_on_desk) ? $slides_on_desk : 1;
+		$slidesToShow = !empty( $slides_on_desk ) ? $slides_on_desk : 1;
 
 		$slides_on_tabs = $settings['premium_carousel_responsive_tabs'];
 		$slides_on_mob = $settings['premium_carousel_responsive_mobile'];
@@ -853,9 +920,9 @@ class Premium_Carousel extends Widget_Base {
 			$slides_on_mob = $slides_on_desk;
 		}
 
-        $infinite = $settings['premium_carousel_loop'] == 'yes' ? true : false;
+        $infinite = $settings['premium_carousel_loop'] === 'yes' ? true : false;
 
-        $fade = $settings['premium_carousel_fade'] == 'yes' ? true : false;
+        $fade = $settings['premium_carousel_fade'] === 'yes' ? true : false;
         
         $speed = !empty( $settings['premium_carousel_speed'] ) ? $settings['premium_carousel_speed'] : '';
         
@@ -997,6 +1064,7 @@ class Premium_Carousel extends Widget_Base {
 		$extra_class = ! empty ( $settings['premium_carousel_extra_class'] ) ? ' ' . $settings['premium_carousel_extra_class'] : '';
 		
 		$animation_class = $settings['premium_carousel_animation_list'];
+        
 		$animation = ! empty( $animation_class ) ? 'animated ' . $animation_class : 'null';
         
         $tablet_breakpoint = ! empty ( $settings['premium_carousel_tablet_breakpoint'] ) ? $settings['premium_carousel_tablet_breakpoint'] : 1025;
@@ -1029,18 +1097,9 @@ class Premium_Carousel extends Widget_Base {
             'slidesMob'     => $slides_on_mob,
             'animation'     => $animation,
             'tabletBreak'   => $tablet_breakpoint,
-            'mobileBreak'   => $mobile_breakpoint
+			'mobileBreak'   => $mobile_breakpoint,
+			'navigation'	=> 'repeater' === $content_type ? $custom_navigation : array()
         ];
-        
-        $templates = array();
-        
-        if( 'select' === $settings['premium_carousel_content_type'] ){
-            $templates = $settings['premium_carousel_slider_content'];
-        } else {
-            foreach( $settings['premium_carousel_templates_repeater'] as $template ){
-                array_push($templates, $template['premium_carousel_repeater_item']);
-            }
-        }
         
         $this->add_render_attribute( 'carousel', 'id', 'premium-carousel-wrapper-' . esc_attr( $this->get_id() ) );
         
@@ -1079,8 +1138,16 @@ class Premium_Carousel extends Widget_Base {
         </div>
 		<?php
 	}
-    
-    protected function _content_template() {
+	
+	/**
+	 * Render Carousel widget output in the editor.
+	 *
+	 * Written as a Backbone JavaScript template and used to generate the live preview.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+    protected function content_template() {
         
         ?>
         
@@ -1266,6 +1333,25 @@ class Premium_Carousel extends Widget_Base {
             var tabletBreakpoint = '' !== settings.premium_carousel_tablet_breakpoint ? settings.premium_carousel_tablet_breakpoint : 1025;
 
             var mobileBreakpoint = '' !== settings.premium_carousel_mobile_breakpoint ? settings.premium_carousel_mobile_breakpoint : 768;
+
+            var templates = [],
+				contentType = settings.premium_carousel_content_type;
+            
+            if( 'select' === contentType ) {
+            
+                templates = settings.premium_carousel_slider_content;
+                
+            } else {
+            
+                var customNavigation = [];
+                _.each( settings.premium_carousel_templates_repeater, function( template ) {
+                
+                    templates.push( template.premium_carousel_repeater_item );
+                    customNavigation.push( template.custom_navigation );
+                
+                } );
+            
+            }
             
             var carouselSettings = {};
             
@@ -1295,22 +1381,9 @@ class Premium_Carousel extends Widget_Base {
             carouselSettings.animation      = animation;
             carouselSettings.tabletBreak    = tabletBreakpoint;
             carouselSettings.mobileBreak    = mobileBreakpoint;
+            carouselSettings.navigation	    = 'repeater' === contentType ? customNavigation : [];
             
-            var templates = [];
             
-            if( 'select' === settings.premium_carousel_content_type ) {
-            
-                templates = settings.premium_carousel_slider_content;
-                
-            } else {
-            
-                _.each( settings.premium_carousel_templates_repeater, function( template ) {
-                
-                    templates.push( template.premium_carousel_repeater_item );
-                
-                } );
-            
-            }
 
             view.addRenderAttribute( 'carousel', 'id', 'premium-carousel-wrapper-' + view.getID() );
 

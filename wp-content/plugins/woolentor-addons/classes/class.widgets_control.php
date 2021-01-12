@@ -48,16 +48,21 @@ class Widgets_Control{
         $wl_element_manager = array(
             'product_tabs',
             'add_banner',
-            'special_day_offer'
+            'special_day_offer',
+            'wb_image_marker',
         );
         if( !is_plugin_active('woolentor-addons-pro/woolentor_addons_pro.php') ){
             $wl_element_manager[] = 'universal_product';
+            $wl_element_manager[] = 'wl_category';
+            $wl_element_manager[] = 'wl_brand';
+            $wl_element_manager[] = 'wb_customer_review';
         }
 
         // WooCommerce Builder
         if( woolentor_get_option( 'enablecustomlayout', 'woolentor_woo_template_tabs', 'on' ) == 'on' ){
             $wlb_element  = array(
                 'wb_archive_product',
+                'wl_product_filter',
                 'wb_product_title',
                 'wb_product_related',
                 'wb_product_add_to_cart',
@@ -75,6 +80,10 @@ class Widgets_Control{
                 'wb_product_meta',
                 'wb_product_call_for_price',
                 'wb_product_suggest_price',
+                'wb_product_qr_code',
+                'product_curvy',
+                'product_image_accordion',
+                'product_accordion',
             );
         }else{ $wlb_element  = array(); }
         $wl_element_manager = array_merge( $wl_element_manager, $wlb_element );

@@ -22,10 +22,20 @@ class WL_Product_Video_Gallery_ELement extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
     public function get_script_depends() {
         return [
             'woolentor-widgets-scripts',
         ];
+    }
+
+    public function get_keywords(){
+        return ['video','gallery','product video gallery'];
     }
 
     protected function _register_controls() {
@@ -194,110 +204,109 @@ class WL_Product_Video_Gallery_ELement extends Widget_Base {
 
         $this->add_render_attribute( 'wl_product_thumbnails_attr', 'class', 'wlpro-product-videothumbnails thumbnails-tab-position-'.$settings['tab_thumbnails_position'] );
 
-        global $product;
-        $product = wc_get_product();
-        if ( Plugin::instance()->editor->is_edit_mode() ) {
-            echo '<div class="product-image">'.__('Product Video Gallery','woolentor').'</div>';
-        }else{
+        if( Plugin::instance()->editor->is_edit_mode() ){
+            $product = wc_get_product( woolentor_get_last_product_id() );
+        } else{
+            global $product;
+        }
 
-            if ( empty( $product ) ) { return; }
-            $gallery_images_ids = $product->get_gallery_image_ids() ? $product->get_gallery_image_ids() : array();
-            if ( has_post_thumbnail() ){
-                array_unshift( $gallery_images_ids, $product->get_image_id() );
-            }
+        if ( empty( $product ) ) { return; }
+        $gallery_images_ids = $product->get_gallery_image_ids() ? $product->get_gallery_image_ids() : array();
+        if ( $product->get_image_id() ){
+            array_unshift( $gallery_images_ids, $product->get_image_id() );
+        }
 
-            ?>
+        ?>
 
-            <div <?php echo $this->get_render_attribute_string( 'wl_product_thumbnails_attr' ); ?>>
-                <div class="wl-thumbnails-image-area">
+        <div <?php echo $this->get_render_attribute_string( 'wl_product_thumbnails_attr' ); ?>>
+            <div class="wl-thumbnails-image-area">
 
-                        <?php if( $settings['tab_thumbnails_position'] == 'left' || $settings['tab_thumbnails_position'] == 'top' ): ?>
-                            <ul class="woolentor-product-video-tabs">
-                                <?php
-                                    $j=0;
-                                    foreach ( $gallery_images_ids as $thkey => $gallery_attachment_id ) {
-                                        $j++;
-                                        if( $j == 1 ){ $tabactive = 'htactive'; }else{ $tabactive = ' '; }
-                                        $video_url = get_post_meta( $gallery_attachment_id, 'woolentor_video_url', true );
-                                        ?>
-                                        <li class="<?php if( !empty( $video_url ) ){ echo 'wlvideothumb'; }?>">
-                                            <a class="<?php echo $tabactive; ?>" href="#wlvideo-<?php echo $j; ?>">
-                                                <?php
-                                                    if( !empty( $video_url ) ){
-                                                        echo '<span class="wlvideo-button"><i class="sli sli-control-play"></i></span>';
-                                                        echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
-                                                    }else{
-                                                        echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
-                                                    }
-                                                ?>
-                                            </a>
-                                        </li>
-                                        <?php
-                                    }
-                                ?>
-                            </ul>
-                        <?php endif; ?>
-
-                        <div class="woolentor-product-gallery-video">
+                    <?php if( $settings['tab_thumbnails_position'] == 'left' || $settings['tab_thumbnails_position'] == 'top' ): ?>
+                        <ul class="woolentor-product-video-tabs">
                             <?php
-                                $i = 0;
+                                $j=0;
                                 foreach ( $gallery_images_ids as $thkey => $gallery_attachment_id ) {
-                                    $i++;
-                                    if( $i == 1 ){ $tabactive = 'htactive'; }else{ $tabactive = ' '; }
+                                    $j++;
+                                    if( $j == 1 ){ $tabactive = 'htactive'; }else{ $tabactive = ' '; }
                                     $video_url = get_post_meta( $gallery_attachment_id, 'woolentor_video_url', true );
                                     ?>
-                                    <div class="video-cus-tab-pane <?php echo $tabactive; ?>" id="wlvideo-<?php echo $i; ?>">
-                                        <?php
-                                            if( !empty( $video_url ) ){
-                                                ?>
-                                                    <div class="embed-responsive embed-responsive-16by9">
-                                                        <?php echo wp_oembed_get( $video_url ); ?>
-                                                    </div>
-                                                <?php
-                                            }else{
-                                                echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_single' );
-                                            }
-                                        ?>
-                                    </div>
+                                    <li class="<?php if( !empty( $video_url ) ){ echo 'wlvideothumb'; }?>">
+                                        <a class="<?php echo $tabactive; ?>" href="#wlvideo-<?php echo $j; ?>">
+                                            <?php
+                                                if( !empty( $video_url ) ){
+                                                    echo '<span class="wlvideo-button"><i class="sli sli-control-play"></i></span>';
+                                                    echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
+                                                }else{
+                                                    echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
+                                                }
+                                            ?>
+                                        </a>
+                                    </li>
                                     <?php
                                 }
                             ?>
-                        </div>
+                        </ul>
+                    <?php endif; ?>
 
-                        <?php if( $settings['tab_thumbnails_position'] == 'right' || $settings['tab_thumbnails_position'] == 'bottom' ): ?>
-
-                            <ul class="woolentor-product-video-tabs">
-                                <?php
-                                    $j=0;
-                                    foreach ( $gallery_images_ids as $thkey => $gallery_attachment_id ) {
-                                        $j++;
-                                        if( $j == 1 ){ $tabactive = 'htactive'; }else{ $tabactive = ' '; }
-                                        $video_url = get_post_meta( $gallery_attachment_id, 'woolentor_video_url', true );
-                                        ?>
-                                        <li class="<?php if( !empty( $video_url ) ){ echo 'wlvideothumb'; }?>">
-                                            <a class="<?php echo $tabactive; ?>" href="#wlvideo-<?php echo $j; ?>">
-                                                <?php
-                                                    if( !empty( $video_url ) ){
-                                                        echo '<span class="wlvideo-button"><i class="sli sli-control-play"></i></span>';
-                                                        echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
-                                                    }else{
-                                                        echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
-                                                    }
-                                                ?>
-                                            </a>
-                                        </li>
-                                        <?php
-                                    }
+                    <div class="woolentor-product-gallery-video">
+                        <?php
+                            $i = 0;
+                            foreach ( $gallery_images_ids as $thkey => $gallery_attachment_id ) {
+                                $i++;
+                                if( $i == 1 ){ $tabactive = 'htactive'; }else{ $tabactive = ' '; }
+                                $video_url = get_post_meta( $gallery_attachment_id, 'woolentor_video_url', true );
                                 ?>
-                            </ul>
+                                <div class="video-cus-tab-pane <?php echo $tabactive; ?>" id="wlvideo-<?php echo $i; ?>">
+                                    <?php
+                                        if( !empty( $video_url ) ){
+                                            ?>
+                                                <div class="embed-responsive embed-responsive-16by9">
+                                                    <?php echo wp_oembed_get( $video_url ); ?>
+                                                </div>
+                                            <?php
+                                        }else{
+                                            echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_single' );
+                                        }
+                                    ?>
+                                </div>
+                                <?php
+                            }
+                        ?>
+                    </div>
 
-                        <?php endif; ?>
-                        
-                </div>
+                    <?php if( $settings['tab_thumbnails_position'] == 'right' || $settings['tab_thumbnails_position'] == 'bottom' ): ?>
+
+                        <ul class="woolentor-product-video-tabs">
+                            <?php
+                                $j=0;
+                                foreach ( $gallery_images_ids as $thkey => $gallery_attachment_id ) {
+                                    $j++;
+                                    if( $j == 1 ){ $tabactive = 'htactive'; }else{ $tabactive = ' '; }
+                                    $video_url = get_post_meta( $gallery_attachment_id, 'woolentor_video_url', true );
+                                    ?>
+                                    <li class="<?php if( !empty( $video_url ) ){ echo 'wlvideothumb'; }?>">
+                                        <a class="<?php echo $tabactive; ?>" href="#wlvideo-<?php echo $j; ?>">
+                                            <?php
+                                                if( !empty( $video_url ) ){
+                                                    echo '<span class="wlvideo-button"><i class="sli sli-control-play"></i></span>';
+                                                    echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
+                                                }else{
+                                                    echo wp_get_attachment_image( $gallery_attachment_id, 'woocommerce_gallery_thumbnail' );
+                                                }
+                                            ?>
+                                        </a>
+                                    </li>
+                                    <?php
+                                }
+                            ?>
+                        </ul>
+
+                    <?php endif; ?>
+                    
             </div>
+        </div>
 
-            <?php
-        }
+        <?php
     }
 
 }

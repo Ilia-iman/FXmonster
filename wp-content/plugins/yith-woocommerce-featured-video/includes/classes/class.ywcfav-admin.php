@@ -208,6 +208,7 @@ if ( ! class_exists( 'YITH_Featured_Audio_Video_Admin' ) ) {
 		public function save_video_thumbnail( $video_info ){
 
 			$name = isset( $video_info['name'] ) ? $video_info['name'] : $video_info['id'];
+			$result = false;
 			switch ( $video_info['host'] ) {
 
 				case 'vimeo' :

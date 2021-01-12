@@ -97,12 +97,12 @@
         public function woolentor_product_archive_template() {
             $archive_template_id = 0;
             if ( defined('WOOCOMMERCE_VERSION') ) {
-                if ( is_shop() || ( is_tax('product_cat') && is_product_category() ) || ( is_tax('product_tag') && is_product_tag() ) ) {
+                $termobj = get_queried_object();
+                if ( is_shop() || ( is_tax('product_cat') && is_product_category() ) || ( is_tax('product_tag') && is_product_tag() ) || ( isset( $termobj->taxonomy ) && is_tax( $termobj->taxonomy ) ) ) {
                     $product_achive_custom_page_id = woolentor_get_option( 'productarchivepage', 'woolentor_woo_template_tabs', '0' );
 
                     // Meta value
                     $wltermlayoutid = 0;
-                    $termobj = get_queried_object();
                     if(( is_tax('product_cat') && is_product_category() ) || ( is_tax('product_tag') && is_product_tag() )){
                         $wltermlayoutid = get_term_meta( $termobj->term_id, 'wooletor_selectcategory_layout', true ) ? get_term_meta( $termobj->term_id, 'wooletor_selectcategory_layout', true ) : '0';
                     }

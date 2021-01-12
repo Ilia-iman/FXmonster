@@ -33,7 +33,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Beaver_Builder' ) ) :
 		public static function get_instance() {
 
 			if ( ! isset( self::$instance ) ) {
-				self::$instance = new self;
+				self::$instance = new self();
 			}
 			return self::$instance;
 		}
@@ -54,12 +54,20 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Beaver_Builder' ) ) :
 		 */
 		public function import() {
 
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Processing "Beaver Builder" Batch Import' );
+			}
+
 			Astra_Sites_Importer_Log::add( '---- Processing WordPress Posts / Pages - for Beaver Builder ----' );
+
 			if ( ! is_callable( 'FLBuilderModel::get_post_types' ) ) {
 				return;
 			}
 
 			$post_types = FLBuilderModel::get_post_types( 'post-types' );
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'For post types: ' . implode( ', ', $post_types ) );
+			}
 			if ( empty( $post_types ) && ! is_array( $post_types ) ) {
 				return;
 			}
@@ -70,10 +78,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Beaver_Builder' ) ) :
 			}
 
 			foreach ( $post_ids as $post_id ) {
-				$is_bb_post = get_post_meta( $post_id, '_fl_builder_enabled', true );
-				if ( $is_bb_post ) {
-					$this->import_single_post( $post_id );
-				}
+				$this->import_single_post( $post_id );
 			}
 		}
 
@@ -85,7 +90,23 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Beaver_Builder' ) ) :
 		 */
 		public function import_single_post( $post_id = 0 ) {
 
-			Astra_Sites_Importer_Log::add( 'Post ID: ' . $post_id );
+			$is_bb_post = get_post_meta( $post_id, '_fl_builder_enabled', true );
+			if ( ! $is_bb_post ) {
+				return;
+			}
+
+			// Is page imported with Starter Sites?
+			// If not then skip batch process.
+			$imported_from_demo_site = get_post_meta( $post_id, '_astra_sites_enable_for_batch', true );
+			if ( ! $imported_from_demo_site ) {
+				return;
+			}
+
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Beaver Builder - Processing page: ' . $post_id );
+			}
+			Astra_Sites_Importer_Log::add( '---- Processing WordPress Page - for Beaver Builder ---- "' . $post_id . '"' );
+
 			if ( ! empty( $post_id ) ) {
 
 				// Get page builder data.
@@ -145,6 +166,21 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Beaver_Builder' ) ) :
 				$settings->data = FLBuilderPhoto::get_attachment_data( $settings->photo );
 			}
 
+			if ( 'uabb-wp-forms-styler' === $settings->type ) {
+				astra_sites_error_log( '--------WP Form Styler ID replacement start-------' );
+				$ids_mapping = get_option( 'astra_sites_wpforms_ids_mapping', array() );
+				if ( $ids_mapping ) {
+					// Update WP form IDs.
+					foreach ( $ids_mapping as $old_id => $new_id ) {
+						if ( isset( $settings->wp_form_id ) && $old_id === $settings->wp_form_id ) {
+							astra_sites_error_log( '--------WP Form Styler ID ' . $old_id . ' replaced to ' . $new_id . '-------' );
+							$settings->wp_form_id = $new_id;
+						}
+					}
+				}
+				astra_sites_error_log( '--------WP Form Styler ID replacement done-------' );
+			}
+
 			// 3) Set `list item` module images.
 			if ( isset( $settings->add_list_item ) ) {
 				foreach ( $settings->add_list_item as $key => $value ) {
@@ -154,23 +190,32 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Beaver_Builder' ) ) :
 
 			// 4) Set `list item` module images.
 			if ( isset( $settings->text ) ) {
-				$ids_mapping = get_option( 'astra_sites_wpforms_ids_mapping', array() );
-				if ( $ids_mapping ) {
-
-					// Keep old data in temp.
-					$updated_data = $settings->text;
-
-					// Update WP form IDs.
-					foreach ( $ids_mapping as $old_id => $new_id ) {
-						$updated_data = str_replace( '[wpforms id="' . $old_id, '[wpforms id="' . $new_id, $updated_data );
-					}
-
-					// Update modified data.
-					$settings->text = $updated_data;
-				}
+				$settings->text = self::get_wpforms_mapping( $settings->text );
+			} elseif ( isset( $settings->html ) ) {
+				$settings->html = self::get_wpforms_mapping( $settings->html );
 			}
 
 			return $settings;
+		}
+
+		/**
+		 * Replace WP Forms shortcode.
+		 *
+		 * @since 2.0.0
+		 * @param  string $content Content.
+		 * @return string          Content.
+		 */
+		private static function get_wpforms_mapping( $content = '' ) {
+			$ids_mapping = get_option( 'astra_sites_wpforms_ids_mapping', array() );
+			astra_sites_error_log( wp_json_encode( $ids_mapping ) );
+			if ( $ids_mapping ) {
+				// Update WP form IDs.
+				foreach ( $ids_mapping as $old_id => $new_id ) {
+					$content = str_replace( '[wpforms id="' . $old_id, '[wpforms id="' . $new_id, $content );
+				}
+			}
+
+			return $content;
 		}
 
 		/**

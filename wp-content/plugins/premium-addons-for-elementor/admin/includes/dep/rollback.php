@@ -1,15 +1,43 @@
 <?php
 
+/**
+ * PA Rollback
+ */
+namespace PremiumAddons\Admin\Includes;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Class Admin_Helper
+ */
 class PA_Rollback {
-    
+	
+	/**
+	 * Plugin URL
+	 *
+	 * @var package_url
+	 */
 	protected $package_url;
-    
+	
+	/**
+	 * Plugin Version
+	 *
+	 * @var version
+	 */
 	protected $version;
-    
+
+	/**
+	 * Plugin Name
+	 *
+	 * @var plugin_name
+	 */
 	protected $plugin_name;
-    
+
+    /**
+	 * Plugin Slug
+	 *
+	 * @var plugin_slug
+	 */
 	protected $plugin_slug;
     
 	public function __construct( $args = [] ) {
@@ -73,13 +101,13 @@ class PA_Rollback {
         
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 
-		$logo_url = PREMIUM_ADDONS_URL . 'admin/images/premium-addons-logo.png';
+		$logo_url = PREMIUM_ADDONS_URL . 'admin/images/pa-logo-symbol.png';
 
 		$upgrader_args = [
 			'url' => 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $this->plugin_name ),
 			'plugin' => $this->plugin_name,
 			'nonce' => 'upgrade-plugin_' . $this->plugin_name,
-			'title' => '<img src="' . $logo_url . '" alt="Premium Addons">' . __( 'Rolling Back to Version ' . PREMIUM_ADDONS_STABLE_VERSION, 'premium-addons-for-elementor' ),
+			'title' => '<img src="' . $logo_url . '" alt="Premium Addons">' . __( 'Rolling Back to Version ' . $this->version, 'premium-addons-for-elementor' ),
 		];
 
 		$this->print_inline_style();

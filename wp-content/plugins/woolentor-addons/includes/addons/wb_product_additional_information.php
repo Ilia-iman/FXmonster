@@ -21,6 +21,16 @@ class WL_Product_Additional_Info_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['additional','information','attributes'];
+    }
+
     protected function _register_controls() {
 
 
@@ -31,6 +41,7 @@ class WL_Product_Additional_Info_Element extends Widget_Base {
                 'label' => __( 'Heading', 'woolentor' ),
             ]
         );
+            
             $this->add_control(
                 'wl_show_heading',
                 [
@@ -133,17 +144,7 @@ class WL_Product_Additional_Info_Element extends Widget_Base {
 
         $settings   = $this->get_settings_for_display();
         if ( Plugin::instance()->editor->is_edit_mode() ) {
-            echo '<div class="woocommerce-tabs-list"><div class="panel--additional_information panel entry-content" id="additional_information">
-                    <h2>Additional information</h2>
-                    <table class="woocommerce-product-attributes shop_attributes">
-                        <tbody>
-                            <tr>
-                                <th>Color</th>
-                                <td>Red</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div></div>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         } else{
             global $product;
             $product = wc_get_product();

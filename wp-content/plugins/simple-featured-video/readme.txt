@@ -2,11 +2,11 @@
 Contributors: primisdigital,vinshakp
 Plugin Name: Simple Featured Video
 Plugin URI: https://www.primisdigital.com/wordpress-plugins/
-version :1.2
+version :1.3
 Author: Prims digital
 Tags:featured,video,videos,featured video,woocommerce video,product-video,video embed,video plugin,video post,posts featured video
 Requires at least: any version
-Tested up to: 5.2.4
+Tested up to: 5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,7 +48,7 @@ Also this plugin is compatible with WooCommerce  product page.In back end of plu
 * Support on custom posts types, pages, and posts
 * Support WooCommerce product page
 * Options to display video along with contents, excerpts
-* Options to display video on different sections of WooCommerce products page.
+* Options to display video on different sections of WooCommerce products page.    
 
 
 
@@ -157,4 +157,7 @@ Fixed some bugs in 1.0 version.
 Updated plugin to 1.2
 Feature to replace featured image with featured video if available
 
+= 1.3
 
+Updated plugin to 1.3
+Some functions updated for latest woocommerce.

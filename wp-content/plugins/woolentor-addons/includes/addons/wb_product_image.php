@@ -21,6 +21,16 @@ class WL_Product_Image_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['image','product image','product thumbnail'];
+    }
+
     protected function _register_controls() {
 
         // Product Image Style
@@ -123,7 +133,7 @@ class WL_Product_Image_Element extends Widget_Base {
         $product = wc_get_product();
 
         if( Plugin::instance()->editor->is_edit_mode() ){
-            
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         } else{
             if ( empty( $product ) ) { return; }
             /**

@@ -1,4 +1,4 @@
-(function($){
+;(function($){
 "use strict";
 
     $(document).on( 'click', '.single_add_to_cart_button:not(.disabled)', function (e) {

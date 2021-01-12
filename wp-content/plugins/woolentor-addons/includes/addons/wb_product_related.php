@@ -21,6 +21,16 @@ class WL_Product_Related_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['related','product','related product'];
+    }
+
     protected function _register_controls() {
 
 
@@ -184,7 +194,7 @@ class WL_Product_Related_Element extends Widget_Base {
         $product = wc_get_product();
 
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo '<div class="Related Product">'.__( 'Related Product','woolentor' ).'</div>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name(), $settings );
         } else{
             if ( ! $product ) { return; }
             $args = [

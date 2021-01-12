@@ -33,7 +33,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Brizy' ) ) :
 		public static function get_instance() {
 
 			if ( ! isset( self::$instance ) ) {
-				self::$instance = new self;
+				self::$instance = new self();
 			}
 			return self::$instance;
 		}
@@ -53,12 +53,22 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Brizy' ) ) :
 		 */
 		public function import() {
 
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Processing "Brizy" Batch Import' );
+			}
+
 			Astra_Sites_Importer_Log::add( '---- Processing WordPress Posts / Pages - for "Brizy" ----' );
+
 			if ( ! is_callable( 'Brizy_Editor_Storage_Common::instance' ) ) {
 				return;
 			}
 
 			$post_types = Brizy_Editor_Storage_Common::instance()->get( 'post-types' );
+
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'For post types: ' . implode( ', ', $post_types ) );
+			}
+
 			if ( empty( $post_types ) && ! is_array( $post_types ) ) {
 				return;
 			}
@@ -69,10 +79,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Brizy' ) ) :
 			}
 
 			foreach ( $post_ids as $post_id ) {
-				$is_brizy_post = get_post_meta( $post_id, 'brizy_post_uid', true );
-				if ( $is_brizy_post ) {
-					$this->import_single_post( $post_id );
-				}
+				$this->import_single_post( $post_id );
 			}
 		}
 
@@ -84,35 +91,47 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Brizy' ) ) :
 		 */
 		public function import_single_post( $post_id = 0 ) {
 
-			$ids_mapping = get_option( 'astra_sites_wpforms_ids_mapping', array() );
-
-			// Empty mapping? Then return.
-			if ( empty( $ids_mapping ) ) {
+			$is_brizy_post = get_post_meta( $post_id, 'brizy_post_uid', true );
+			if ( ! $is_brizy_post ) {
 				return;
 			}
 
-			$json_value = null;
-
-			$post = Brizy_Editor_Post::get( (int) $post_id );
-			$data = $post->storage()->get( Brizy_Editor_Post::BRIZY_POST, false );
-
-			// Decode current data.
-			$json_value = base64_decode( $data['editor_data'] );
-
-			// Update WPForm IDs.
-			foreach ( $ids_mapping as $old_id => $new_id ) {
-				$json_value = str_replace( '[wpforms id=\"' . $old_id, '[wpforms id=\"' . $new_id, $json_value );
+			// Is page imported with Starter Sites?
+			// If not then skip batch process.
+			$imported_from_demo_site = get_post_meta( $post_id, '_astra_sites_enable_for_batch', true );
+			if ( ! $imported_from_demo_site ) {
+				return;
 			}
 
-			// Encode modified data.
-			$data['editor_data'] = base64_encode( $json_value );
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Brizy - Processing page: ' . $post_id );
+			}
 
-			$post->set_editor_data( $json_value );
+			astra_sites_error_log( '---- Processing WordPress Page - for "Brizy" ---- "' . $post_id . '"' );
 
-			$post->storage()->set( Brizy_Editor_Post::BRIZY_POST, $data );
+			$ids_mapping = get_option( 'astra_sites_wpforms_ids_mapping', array() );
 
-			$post->compile_page();
-			$post->save();
+			$json_value = null;
+
+			$post        = Brizy_Editor_Post::get( (int) $post_id );
+			$editor_data = $post->get_editor_data();
+
+			// Empty mapping? Then return.
+			if ( ! empty( $ids_mapping ) ) {
+
+				// Update WPForm IDs.
+				astra_sites_error_log( '---- Processing WP Forms Mapping ----' );
+				astra_sites_error_log( $ids_mapping );
+
+				foreach ( $ids_mapping as $old_id => $new_id ) {
+					$editor_data = str_replace( '[wpforms id=\"' . $old_id, '[wpforms id=\"' . $new_id, $editor_data );
+				}
+			}
+
+			$post->set_editor_data( $editor_data );
+			$post->set_editor_version( BRIZY_EDITOR_VERSION );
+			$post->set_needs_compile( true );
+			$post->saveStorage();
 		}
 
 	}

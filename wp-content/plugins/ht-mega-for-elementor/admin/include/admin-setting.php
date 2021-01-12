@@ -44,8 +44,8 @@ class HTMega_Admin_Settings {
         
         add_submenu_page(
             'htmega_addons_option_page', 
-            __( 'Settings', 'htmega-addons' ),
-            __( 'Settings', 'htmega-addons' ), 
+            esc_html__( 'Settings', 'htmega-addons' ),
+            esc_html__( 'Settings', 'htmega-addons' ), 
             'manage_options', 
             'htmega_addons_options', 
             array ( $this, 'plugin_page' ) 
@@ -662,6 +662,14 @@ class HTMega_Admin_Settings {
                     'default'=>'off',
                     'class'=>'htmega_table_row',
                 ),
+
+                array(
+                    'name'  => 'postduplicator',
+                    'label'  => __( 'Post Duplicator', 'htmega-addons' ),
+                    'type'  => 'checkbox',
+                    'default'=>'off',
+                    'class'=>'htmega_table_row',
+                ),
                 
 
             ),
@@ -852,9 +860,25 @@ class HTMega_Admin_Settings {
             ),
 
         );
+
+        // Post Duplicator Condition
+        if( htmega_get_option( 'postduplicator', 'htmega_advance_element_tabs', 'off' ) === 'on' ){
+            $post_types = htmega_get_post_types( array('defaultadd'=>'all') );
+            if ( did_action( 'elementor/loaded' ) && defined( 'ELEMENTOR_VERSION' ) ) {
+                $post_types['elementor_library'] = esc_html__( 'Templates', 'htmega-addons' );
+            }
+            $settings_fields['htmega_general_tabs'][] = [
+                'name'    => 'postduplicate_condition',
+                'label'   => __( 'Post Duplicator Condition', 'htmega-addons' ),
+                'desc'    => __( 'You can enable duplicator for individual post.', 'htmega-addons' ),
+                'type'    => 'multiselect',
+                'default' => '',
+                'options' => $post_types,
+            ];
+        }
         
-        // Third Party Addons
         $third_party_element = array();
+        // Third Party Addons
         if( is_plugin_active('bbpress/bbpress.php') ) {
             $third_party_element['htmega_thirdparty_element_tabs'][] = [
                 'name'    => 'bbpress',

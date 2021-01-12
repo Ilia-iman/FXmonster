@@ -1,8 +1,11 @@
 <?php
 
+/**
+ * Premium Countdown.
+ */
 namespace PremiumAddons\Widgets;
 
-use PremiumAddons\Helper_Functions;
+// Elementor Classes.
 use Elementor\Modules\DynamicTags\Module as TagsModule;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
@@ -12,8 +15,14 @@ use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Box_Shadow;
 
+// PremiumAddons Classes.
+use PremiumAddons\Includes\Helper_Functions;
+
 if( !defined( 'ABSPATH' ) ) exit; // No access of directly access
 
+/**
+ * Class Premium_Countdown
+ */
 class Premium_Countdown extends Widget_Base {
     
 	public function get_name() {
@@ -41,7 +50,7 @@ class Premium_Countdown extends Widget_Base {
     public function get_script_depends() {
 		return [
             'count-down-timer-js',
-            'premium-addons-js'
+            'premium-addons'
         ];
 	}
 
@@ -53,8 +62,12 @@ class Premium_Countdown extends Widget_Base {
 		return 'https://premiumaddons.com/support/';
 	}
 
-    // Adding the controls fields for the premium countdown
-    // This will controls the animation, colors and background, dimensions etc
+    /**
+	 * Register Countdown controls.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
 	protected function _register_controls() {
 		$this->start_controls_section(
 			'premium_countdown_global_settings',
@@ -240,154 +253,172 @@ class Premium_Countdown extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
-			'premium_countdown_day_singular',
-		  	[
-		     	'label'			=> __( 'Day (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
+        $this->add_control(
+            'premium_countdown_day_singular',
+            [
+                'label'			=> __( 'Day (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
                 'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Day'
-		  	]
-		);
-
-		$this->add_control(
-			'premium_countdown_day_plural',
-		  	[
-		     	'label'			=> __( 'Day (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Days'
-		  	]
-		);
-
-		$this->add_control(
-			'premium_countdown_week_singular',
-		  	[
-		     	'label'			=> __( 'Week (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Week'
-		  	]
-		);
-
-		$this->add_control(
-			'premium_countdown_week_plural',
-		  	[
-		     	'label'			=> __( 'Weeks (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Weeks'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_month_singular',
-		  	[
-		     	'label'			=> __( 'Month (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Month'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_month_plural',
-		  	[
-		     	'label'			=> __( 'Months (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Months'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_year_singular',
-		  	[
-		     	'label'			=> __( 'Year (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Year'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_year_plural',
-		  	[
-		     	'label'			=> __( 'Years (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Years'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_hour_singular',
-		  	[
-		     	'label'			=> __( 'Hour (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Hour'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_hour_plural',
-		  	[
-		     	'label'			=> __( 'Hours (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Hours'
-		  	]
-		);
-
-
-		$this->add_control(
-			'premium_countdown_minute_singular',
-		  	[
-		     	'label'			=> __( 'Minute (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Minute'
-		  	]
-		);
-
-		$this->add_control(
-			'premium_countdown_minute_plural',
-		  	[
-		     	'label'			=> __( 'Minutes (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Minutes'
-		  	]
-		);
+                'default'		=> 'Day'
+            ]
+        );
 
         $this->add_control(
-			'premium_countdown_second_singular',
-		  	[
-		     	'label'			=> __( 'Second (Singular)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
+            'premium_countdown_day_plural',
+            [
+                'label'			=> __( 'Day (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
                 'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Second',
-		  	]
-		);
-        
-		$this->add_control(
-			'premium_countdown_second_plural',
-		  	[
-		     	'label'			=> __( 'Seconds (Plural)', 'premium-addons-for-elementor' ),
-		     	'type' 			=> Controls_Manager::TEXT,
-                'dynamic'       => [ 'active' => true ],
-		     	'default'		=> 'Seconds'
-		  	]
-		);
+                'default'		=> 'Days'
+            ]
+        );
 
-		$this->end_controls_section();
+        $this->add_control(
+            'premium_countdown_week_singular',
+            [
+                'label'			=> __( 'Week (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Week'
+            ]
+        );
+
+        $this->add_control(
+            'premium_countdown_week_plural',
+            [
+                'label'			=> __( 'Weeks (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Weeks'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_month_singular',
+            [
+                'label'			=> __( 'Month (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Month'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_month_plural',
+            [
+                'label'			=> __( 'Months (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Months'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_year_singular',
+            [
+                'label'			=> __( 'Year (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Year'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_year_plural',
+            [
+                'label'			=> __( 'Years (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Years'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_hour_singular',
+            [
+                'label'			=> __( 'Hour (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Hour'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_hour_plural',
+            [
+                'label'			=> __( 'Hours (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Hours'
+            ]
+        );
+
+
+        $this->add_control(
+            'premium_countdown_minute_singular',
+            [
+                'label'			=> __( 'Minute (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Minute'
+            ]
+        );
+
+        $this->add_control(
+            'premium_countdown_minute_plural',
+            [
+                'label'			=> __( 'Minutes (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Minutes'
+            ]
+        );
+
+        $this->add_control(
+            'premium_countdown_second_singular',
+            [
+                'label'			=> __( 'Second (Singular)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Second',
+            ]
+        );
+        
+        $this->add_control(
+            'premium_countdown_second_plural',
+            [
+                'label'			=> __( 'Seconds (Plural)', 'premium-addons-for-elementor' ),
+                'type' 			=> Controls_Manager::TEXT,
+                'dynamic'       => [ 'active' => true ],
+                'default'		=> 'Seconds'
+            ]
+        );
+
+        $this->end_controls_section();
+        
+        $this->start_controls_section('section_pa_docs',
+            [
+                'label'         => __('Helpful Documentations', 'premium-addons-for-elementor'),
+            ]
+        );
+
+        $doc1_url = Helper_Functions::get_campaign_link( 'https://premiumaddons.com/docs/countdown-widget-tutorial/', 'editor-page', 'wp-editor', 'get-support' ); 
+
+        $this->add_control('doc_1',
+            [
+                'type'            => Controls_Manager::RAW_HTML,
+                'raw'             => sprintf(  '<a href="%s" target="_blank">%s</a>', $doc1_url ,__( 'Gettings started »', 'premium-addons-for-elementor' ) ),
+                'content_classes' => 'editor-pa-doc',
+            ]
+        );
+
+        $this->end_controls_section();
 
 		$this->start_controls_section(
 			'premium_countdown_typhography',
@@ -403,8 +434,8 @@ class Premium_Countdown extends Widget_Base {
 				'label' 		=> __( 'Color', 'premium-addons-for-elementor' ),
 				'type' 			=> Controls_Manager::COLOR,
 				'scheme' 		=> [
-				    'type' 	=> Scheme_Color::get_type(),
-				    'value' => Scheme_Color::COLOR_2,
+                    'type' 	=> Scheme_Color::get_type(),
+                    'value' => Scheme_Color::COLOR_2,
 				],
 				'selectors'		=> [
 					'{{WRAPPER}} .countdown .pre_countdown-section .pre_countdown-amount' => 'color: {{VALUE}};'
@@ -499,8 +530,8 @@ class Premium_Countdown extends Widget_Base {
 				'label' 		=> __( 'Color', 'premium-addons-for-elementor' ),
 				'type' 			=> Controls_Manager::COLOR,
 				'scheme' 		=> [
-				    'type' 	=> Scheme_Color::get_type(),
-				    'value' => Scheme_Color::COLOR_2,
+                    'type' 	=> Scheme_Color::get_type(),
+                    'value' => Scheme_Color::COLOR_2,
 				],
 				'selectors'		=> [
 					'{{WRAPPER}} .countdown .pre_countdown-section .pre_countdown-period' => 'color: {{VALUE}};'
@@ -611,6 +642,14 @@ class Premium_Countdown extends Widget_Base {
         
 	}
 
+	/**
+	 * Render Countdown widget output on the frontend.
+	 *
+	 * Written in PHP and used to generate the final HTML.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
 	protected function render( ) {
 		
       	$settings = $this->get_settings_for_display();

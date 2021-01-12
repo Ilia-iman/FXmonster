@@ -20,16 +20,36 @@ class Tooltip extends Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'EA Tooltip', 'essential-addons-for-elementor-lite');
+		return esc_html__( 'Tooltip', 'essential-addons-for-elementor-lite');
 	}
 
 	public function get_icon() {
-		return 'eicon-alert';
+		return 'eaicon-tooltip';
 	}
 
-   public function get_categories() {
+   	public function get_categories() {
 		return [ 'essential-addons-elementor' ];
 	}
+
+	public function get_keywords()
+	{
+        return [
+			'tooltip',
+			'ea tooltip',
+			'popover',
+			'hover',
+			'hint',
+			'floating text',
+			'glossary',
+			'ea',
+			'essential addons'
+		];
+    }
+
+	public function get_custom_help_url()
+	{
+        return 'https://essential-addons.com/elementor/docs/tooltip/';
+    }
 
 	protected function _register_controls() {
 		/**
@@ -199,7 +219,7 @@ class Tooltip extends Widget_Base {
 				]
 			]
 		);
-		
+
 		$this->add_control(
 			'eael_tooltip_enable_link',
 			[
@@ -217,7 +237,8 @@ class Tooltip extends Widget_Base {
 			[
 				'label' => esc_html__( 'Button Link', 'essential-addons-for-elementor-lite'),
 				'type' => Controls_Manager::URL,
-				'label_block' => true,
+                'dynamic'   => ['active' => true],
+                'label_block' => true,
 				'default' => [
         			'url' => '#',
         			'is_external' => '',
@@ -490,7 +511,7 @@ class Tooltip extends Widget_Base {
 					'type' => Controls_Manager::CHOOSE,
 					'options' => [
 						'1' => [
-							'title' => __( '', 'essential-addons-for-elementor-lite'),
+							'title' => '',
 							'icon' => 'fa fa-unlock-alt',
 						],
 					],
@@ -498,7 +519,7 @@ class Tooltip extends Widget_Base {
 					'description' => '<span class="pro-feature"> Get the  <a href="https://wpdeveloper.net/in/upgrade-essential-addons-elementor" target="_blank">Pro version</a> for more stunning elements and customization options.</span>'
 				]
 			);
-			
+
 			$this->end_controls_section();
 		}
 
@@ -668,15 +689,16 @@ class Tooltip extends Widget_Base {
 
 	protected function render( ) {
 
-   		$settings = $this->get_settings_for_display();
-   		$target = $settings['eael_tooltip_link']['is_external'] ? 'target="_blank"' : '';
-		$nofollow = $settings['eael_tooltip_link']['nofollow'] ? 'rel="nofollow"' : '';
+		$settings = $this->get_settings_for_display();
+		
+   		$target = isset($settings['eael_tooltip_link']['is_external']) ? 'target="_blank"' : '';
+		$nofollow = isset($settings['eael_tooltip_link']['nofollow']) ? 'rel="nofollow"' : '';
 		$icon_migrated = isset($settings['__fa4_migrated']['eael_tooltip_icon_content_new']);
-		$icon_is_new = empty($settings['eael_tooltip_icon_content']);  
+		$icon_is_new = empty($settings['eael_tooltip_icon_content']);
 	?>
 	<div class="eael-tooltip">
 		<?php if( $settings['eael_tooltip_type'] === 'text' ) : ?>
-			<<?php echo esc_attr( $settings['eael_tooltip_content_tag'] ); ?> class="eael-tooltip-content"><?php if( $settings['eael_tooltip_enable_link'] === 'yes' ) : ?><a href="<?php echo esc_url( $settings['eael_tooltip_link']['url'] ); ?>" <?php echo $target; ?> <?php echo $nofollow; ?> ><?php endif; ?><?php echo esc_html__( $settings['eael_tooltip_content'], 'essential-addons-for-elementor-lite'); ?><?php if( $settings['eael_tooltip_enable_link'] === 'yes' ) : ?></a><?php endif; ?></<?php echo esc_attr( $settings['eael_tooltip_content_tag'] ); ?>>
+			<<?php echo esc_attr( $settings['eael_tooltip_content_tag'] ); ?> class="eael-tooltip-content"><?php if( $settings['eael_tooltip_enable_link'] === 'yes' ) : ?><a href="<?php echo esc_url( $settings['eael_tooltip_link']['url'] ); ?>" <?php echo $target; ?> <?php echo $nofollow; ?> ><?php endif; ?><?php echo wp_kses_post($settings['eael_tooltip_content']); ?><?php if( $settings['eael_tooltip_enable_link'] === 'yes' ) : ?></a><?php endif; ?></<?php echo esc_attr( $settings['eael_tooltip_content_tag'] ); ?>>
   			<span class="eael-tooltip-text eael-tooltip-<?php echo esc_attr( $settings['eael_tooltip_hover_dir'] ) ?>"><?php echo __( $settings['eael_tooltip_hover_content'] ); ?></span>
   		<?php elseif( $settings['eael_tooltip_type'] === 'icon' ) : ?>
 			<span class="eael-tooltip-content"><?php if( $settings['eael_tooltip_enable_link'] === 'yes' ) : ?><a href="<?php echo esc_url( $settings['eael_tooltip_link']['url'] ); ?>" <?php echo $target; ?> <?php echo $nofollow; ?> ><?php endif; ?>

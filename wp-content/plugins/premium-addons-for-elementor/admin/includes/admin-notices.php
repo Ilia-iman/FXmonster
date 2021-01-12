@@ -1,20 +1,39 @@
 <?php
 
+/**
+ * PA Admin Notices.
+ */
 namespace PremiumAddons\Admin\Includes;
 
-use PremiumAddons\Helper_Functions;
+use PremiumAddons\Includes\Helper_Functions;
 
 if( ! defined( 'ABSPATH') ) exit();
 
+/**
+ * Class Admin_Notices
+ */
 class Admin_Notices {
     
+    /**
+	 * Class object
+	 *
+	 * @var instance
+	 */
     private static $instance = null;
     
+    /**
+	 * Elementor slug
+	 *
+	 * @var elementor
+	 */
     private static $elementor = 'elementor';
     
+    /**
+	 * PAPRO Slug
+	 *
+	 * @var papro
+	 */
     private static $papro = 'premium-addons-pro';
-    
-    private static $pbg = 'premium-blocks-for-gutenberg';
     
     /**
     * Constructor for the class
@@ -27,6 +46,8 @@ class Admin_Notices {
         
         add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
         
+        add_action( 'wp_ajax_pa_reset_admin_notice', array( $this, 'reset_admin_notice' ) );
+        
         add_action( 'wp_ajax_pa_dismiss_admin_notice', array( $this, 'dismiss_admin_notice' ) );
         
     }
@@ -38,7 +59,9 @@ class Admin_Notices {
 
         $this->handle_review_notice();
         
-//        $this->handle_det_notice();
+        $this->handle_major_update_notice();
+
+        $this->handle_bf_notice();
         
     }
     
@@ -53,11 +76,18 @@ class Admin_Notices {
         
         $response = get_transient( $cache_key );
         
-        if ( false == $response ) {
-            $this->get_review_notice();
+        $show_review = get_option( 'pa_review_notice' );
+
+        //Make sure Already did was not clicked before.
+        if( '1' !== $show_review ) {
+            if ( false == $response ) {
+                // $this->get_review_notice();
+            }
         }
         
-//        $this->get_det_notice();
+        $this->get_major_update_notice();
+
+        $this->get_bf_notice();
         
     }
 
@@ -85,51 +115,87 @@ class Admin_Notices {
         
         exit;
     }
-   
+
     /**
+     * Checks if Premium Horizontal Scroll message is dismissed.
      * 
-     * Checks if Premium Gutenberg message is dismissed.
-     * 
-     * @access public
-     * @return void
-     * 
-    */
-    public function handle_pbg_notice() {
-        if ( ! isset( $_GET['pbg'] ) ) {
-            return;
-        }
-
-        if ( 'opt_out' === $_GET['pbg'] ) {
-            check_admin_referer( 'opt_out' );
-
-            update_option( 'pbg_notice', '1' );
-        }
-
-        wp_redirect( remove_query_arg( 'pbg' ) );
-        exit;
-    }
-    
-    /**
-     * Checks if Disable Elementor Translation message is dismissed.
-     * 
-     * @since 3.7.9
+     * @since 3.11.7
      * @access public
      * 
      * @return void
      */
-    public function handle_det_notice() {
-        if ( ! isset( $_GET['det'] ) ) {
+    public function handle_major_update_notice() {
+        
+        if ( ! isset( $_GET['major_update'] ) ) {
             return;
         }
 
-        if ( 'opt_out' === $_GET['det'] ) {
+        if ( 'opt_out' === $_GET['major_update'] ) {
             check_admin_referer( 'opt_out' );
 
-            update_option( 'det_notice', '1' );
+            update_option( 'major_update_notice', '1' );
         }
 
-        wp_redirect( remove_query_arg( 'det' ) );
+        wp_redirect( remove_query_arg( 'major_update' ) );
         exit;
+    }
+
+    public function handle_bf_notice() {
+
+        if ( ! isset( $_GET['papro_new_bf'] ) ) {
+            return;
+        }
+
+        if ( 'opt_out' === $_GET['papro_new_bf'] ) {
+            check_admin_referer( 'opt_out' );
+
+            update_option( 'papro_new_bf_notice', '1' );
+        }
+
+        wp_redirect( remove_query_arg( 'papro_new_bf' ) );
+        
+        exit;
+
+    }
+
+    public function get_bf_notice() {
+        
+        $papro_path = 'premium-addons-pro/premium-addons-pro-for-elementor.php';
+        
+        $is_papro_installed = Helper_Functions::is_plugin_installed( $papro_path );
+        
+        $license_status = get_option( 'papro_license_status' );
+        
+        $bf_notice = get_option( 'papro_new_bf_notice' );
+        
+        if( ( $is_papro_installed && 'valid' === $license_status ) || '1' === $bf_notice )
+            return;
+            
+        $theme = Helper_Functions::get_installed_theme();
+
+        $link = Helper_Functions::get_campaign_link( 'https://premiumaddons.com/black-friday/', 'wp-dash', 'black-friday-2020-notification', 'black-friday-2020' ); 
+
+        ?>
+
+        <div class="error pa-notice-wrap pa-new-feature-notice pa-review-notice">
+            <div class="pa-img-wrap">
+                <img src="<?php echo PREMIUM_ADDONS_URL .'admin/images/pa-logo-symbol.png'; ?>">
+            </div>
+            <div class="pa-text-wrap">
+                <p>
+                    <?php echo __('Black Friday Deal is ON! Get <b>25% Discount</b> for a Limited Time Only', 'premium-addons-for-elementor'); ?>
+                    <a class="button button-primary" href="<?php echo esc_url( $link ); ?>" target="_blank">
+                        <span><?php echo __('Get The Deal','premium-addons-for-elementor'); ?></span>
+                    </a>
+                </p>
+            </div>
+            <div class="pa-notice-close" data-notice="black-friday">
+                <span class="dashicons dashicons-dismiss"></span>
+            </div>
+        </div>
+
+        <?php
+
     }
     
     /**
@@ -183,12 +249,13 @@ class Admin_Notices {
     public function get_review_text( $review_url, $optout_url ) {
         
         $notice = sprintf(
-            '<p>' . __('Did you like','premium-addons-for-elementor') . '<strong>&nbspPremium Addons for Elementor&nbsp</strong>' . __('Plugin?','premium-addons-for-elementor') . '</p>
-             <p>' . __('Could you please do us a BIG favor ? if you could take 2 min of your time, we\'d really appreciate if you give Premium Addons for Elementor 5-star rating on WordPress. By spreading the love, we can create even greater free stuff in the future!','premium-addons-for-elementor') . '</p>
-            <p><a class="button button-primary" href="%s" target="_blank"><span><i class="dashicons dashicons-external"></i>' . __('Leave a Review','premium-addons-for-elementor') . '</span></a>
-                <a class="button button-secondary pa-notice-reset"><span><i class="dashicons dashicons-calendar-alt"></i>' . __('Maybe Later','premium-addons-for-elementor') . '</span></a>
-                <a class="button button-secondary" href="%2$s"><span><i class="dashicons dashicons-smiley"></i>' . __('I Already did','premium-addons-for-elementor') . '</span></a>
-            </p>',
+            '<p>' . __('Can we take only 2 minutes of your time? We\'d really appreciate it if you give ','premium-addons-for-elementor') . 
+            '<b>'  . __('Premium Addons for Elementor','premium-addons-for-elementor') . '</b> a 5 Stars Rating on WordPress.org. By speading the love, we can create even greater free stuff in the future!</p>
+            <div>
+                <a class="button button-primary" href="%s" target="_blank"><span>' . __('Leave a Review','premium-addons-for-elementor') . '</span></a>
+                <a class="button" href="%2$s"><span>' . __('I Already Did','premium-addons-for-elementor') . '</span></a>
+                <a class="button button-secondary pa-notice-reset"><span>' . __('Maybe Later','premium-addons-for-elementor') . '</span></a>
+            </div>',
         $review_url, $optout_url );
         
         return $notice;
@@ -203,19 +270,14 @@ class Admin_Notices {
      */
     public function get_review_notice() {
 
-        $review = get_option( 'pa_review_notice' );
-
         $review_url = 'https://wordpress.org/support/plugin/premium-addons-for-elementor/reviews/?filter=5';
 
-        if ( '1' === $review ) {
-            return;
-        } else if ( '1' !== $review ) {
-            $optout_url = wp_nonce_url( add_query_arg( 'pa_review', 'opt_out' ), 'opt_out' );
+        $optout_url = wp_nonce_url( add_query_arg( 'pa_review', 'opt_out' ), 'opt_out' );
         ?>
 
-        <div class="error pa-notice-wrap" data-notice="pa-review">
+        <div class="error pa-notice-wrap pa-review-notice" data-notice="pa-review">
             <div class="pa-img-wrap">
-                <img src="<?php echo PREMIUM_ADDONS_URL .'admin/images/premium-addons-logo.png'; ?>">
+                <img src="<?php echo PREMIUM_ADDONS_URL .'admin/images/pa-logo-symbol.png'; ?>">
             </div>
             <div class="pa-text-wrap">
                 <?php echo $this->get_review_text( $review_url, $optout_url ); ?>
@@ -225,89 +287,63 @@ class Admin_Notices {
             </div>
         </div>
             
-        <?php }
+    <?php
         
     }
     
-    /**
-     * 
-     * Shows an admin notice for Premium Gutenberg.
-     * 
-     * @since 2.7.6
-     * @return void
-     * 
-     */
-    public function get_pbg_notice() {
-        
-        $pbg_path = sprintf( '%1$s/%1$s.php', self::$pbg);
-        
-        if( ! defined('PREMIUM_BLOCKS_VERSION' ) ) {
-
-            if ( ! Helper_Functions::is_plugin_installed( $pbg_path ) && self::check_user_can( 'install_plugins' ) ) {
-
-                $pbg_notice = get_option( 'pbg_notice' );
-
-                $install_url = wp_nonce_url( self_admin_url( sprintf( 'update.php?action=install-plugin&plugin=%s', self::$pbg ) ), 'install-plugin_premium-blocks-for-gutenberg' );
-
-                if ( '1' === $pbg_notice ) {
-                    return;
-                } else if ( '1' !== $pbg_notice ) {
-                    $optout_url = wp_nonce_url( add_query_arg( 'pbg', 'opt_out' ), 'opt_out' );
-
-                    ?>
-<div class="error">
-                <p style="display: flex; align-items: center; padding:10px 10px 10px 0;">
-                    <img src="<?php echo PREMIUM_ADDONS_URL .'admin/images/premium-blocks-logo.png'; ?>" style="margin-right: 0.8em; width: 40px;">
-                    <span><strong><?php echo __('Premium Blocks for Gutenberg', 'premium-addons-for-elementor'); ?>&nbsp;</strong><?php echo __('is Now Available.','premium-addons-for-elementor'); ?>&nbsp;</span>
-                    <a href="<?php echo $install_url; ?>" style="flex-grow: 2;"><span class="button-primary" style="margin-left:5px;"><?php echo __('Install it Now.','premium-addons-for-elementor'); ?></span></a>
-                    <a href="<?php echo $optout_url; ?>" style="text-decoration: none; margin-left: 1em; float:right; "><span class="dashicons dashicons-dismiss"></span></a>
-                </p>
-</div>
-
-                <?php }
-
-            }
-        
-        }
-        
-    }
     
     /**
      * 
-     * Shows an admin notice for Disable Elementor Translation.
+     * Shows admin notice for Premium Lottie Animations.
      * 
-     * @since 3.7.9
+     * @since 3.11.7
      * @access public
      * 
      * @return void
      */
-    public function get_det_notice() {
+    public function get_major_update_notice() {
+
+        $update_notice = get_option( 'major_update_notice' );
         
-        $det_notice = get_option( 'det_notice' );
-        
-        if( ! current_user_can( 'install_plugins' ) ||  '1' === $det_notice || defined( 'DET_VERSION' ) )
+        if( '1' === $update_notice )
             return;
-        
-        $det_slug = 'disable-elementor-editor-translation';
-        
-        $install_url = wp_nonce_url( self_admin_url( sprintf( 'update.php?action=install-plugin&plugin=%s', $det_slug ) ), sprintf( 'install-plugin_%s', $det_slug ) );
             
-        $optout_url = wp_nonce_url( add_query_arg( 'det', 'opt_out' ), 'opt_out' );
+        $notice_url = Helper_Functions::get_campaign_link( 'https://premiumaddons.com/huge-update-that-you-will-love-premium-addons-4-0-papro-v-2-2/', 'pa4update-notification', 'wp-dash', 'pa4-update' ); 
         
-        $message =  '<p class="pa-text-wrap">';
-        
-        $message .= sprintf( '<img class="pa-notice-logo" src="%s">', PREMIUM_ADDONS_URL .'admin/images/premium-addons-logo.png' );
+        ?>
 
-        $message .= sprintf( '<strong>%s</strong>' , __( 'Now, you can disable Elementor editor & Premium Addons translation with this handy plugin.&nbsp;', 'premium-addons-for-elementor' ) );
-        
-        $message .= sprintf( '<a class="pa-notice-cta" href="%s" target="_blank">%s</a>', $install_url , __( 'Click Here to Install', 'premium-addons-for-elementor' ) );
+        <div class="error pa-notice-wrap pa-new-feature-notice">
+            <div class="pa-img-wrap">
+                <img src="<?php echo PREMIUM_ADDONS_URL .'admin/images/pa-logo-symbol.png'; ?>">
+            </div>
+            <div class="pa-text-wrap">
+                <p>
+                    <?php echo __('Huge Update for', 'premium-addons-for-elementor'); ?>
+                    <strong><?php echo __('Premium Addons Free and PRO', 'premium-addons-for-elemetor'); ?></strong>
+                    <?php echo sprintf(__('Plugins. Click <a href="%s" target="_blank">Here</a> for Details.','premium-addons-for-elementor'), $notice_url ); ?>
+                </p>
+                <?php
+                    if( defined('PREMIUM_PRO_ADDONS_VERSION') ) { 
+                        if( version_compare( PREMIUM_PRO_ADDONS_VERSION, '2.2.0', '<' ) ) {
+                            $download_link = PAPRO_STORE_URL . '/my-account';
+                        ?>
+                        <p>
+                            <b>IMPORTANT:</b> 
+                            <span>If you’re not getting the update notification for Premium Addons PRO v2.2.0 in your WP Dashboard -> Plugins tab, you can download it from your account settings <a href="<?php echo esc_url( $download_link ); ?>" target="_blank">page</a> and upload it manually on your website. For more clarification, please check this doc<a href="https://premiumaddons.com/docs/how-to-update-premium-addons-pro-manually/" target="_blank">article</a>.</span>
+                        </p>
+                        <?php
+                        }
+                    
+                    }
+                ?>
+            </div>
+            <div class="pa-notice-close" data-notice="major-update">
+                <span class="dashicons dashicons-dismiss"></span>
+            </div>
+        </div>
 
-        $message .= sprintf( __('<a class="pa-notice-close" href="%s"><span class="dashicons dashicons-dismiss"></span></a></p>', 'premium-addons-for-elementor'),  $optout_url );
-            
-        $this->render_admin_notices( $message );
-
+        <?php        
     }
-
     
     /**
      * Checks user credentials for specific action
@@ -328,9 +364,9 @@ class Admin_Notices {
      * 
      * @return void
      */
-    private function render_admin_notices( $message, $class = '' ) {
+    private function render_admin_notices( $message, $class = '', $handle = '' ) {
         ?>
-            <div class="error pa-new-feature-notice <?php echo $class; ?>">
+            <div class="error pa-new-feature-notice <?php echo $class; ?>" data-notice="<?php echo $handle; ?>">
                 <?php echo $message; ?>
             </div>
         <?php
@@ -363,7 +399,7 @@ class Admin_Notices {
      * 
      * @return void
      */
-    public function dismiss_admin_notice() {
+    public function reset_admin_notice() {
         
         $key = isset( $_POST['notice'] ) ? $_POST['notice'] : '';
         
@@ -382,25 +418,50 @@ class Admin_Notices {
         }
         
     }
-
-    public static function get_instance() {
-        if( self::$instance == null ) {
-            self::$instance = new self;
+    
+    /**
+     * Dismiss admin notice
+     * 
+     * @since 3.11.7
+     * @access public
+     * 
+     * @return void
+     */
+    public function dismiss_admin_notice() {
+        
+        $key = isset( $_POST['notice'] ) ? $_POST['notice'] : '';
+        
+        if ( ! empty( $key ) ) {
+            
+            update_option( $key, '1' );
+            
+            wp_send_json_success();
+            
+        } else {
+            
+            wp_send_json_error();
+            
         }
+        
+    }
+    
+    /**
+     * Creates and returns an instance of the class
+     * 
+     * @since 2.8.4
+     * @access public
+     * 
+     * @return object
+     */
+    public static function get_instance() {
+
+        if( self::$instance == null ) {
+
+            self::$instance = new self;
+
+        }
+        
         return self::$instance;
     }
-       
-}
 
-if( ! function_exists('get_notices_instance') ) {
-    /**
-	 * Returns an instance of the plugin class.
-	 * @since  1.1.1
-	 * @return object
-	 */
-    function get_notices_instance() {
-        return Admin_Notices::get_instance();
-    }
 }
-
-get_notices_instance();

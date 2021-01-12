@@ -29,6 +29,29 @@ function woolentor_taxonomy_list( $taxonomy = 'product_cat' ){
     }
 }
 
+/*
+ * Get Post Type
+ * return array
+ */
+function woolentor_get_post_types( $args = [] ) {
+    $post_type_args = [
+        'show_in_nav_menus' => true,
+    ];
+    if ( ! empty( $args['post_type'] ) ) {
+        $post_type_args['name'] = $args['post_type'];
+    }
+    $_post_types = get_post_types( $post_type_args , 'objects' );
+
+    $post_types  = [];
+    if( !empty( $args['defaultadd'] ) ){
+        $post_types[ strtolower($args['defaultadd']) ] = ucfirst($args['defaultadd']);
+    }
+    foreach ( $_post_types as $post_type => $object ) {
+        $post_types[ $post_type ] = $object->label;
+    }
+    return $post_types;
+}
+
 
 /**
  * Get Post List
@@ -90,6 +113,21 @@ function woolentor_get_option_label_text( $option, $section, $default = '' ){
         return $default;
     }
     return $default;
+}
+
+/**
+* Woocommerce Product last product id return
+*/
+function woolentor_get_last_product_id(){
+    global $wpdb;
+    
+    // Getting last Product ID (max value)
+    $results = $wpdb->get_col( "
+        SELECT MAX(ID) FROM {$wpdb->prefix}posts
+        WHERE post_type LIKE 'product'
+        AND post_status = 'publish'" 
+    );
+    return reset($results);
 }
 
 /*
@@ -288,33 +326,40 @@ if( class_exists('WooCommerce') ){
             if ( get_option( 'woocommerce_enable_review_rating' ) === 'no' ) { return; }
             global $product;
             $rating_count = $product->get_rating_count();
-            $review_count = $product->get_review_count();
             $average      = $product->get_average_rating();
+            $rating_whole = floor($average);
+            $rating_fraction = $average - $rating_whole;
+            $flug = 0;   
+            
             if ( $rating_count > 0 ) {
-                $rating_whole = $average / 5*100;
                 $wrapper_class = is_single() ? 'rating-number' : 'top-rated-rating';
                 ob_start();
             ?>
-            <div class="<?php echo esc_attr( $wrapper_class ); ?>">
-                <span class="ht-product-ratting">
-                    <span class="ht-product-user-ratting" style="width: <?php echo esc_attr( $rating_whole );?>%;">
-                        <i class="sli sli-star"></i>
-                        <i class="sli sli-star"></i>
-                        <i class="sli sli-star"></i>
-                        <i class="sli sli-star"></i>
-                        <i class="sli sli-star"></i>
+                <div class="<?php echo esc_attr( $wrapper_class ); ?>">
+                    <span class="ht-product-ratting">
+                        <span class="ht-product-user-ratting">
+                            <?php for($i = 1; $i <= 5; $i++){
+                                if( $i <= $rating_whole ){
+                                    echo '<i class="fas fa-star"></i>';
+                                } else {
+                                    if( $rating_fraction > 0 && $flug == 0 ){
+                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                        $flug = 1;
+                                    } else {
+                                        echo '<i class="far fa-star empty"></i>';
+                                    }
+                                }
+                            } ?>
+                        </span>
                     </span>
-                    <i class="sli sli-star"></i>
-                    <i class="sli sli-star"></i>
-                    <i class="sli sli-star"></i>
-                    <i class="sli sli-star"></i>
-                    <i class="sli sli-star"></i>
-                </span>
-            </div>
-            <?php
-                $html = ob_get_clean();
-            } else { $html  = ''; }
-            return $html;
+                </div>
+                 <?php
+                    $html = ob_get_clean();
+                } else {
+                    $html  = '';
+                }
+
+                return $html;
         }
     }
 
@@ -338,12 +383,88 @@ if( class_exists('WooCommerce') ){
             $id      = ( int ) $_POST['id'];
             $post    = get_post( $id );
             $product = get_product( $id );
-            if ( $product ) { include WOOLENTOR_ADDONS_PL_PATH.'includes/quickview-content.php'; }
+            if ( $product ) { 
+                include ( apply_filters( 'woolentor_quickview_tmp', WOOLENTOR_ADDONS_PL_PATH.'includes/quickview-content.php' ) ); 
+            }
         }
         wp_die();
     }
     add_action( 'wp_ajax_woolentor_quickview', 'woolentor_wc_quickview' );
     add_action( 'wp_ajax_nopriv_woolentor_quickview', 'woolentor_wc_quickview' );
+
+
+    /**
+     * [woolentor_stock_status]
+     */
+    function woolentor_stock_status( $order_text, $available_text, $product_id ){
+
+        $product_id  = $product_id;
+        if ( get_post_meta( $product_id, '_manage_stock', true ) == 'yes' ) {
+
+            $total_stock = get_post_meta( $product_id, 'woolentor_total_stock_quantity', true );
+
+            if ( ! $total_stock ) { echo '<div class="stock-management-progressbar">'.__('Do not set stock amount for progress bar','woolentor-pro').'</div>'; return; }
+
+            $current_stock = round( get_post_meta( $product_id, '_stock', true ) );
+
+            $total_sold = $total_stock > $current_stock ? $total_stock - $current_stock : 0;
+            $percentage = $total_sold > 0 ? round( $total_sold / $total_stock * 100 ) : 0;
+
+            if ( $current_stock > 0 ) {
+                echo '<div class="woolentor-stock-progress-bar">';
+                    echo '<div class="wlstock-info">';
+                        echo '<div class="wltotal-sold">' . __( $order_text, 'woolentor-pro' ) . '<span>' . esc_html( $total_sold ) . '</span></div>';
+                        echo '<div class="wlcurrent-stock">' . __( $available_text, 'woolentor-pro' ) . '<span>' . esc_html( $current_stock ) . '</span></div>';
+                    echo '</div>';
+                    echo '<div class="wlprogress-area" title="' . __( 'Sold', 'woolentor-pro' ) . ' ' . esc_attr( $percentage ) . '%">';
+                        echo '<div class="wlprogress-bar"style="width:' . esc_attr( $percentage ) . '%;"></div>';
+                    echo '</div>';
+                echo '</div>';
+            }else{
+                echo '<div class="stock-management-progressbar">'.__('Do not set stock amount for progress bar','woolentor-pro').'</div>';
+            }
+
+        }
+
+    }
+
+}
+
+/**
+ * [woolentor_pro_get_taxonomies]
+ * @return [array] product texonomies
+ */
+function woolentor_get_taxonomies( $object = 'product' ) {
+    $all_taxonomies = get_object_taxonomies( $object );
+    $taxonomies_list = [];
+    foreach ( $all_taxonomies as $taxonomy_data ) {
+        $taxonomy = get_taxonomy( $taxonomy_data );
+        if( $taxonomy->show_ui ) {
+            $taxonomies_list[ $taxonomy_data ] = $taxonomy->label;
+        }
+    }
+    return $taxonomies_list;
+}
+
+/**
+ * [woolentor_order_by_opts]
+ * @return [array] [description]
+ */
+function woolentor_order_by_opts() {
+    $options = [
+        'none'                  => esc_html__( 'None', 'woolentor' ),
+        'ID'                    => esc_html__( 'ID', 'woolentor' ),
+        'date'                  => esc_html__( 'Date', 'woolentor' ),
+        'name'                  => esc_html__( 'Name', 'woolentor' ),
+        'title'                 => esc_html__( 'Title', 'woolentor' ),
+        'comment_count'         => esc_html__( 'Comment count', 'woolentor' ),
+        'rand'                  => esc_html__( 'Random', 'woolentor' ),
+        'featured'              => esc_html__( 'Featured', 'woolentor' ),
+        '_price'                => esc_html__( 'Product Price', 'woolentor' ),
+        'total_sales'           => esc_html__( 'Top Seller', 'woolentor' ),
+        '_wc_average_rating'    => esc_html__( 'Top Rated', 'woolentor' ),
+    ];
+    return apply_filters( 'woolentor_order_by_opts', $options );
 
 }
 
@@ -401,4 +522,6 @@ function woolentor_add_to_wishlist_button( $normalicon = '<i class="fa fa-heart-
         $output .= '<div class="yith-wcwl-wishlistexistsbrowse ' . ( $exists ? 'show' : 'hide' ) . '" style="display:' . ( $exists ? 'block' : 'none' ) . '"><a href="' . esc_url( $url ) . '" class="">'.$addedicon.'<span class="ht-product-action-tooltip">'.esc_html( $added ).'</span></a></div>';
     $output .= '</div>';
     return $output;
+
+
 }

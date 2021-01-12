@@ -21,6 +21,16 @@ class WL_Product_Title_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['product title','product','title'];
+    }
+
     protected function _register_controls() {
 
 
@@ -58,7 +68,7 @@ class WL_Product_Title_Element extends Widget_Base {
                     'label'     => __( 'Title Color', 'woolentor' ),
                     'type'      => Controls_Manager::COLOR,
                     'selectors' => [
-                        '{{WRAPPER}} .product_title' => 'color: {{VALUE}};',
+                        '{{WRAPPER}} .product_title' => 'color: {{VALUE}} !important;',
                     ],
                 ]
             );
@@ -79,7 +89,7 @@ class WL_Product_Title_Element extends Widget_Base {
                     'type' => Controls_Manager::DIMENSIONS,
                     'size_units' => [ 'px', '%', 'em' ],
                     'selectors' => [
-                        '{{WRAPPER}} .product_title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        '{{WRAPPER}} .product_title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
                     ],
                     'separator' => 'before',
                 ]
@@ -116,7 +126,8 @@ class WL_Product_Title_Element extends Widget_Base {
     protected function render( $instance = [] ) {
         $settings   = $this->get_settings_for_display();
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo sprintf( '<%1$s class="product_title entry-title">' . __('Product Title', 'woolentor' ). '</%1$s>', $settings['product_title_html_tag'] );
+            $title = get_the_title( woolentor_get_last_product_id() );
+            echo sprintf( '<%1$s class="product_title entry-title">' . __( $title, 'woolentor' ). '</%1$s>', $settings['product_title_html_tag'] );
         }else{
             echo sprintf( the_title( '<%1$s class="product_title entry-title">', '</%1s>', false ), $settings['product_title_html_tag']  );
         }

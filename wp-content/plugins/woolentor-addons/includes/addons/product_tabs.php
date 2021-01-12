@@ -22,11 +22,25 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
         return [ 'woolentor-addons' ];
     }
 
+    public function get_style_depends(){
+        return [
+            'htflexboxgrid',
+            'font-awesome',
+            'simple-line-icons',
+            'slick',
+            'woolentor-widgets',
+        ];
+    }
+
     public function get_script_depends() {
         return [
             'woolentor-widgets-scripts',
             'slick',
         ];
+    }
+
+    public function get_keywords(){
+        return ['product tab','tab','tabs','tab with product','product'];
     }
 
     protected function _register_controls() {
@@ -41,13 +55,13 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
             $this->add_control(
                 'woolentor_product_style',
                 [
-                    'label' => esc_html__( 'Product style', 'woolentor' ),
+                    'label' => esc_html__( 'Product Style', 'woolentor' ),
                     'type' => Controls_Manager::SELECT,
                     'default' => '1',
                     'options' => [
-                        '1' => esc_html__( 'Product style One', 'woolentor' ),
-                        '2' => esc_html__( 'Product style Two', 'woolentor' ),
-                        '3' => esc_html__( 'Product style Three', 'woolentor' ),
+                        '1' => esc_html__( 'Style One', 'woolentor' ),
+                        '2' => esc_html__( 'Style Two', 'woolentor' ),
+                        '3' => esc_html__( 'Style Three', 'woolentor' ),
                     ],
                 ]
             );
@@ -83,6 +97,9 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         '5' => esc_html__( '5', 'woolentor' ),
                         '6' => esc_html__( '6', 'woolentor' ),
                     ],
+                    'condition' => [
+                        'proslider!' => 'yes',
+                    ]
                 ]
             );
 
@@ -101,7 +118,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
             $this->add_control(
               'woolentor_product_grid_products_count',
               [
-                 'label'   => __( 'Products Count', 'woolentor' ),
+                 'label'   => __( 'Number of Products', 'woolentor' ),
                  'type'    => Controls_Manager::NUMBER,
                  'default' => 4,
                  'min'     => 1,
@@ -124,7 +141,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
             $this->add_control(
                 'custom_order',
                 [
-                    'label' => esc_html__( 'Custom order', 'woolentor' ),
+                    'label' => esc_html__( 'Custom Order', 'woolentor' ),
                     'type' => Controls_Manager::SWITCHER,
                     'return_value' => 'yes',
                     'default' => 'no',
@@ -155,7 +172,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
             $this->add_control(
                 'order',
                 [
-                    'label' => esc_html__( 'order', 'woolentor' ),
+                    'label' => esc_html__( 'Order', 'woolentor' ),
                     'type' => Controls_Manager::SELECT,
                     'default' => 'DESC',
                     'options' => [
@@ -181,7 +198,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
             $this->add_control(
                 'proslider',
                 [
-                    'label' => esc_html__( 'Product slider', 'woolentor' ),
+                    'label' => esc_html__( 'Product Slider', 'woolentor' ),
                     'type' => Controls_Manager::SWITCHER,
                     'return_value' => 'yes',
                     'default' => 'no',
@@ -259,10 +276,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#23252a',
                             'selectors' => [
                                 '{{WRAPPER}} .ht-tab-menus li a' => 'color: {{VALUE}};',
@@ -275,10 +288,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Product tab menu background', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .ht-tab-menus li a' => 'background-color: {{VALUE}} !important;',
@@ -346,10 +355,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#23252a',
                             'selectors' => [
                                 '{{WRAPPER}} .ht-tab-menus li a:hover' => 'color: {{VALUE}};',
@@ -363,10 +368,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Product tab menu background', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .ht-tab-menus li a:hover' => 'background-color: {{VALUE}} !important;',
@@ -642,10 +643,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                             [
                                 'label' => __( 'Color', 'woolentor' ),
                                 'type' => Controls_Manager::COLOR,
-                                'scheme' => [
-                                    'type' => Scheme_Color::get_type(),
-                                    'value' => Scheme_Color::COLOR_1,
-                                ],
                                 'default' =>'#dddddd',
                                 'selectors' => [
                                     '{{WRAPPER}} .product-slider .slick-arrow' => 'color: {{VALUE}};',
@@ -658,10 +655,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                             [
                                 'label' => __( 'Background Color', 'woolentor' ),
                                 'type' => Controls_Manager::COLOR,
-                                'scheme' => [
-                                    'type' => Scheme_Color::get_type(),
-                                    'value' => Scheme_Color::COLOR_1,
-                                ],
                                 'default' =>'#ffffff',
                                 'selectors' => [
                                     '{{WRAPPER}} .product-slider .slick-arrow' => 'background-color: {{VALUE}} !important;',
@@ -714,10 +707,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                                 [
                                     'label' => __( 'Background Color', 'woolentor' ),
                                     'type' => Controls_Manager::COLOR,
-                                    'scheme' => [
-                                        'type' => Scheme_Color::get_type(),
-                                        'value' => Scheme_Color::COLOR_1,
-                                    ],
                                     'default' =>'#ffffff',
                                     'selectors' => [
                                         '{{WRAPPER}} .product-slider .slick-dots li button' => 'background-color: {{VALUE}} !important;',
@@ -769,10 +758,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                             [
                                 'label' => __( 'Color', 'woolentor' ),
                                 'type' => Controls_Manager::COLOR,
-                                'scheme' => [
-                                    'type' => Scheme_Color::get_type(),
-                                    'value' => Scheme_Color::COLOR_1,
-                                ],
                                 'default' =>'#23252a',
                                 'selectors' => [
                                     '{{WRAPPER}} .product-slider .slick-arrow:hover' => 'color: {{VALUE}};',
@@ -785,10 +770,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                             [
                                 'label' => __( 'Background', 'woolentor' ),
                                 'type' => Controls_Manager::COLOR,
-                                'scheme' => [
-                                    'type' => Scheme_Color::get_type(),
-                                    'value' => Scheme_Color::COLOR_1,
-                                ],
                                 'default' =>'#ffffff',
                                 'selectors' => [
                                     '{{WRAPPER}} .product-slider .slick-arrow:hover' => 'background-color: {{VALUE}} !important;',
@@ -830,10 +811,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                                 [
                                     'label' => __( 'Background Color', 'woolentor' ),
                                     'type' => Controls_Manager::COLOR,
-                                    'scheme' => [
-                                        'type' => Scheme_Color::get_type(),
-                                        'value' => Scheme_Color::COLOR_1,
-                                    ],
                                     'default' =>'#282828',
                                     'selectors' => [
                                         '{{WRAPPER}} .product-slider .slick-dots li button:hover' => 'background-color: {{VALUE}} !important;',
@@ -912,7 +889,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                     $this->add_responsive_control(
                         'product_image_padding',
                         [
-                            'label' => __( 'Product image area padding', 'woolentor' ),
+                            'label' => __( 'Product Image Area Padding', 'woolentor' ),
                             'type' => Controls_Manager::DIMENSIONS,
                             'size_units' => [ 'px', '%', 'em' ],
                             'selectors' => [
@@ -924,12 +901,8 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                     $this->add_control(
                         'product_image_bg_color',
                         [
-                            'label' => __( 'Product image background', 'woolentor' ),
+                            'label' => __( 'Product Image Background', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .product-inner .image-wrap' => 'background-color: {{VALUE}} !important;',
@@ -940,7 +913,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                     $this->add_responsive_control(
                         'product_content_padding',
                         [
-                            'label' => __( 'Product content area padding', 'woolentor' ),
+                            'label' => __( 'Product Content Area Padding', 'woolentor' ),
                             'type' => Controls_Manager::DIMENSIONS,
                             'size_units' => [ 'px', '%', 'em' ],
                             'selectors' => [
@@ -952,12 +925,8 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                     $this->add_control(
                         'product_content_bg_color',
                         [
-                            'label' => __( 'Product content background', 'woolentor' ),
+                            'label' => __( 'Product Content Background', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .product-inner .content' => 'background-color: {{VALUE}} !important;',
@@ -1017,11 +986,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Title color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
-                            'default' =>'#23252a',
+                            'default' =>'#444444',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .product-inner .content .title a' => 'color: {{VALUE}};',
                             ],
@@ -1041,13 +1006,10 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Price color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
-                            'default' =>'#23252a',
+                            'default' =>'#444444',
                             'selectors' => [
-                                '{{WRAPPER}} .product-item .product-inner .content .price' => 'color: {{VALUE}};',
+                                '{{WRAPPER}} .product-item .product-inner .content .price ' => 'color: {{VALUE}};',
+                                '{{WRAPPER}} .product-item .product-inner .content .price .amount' => 'color: {{VALUE}};',
                             ],
                         ]
                     );
@@ -1057,7 +1019,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'name' => 'pricetypography',
                             'scheme' => Scheme_Typography::TYPOGRAPHY_1,
-                            'selector' => '{{WRAPPER}} .product-item .product-inner .content .price',
+                            'selector' => '{{WRAPPER}} .product-item .product-inner .content .price ',
                         ]
                     );
 
@@ -1107,10 +1069,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Title color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
+                            'default' =>'#dc9a0e',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .product-inner .content .title a:hover' => 'color: {{VALUE}};',
                             ],
@@ -1122,10 +1081,6 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Product content background', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
                             'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .product-inner .product_information_area .content' => 'background-color: {{VALUE}} !important;',
@@ -1175,10 +1130,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
+                            'default' =>'#444444',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .actions a, {{WRAPPER}} .product-item .woocommerce.compare-button a.button, {{WRAPPER}} .product-item .actions a::before' => 'color: {{VALUE}};',
                             ],
@@ -1190,10 +1142,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Backgournd Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
+                            'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .actions' => 'background-color: {{VALUE}};',
                             ],
@@ -1241,10 +1190,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
+                            'default' =>'#dc9a0e',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .actions a:hover, {{WRAPPER}} .product-item .woocommerce.compare-button a.button:hover, {{WRAPPER}} .product-item .actions a:hover::before' => 'color: {{VALUE}};',
                             ],
@@ -1256,10 +1202,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                         [
                             'label' => __( 'Backgournd Color', 'woolentor' ),
                             'type' => Controls_Manager::COLOR,
-                            'scheme' => [
-                                'type' => Scheme_Color::get_type(),
-                                'value' => Scheme_Color::COLOR_1,
-                            ],
+                            'default' =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .product-item .actions:hover' => 'background-color: {{VALUE}};',
                             ],
@@ -1460,7 +1403,14 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                 
             <?php
                 $j=0;
-                foreach( $product_cats as $cats ):
+                $tabcatargs = array(
+                    'orderby'    => 'name',
+                    'order'      => 'ASC',
+                    'hide_empty' => true,
+                    'slug'       => $product_cats,
+                );
+                $tabcat_fach = get_terms( 'product_cat', $tabcatargs );
+                foreach( $tabcat_fach as $cats ):
                     $j++;
                     $field_name = is_numeric($product_cats[0])?'term_id':'slug';
                     $args['tax_query'] = array(
@@ -1736,7 +1686,7 @@ class Woolentor_Product_Tabs_Widget extends Widget_Base {
                            <?php if ($k % $rows == 0 && ($products->post_count != $k)) { ?>
                             </div>
                             <div class="<?php echo esc_attr($collumval );?>">
-                                <?php } $k++; endwhile; wp_reset_postdata();  endif; ?>
+                                <?php } $k++; endwhile; wp_reset_query(); wp_reset_postdata();  endif; ?>
                             </div>
                     <?php if( $proslider == 'yes' ){ echo '</div>';} ?>
                 </div>

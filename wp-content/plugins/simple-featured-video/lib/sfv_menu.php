@@ -4,7 +4,7 @@
 	
 	// Menu creation under General Settings with name "Simple Featured Video"
 	function sfv_menus(){
-			add_submenu_page('options-general.php','Simple Featured Video', 'Simple Featured Video', 'administrator', 'sfv_menu_page','sfv_menu_page_function','', '');
+			add_submenu_page('options-general.php','Simple Featured Video', 'Simple Featured Video', 'administrator', 'sfv_menu_page','sfv_menu_page_function');
 	}
 	// Menu page code loading
 	function sfv_menu_page_function(){

@@ -7,12 +7,21 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 /**
 * Base
 */
-class Base {
+final class Base {
 
     const MINIMUM_PHP_VERSION = '5.4';
     const MINIMUM_ELEMENTOR_VERSION = '2.0.0';
 
+    /**
+     * [$_instance]
+     * @var null
+     */
     private static $_instance = null;
+
+    /**
+     * [instance] Initializes a singleton instance
+     * @return [Base]
+     */
     public static function instance() {
         if ( is_null( self::$_instance ) ) {
             self::$_instance = new self();
@@ -20,7 +29,11 @@ class Base {
         return self::$_instance;
     }
 
-    public function __construct() {
+    /**
+     * [__construct] Class construcotr
+     */
+    private function __construct() {
+
         if ( ! function_exists('is_plugin_active') ){ include_once( ABSPATH . 'wp-admin/includes/plugin.php' ); }
         add_action( 'init', [ $this, 'i18n' ] );
         add_action( 'plugins_loaded', [ $this, 'init' ] );
@@ -28,21 +41,26 @@ class Base {
         // Register Plugin Active Hook
         register_activation_hook( WOOLENTOR_ADDONS_PL_ROOT, [ $this, 'plugin_activate_hook' ] );
 
+        // Register Plugin Deactive Hook
+        register_deactivation_hook( WOOLENTOR_ADDONS_PL_ROOT, [ $this, 'plugin_deactivation_hook'] );
+
         // Support WooCommerce
-        add_action( 'after_setup_theme', [ $this, 'woocommerce_setup' ] );
+        add_action( 'after_setup_theme', [ $this, 'after_setup_theme' ] );
 
     }
 
-    /*
-    * Load Text Domain
-    */
+    /**
+     * [i18n] Load Text Domain
+     * @return [void]
+     */
     public function i18n() {
         load_plugin_textdomain( 'woolentor', false, dirname( plugin_basename( WOOLENTOR_ADDONS_PL_ROOT ) ) . '/languages/' );
     }
 
-    /*
-    * Init Hook in Init
-    */
+    /**
+     * [init] Plugins Loaded Init Hook
+     * @return [void]
+     */
     public function init() {
 
         // Check for required PHP version
@@ -74,13 +92,12 @@ class Base {
 
         // Promo Banner
         if( is_admin() ){
-            if( !is_plugin_active('woolentor-addons-pro/woolentor_addons_pro.php') && ( \Woolentor_Template_Library::instance()->get_templates_info( true )[$notices][0][$status] == 1 ) ){
-                if ( isset( $_GET['woolentor-dismiss'] ) && check_admin_referer( 'woolentor-dismiss-' . get_current_user_id() ) ) {
-                    add_action( 'admin_head', [ $this, 'dismiss' ] );
+            if( isset( \Woolentor_Template_Library::instance()->get_templates_info()['notices'][0]['status'] ) ){
+                if( !is_plugin_active('woolentor-addons-pro/woolentor_addons_pro.php') && ( \Woolentor_Template_Library::instance()->get_templates_info()['notices'][0]['status'] == 1 ) ){
+                    add_action( 'wp_ajax_woolentor_pro_notice', [ $this, 'ajax_dismiss' ] );
+                    add_action( 'admin_notices', [ $this, 'admin_promo_notice' ] );
+                    return ;
                 }
-                register_deactivation_hook( WOOLENTOR_ADDONS_PL_ROOT, [ $this, 'update_dismiss'] );
-                add_action( 'admin_notices', [ $this, 'admin_promo_notice' ] );
-                return ;
             }
         }
 
@@ -92,8 +109,8 @@ class Base {
     }
 
     /**
-     * Admin notice.
-     * For missing elementor.
+     * [admin_notice_missing_main_plugin] Admin Notice For missing elementor.
+     * @return [void]
      */
     public function admin_notice_missing_main_plugin() {
         if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
@@ -118,8 +135,8 @@ class Base {
     }
 
     /**
-     * Admin notice.
-     * For WooCommerce.
+     * [admin_notic_missing_woocommerce] Admin Notice For missing WooCommerce
+     * @return [void]
      */
     public function admin_notic_missing_woocommerce(){
         $woocommerce = 'woocommerce/woocommerce.php';
@@ -143,8 +160,8 @@ class Base {
     }
 
     /**
-     * Admin notice.
-     * PHP required version.
+     * [admin_notice_minimum_php_version] Admin Notice For Required PHP Version
+     * @return [void]
      */
     public function admin_notice_minimum_php_version() {
         if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
@@ -159,56 +176,102 @@ class Base {
     }
 
     /**
-     * Admin notice.
-     * Promo Banner
+     * [ajax_dismiss] Ajax Call back funtion for update user meta
+     * @return [void]
      */
-    public function dismiss() {
+    public function ajax_dismiss() {
         update_user_meta( get_current_user_id(), 'woolentor_dismissed_notice_id', 1 );
+        wp_die();
     }
-    public function update_dismiss() {
-        delete_metadata( 'user', null, 'woolentor_dismissed_notice_id', null, true );
-    }
+
+    /**
+     * [admin_promo_notice]
+     * @return [void] Promo banner admin notice
+     */
     public function admin_promo_notice(){
+
         if( get_user_meta( get_current_user_id(), 'woolentor_dismissed_notice_id', true ) ){
             return;
         }
-        if( \Woolentor_Template_Library::instance()->get_templates_info( true )['notices'] ){
-            $dismissbtn = '<a href="'.esc_url( wp_nonce_url( add_query_arg( 'woolentor-dismiss', 'dismiss_admin_notices' ), 'woolentor-dismiss-' . get_current_user_id() ) ).'">
-                <button type="button" class="notice-dismiss"><span class="screen-reader-text">'.esc_html__( 'Dismiss this notice.', 'woolentor' ).'</span></button>
-            </a>';
-            foreach ( \Woolentor_Template_Library::instance()->get_templates_info( true )['notices'] as $notices ) {
-               printf( '<div class="woolentor-admin-notice notice notice-warning"><a href="%1$s" target="_blank"><img src="%2$s" alt="%3$s"></a><p>%4$s</p>%5$s</div>', $notices['bannerlink'], $notices['bannerimage'], $notices['title'], $notices['description'], $dismissbtn );
-            }
+
+        if( \Woolentor_Template_Library::instance()->get_templates_info()['notices'] ){
+            ?>
+            <style type="text/css">
+                .woolentor-admin-notice.notice {
+                  position: relative;
+                  padding-top: 20px !important;
+                  padding-right: 40px;
+                }
+                .woolentor-admin-notice.notice img{
+                  width: 100%;
+                }
+                .woolentor-admin-notice.notice-warning {
+                  border-left-color: #22b9ff;
+                }
+            </style>
+            <script>
+                ;jQuery( function( $ ) {
+                    $( 'div.notice.woolentor-admin-notice' ).on( 'click', 'button.notice-dismiss', function( event ) {
+                        event.preventDefault();
+                        $.ajax({
+                            url: ajaxurl,
+                            data: {
+                                'action': 'woolentor_pro_notice',
+                            }
+                        });
+                    } );
+                });
+            </script>
+            <?php
+            printf( '<div class="woolentor-admin-notice is-dismissible notice notice-warning"><a href="%1$s" target="_blank"><img src="%2$s" alt="%3$s"></a><p>%4$s</p></div>', \Woolentor_Template_Library::instance()->get_templates_info()['notices'][0]['bannerlink'], \Woolentor_Template_Library::instance()->get_templates_info()['notices'][0]['bannerimage'], \Woolentor_Template_Library::instance()->get_templates_info()['notices'][0]['title'], \Woolentor_Template_Library::instance()->get_templates_info()['notices'][0]['description'] );
+           
         }
     }
 
-    /*
-    * Check Plugins is Installed or not
+   /**
+    * [is_plugins_active] Check Plugin is Installed or not
+    * @param  [string]  $pl_file_path plugin file path
+    * @return boolean  true|false
     */
     public function is_plugins_active( $pl_file_path = NULL ){
         $installed_plugins_list = get_plugins();
         return isset( $installed_plugins_list[$pl_file_path] );
     }
 
-    /* 
-    * Add settings link on plugin page.
+   /**
+    * [plugins_setting_links]
+    * @param  [array] $links default plugin action link
+    * @return [array] plugin action link
     */
     public function plugins_setting_links( $links ) {
         $settings_link = '<a href="'.admin_url('admin.php?page=woolentor').'">'.esc_html__( 'Settings', 'woolentor' ).'</a>'; 
         array_unshift( $links, $settings_link );
         if( !is_plugin_active('woolentor-addons-pro/woolentor_addons_pro.php') ){
-            $links['woolentorgo_pro'] = sprintf('<a href="https://hasthemes.com/plugins/woolentor-pro/" target="_blank" style="color: #39b54a; font-weight: bold;">' . esc_html__('Go Pro','woolentor') . '</a>');
+            $links['woolentorgo_pro'] = sprintf('<a href="https://hasthemes.com/plugins/woolentor-pro-woocommerce-page-builder/?fd" target="_blank" style="color: #39b54a; font-weight: bold;">' . esc_html__('Go Pro','woolentor') . '</a>');
         }
         return $links; 
     }
 
-    /* 
-    * Plugins After Install
-    * Redirect Setting page
+   /**
+    * [plugin_activate_hook] Plugin Activation hook callable
+    * @return [void]
     */
     public function plugin_activate_hook() {
-        add_option('woolentor_do_activation_redirect', TRUE);
+        add_option( 'woolentor_do_activation_redirect', TRUE );
     }
+
+    /**
+     * [plugin_deactivation_hook] Plugin Deactivation hook callable
+     * @return [void]
+     */
+    public function plugin_deactivation_hook() {
+        delete_metadata( 'user', null, 'woolentor_dismissed_notice_id', null, true );
+    }
+
+    /**
+     * [plugin_redirect_option_page] After Active the plugin then redirect to option page
+     * @return [void]
+     */
     public function plugin_redirect_option_page() {
         if ( get_option( 'woolentor_do_activation_redirect', FALSE ) ) {
             delete_option('woolentor_do_activation_redirect');
@@ -218,8 +281,12 @@ class Base {
         }
     }
 
-    // Support WooCommerce
-    public function woocommerce_setup() {
+
+    /**
+     * [after_setup_theme] WooCommerce Support
+     * @return [void] 
+     */
+    public function after_setup_theme() {
         if( function_exists('woolentor_get_option') ){
             if( woolentor_get_option( 'enablecustomlayout', 'woolentor_woo_template_tabs', 'on' ) == 'on' ){
                 add_theme_support( 'woocommerce' );
@@ -230,8 +297,9 @@ class Base {
         }
     }
 
-    /*
-    * Load WC Files in Editor Mode
+   /**
+    * [wc_fontend_includes] Load WC Files in Editor Mode
+    * @return [void]
     */
     public function wc_fontend_includes() {
         \WC()->frontend_includes();
@@ -246,28 +314,41 @@ class Base {
         }
     }
 
-    /*
-    * Include File
-    */
+    /**
+     * [include_files] Required File
+     * @return [void]
+     */
     public function include_files(){
+
         require( WOOLENTOR_ADDONS_PL_PATH.'includes/helper-function.php' );
         require( WOOLENTOR_ADDONS_PL_PATH.'classes/class.assest_management.php' );
         require( WOOLENTOR_ADDONS_PL_PATH.'classes/class.widgets_control.php' );
+        require( WOOLENTOR_ADDONS_PL_PATH.'classes/class.default_data.php' );
+        require( WOOLENTOR_ADDONS_PL_PATH.'classes/class.icon-manager.php' );
 
         // Admin Setting file
         if( is_admin() ){
             require( WOOLENTOR_ADDONS_PL_PATH.'includes/custom-metabox.php' );
             require( WOOLENTOR_ADDONS_PL_PATH.'includes/admin/admin-init.php' );
+
+            // Post Duplicator
+            if( !is_plugin_active('ht-mega-for-elementor/htmega_addons_elementor.php') ){
+                if( woolentor_get_option( 'postduplicator', 'woolentor_others_tabs', 'off' ) === 'on' ){
+                    require_once ( WOOLENTOR_ADDONS_PL_PATH.'classes/class.post-duplicator.php' );
+                }
+            }
+
         }
 
         // Builder File
         if( woolentor_get_option( 'enablecustomlayout', 'woolentor_woo_template_tabs', 'on' ) == 'on' ){
             require( WOOLENTOR_ADDONS_PL_PATH.'includes/wl_woo_shop.php' );
-            require( WOOLENTOR_ADDONS_PL_PATH.'includes/archive_product_render.php' );
+            require( WOOLENTOR_ADDONS_PL_PATH.'includes/archive_product_render.php' );            
             require( WOOLENTOR_ADDONS_PL_PATH.'includes/class.product_video_gallery.php' );
             if( !is_admin() && !is_plugin_active('woolentor-addons-pro/woolentor_addons_pro.php') && woolentor_get_option( 'enablerenamelabel', 'woolentor_rename_label_tabs', 'off' ) == 'on' ){
                 require( WOOLENTOR_ADDONS_PL_PATH.'includes/rename_label.php' );
             }
+            require( WOOLENTOR_ADDONS_PL_PATH.'classes/class.product_query.php' );
         }
 
         // Search
@@ -282,11 +363,22 @@ class Base {
 
         // Single Product Ajax cart
         if( woolentor_get_option( 'ajaxcart_singleproduct', 'woolentor_others_tabs', 'off' ) == 'on' ){
-            require( WOOLENTOR_ADDONS_PL_PATH. 'classes/class.single_product_ajax_add_to_cart.php' );
+            if ( 'yes' === get_option('woocommerce_enable_ajax_add_to_cart') ) {
+                require( WOOLENTOR_ADDONS_PL_PATH. 'classes/class.single_product_ajax_add_to_cart.php' );
+            }
         }
 
 
     }
     
 
+}
+
+/**
+ * Initializes the main plugin
+ *
+ * @return \Base
+ */
+function woolentor() {
+    return Base::instance();
 }

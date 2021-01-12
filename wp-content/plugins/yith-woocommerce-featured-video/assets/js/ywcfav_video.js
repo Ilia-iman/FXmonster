@@ -1,4 +1,4 @@
-jQuery(document).ready(function ($) {
+jQuery(function ($) {
 
     var hide_gallery_trigger_and_onsale_icon = function (e) {
             $('.woocommerce span.onsale:first, .woocommerce-page span.onsale:first').hide();

@@ -7,16 +7,12 @@ use WPForms\Integrations\IntegrationInterface;
 /**
  * Form Selector Gutenberg block with live preview.
  *
- * @package    WPForms\Integrations\Gutenberg
- * @author     WPForms
- * @since      1.4.8
- * @license    GPL-2.0+
- * @copyright  Copyright (c) 2018, WPForms LLC
+ * @since 1.4.8
  */
 class FormSelector implements IntegrationInterface {
 
 	/**
-	 * Indicates if current integration is allowed to load.
+	 * Indicate if current integration is allowed to load.
 	 *
 	 * @since 1.4.8
 	 *
@@ -27,7 +23,7 @@ class FormSelector implements IntegrationInterface {
 	}
 
 	/**
-	 * Loads an integration.
+	 * Load an integration.
 	 *
 	 * @since 1.4.8
 	 */
@@ -99,6 +95,7 @@ class FormSelector implements IntegrationInterface {
 				\esc_html__( 'form', 'wpforms-lite' ),
 				\esc_html__( 'contact', 'wpforms-lite' ),
 				\esc_html__( 'survey', 'wpforms-lite' ),
+				'the dude',
 			),
 			'form_select'       => \esc_html__( 'Select a Form', 'wpforms-lite' ),
 			'form_settings'     => \esc_html__( 'Form Settings', 'wpforms-lite' ),
@@ -112,6 +109,7 @@ class FormSelector implements IntegrationInterface {
 
 		\wp_enqueue_script(
 			'wpforms-gutenberg-form-selector',
+			// The unminified version is not supported by the browser.
 			WPFORMS_PLUGIN_URL . 'assets/js/components/admin/gutenberg/formselector.min.js',
 			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
 			WPFORMS_VERSION,
@@ -132,10 +130,11 @@ class FormSelector implements IntegrationInterface {
 			'wpforms-gutenberg-form-selector',
 			'wpforms_gutenberg_form_selector',
 			array(
-				'logo_url' => WPFORMS_PLUGIN_URL . 'assets/images/sullie-vc.png',
-				'wpnonce'  => \wp_create_nonce( 'wpforms-gutenberg-form-selector' ),
-				'forms'    => $forms,
-				'i18n'     => $i18n,
+				'logo_url'          => WPFORMS_PLUGIN_URL . 'assets/images/sullie-alt.png',
+				'block_preview_url' => WPFORMS_PLUGIN_URL . 'assets/images/integrations/gutenberg/block-preview.png',
+				'wpnonce'           => \wp_create_nonce( 'wpforms-gutenberg-form-selector' ),
+				'forms'             => $forms,
+				'i18n'              => $i18n,
 			)
 		);
 	}
@@ -201,15 +200,30 @@ class FormSelector implements IntegrationInterface {
 
 		\do_action( 'wpforms_gutenberg_block_before' );
 
-		\wpforms_display(
-			$id,
-			\apply_filters( 'wpforms_gutenberg_block_form_title', $title, $id ),
-			\apply_filters( 'wpforms_gutenberg_block_form_desc', $desc, $id )
-		);
+		if ( $this->is_gb_editor() ) {
+			wpforms_display(
+				$id,
+				apply_filters( 'wpforms_gutenberg_block_form_title', $title, $id ),
+				apply_filters( 'wpforms_gutenberg_block_form_desc', $desc, $id )
+			);
+		} else {
+			printf(
+				'[wpforms id="%s" title="%d" description="%d"]',
+				absint( $id ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				apply_filters( 'wpforms_gutenberg_block_form_title', $title, $id ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				apply_filters( 'wpforms_gutenberg_block_form_desc', $desc, $id ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			);
+		}
 
 		\do_action( 'wpforms_gutenberg_block_after' );
 
-		return \apply_filters( 'wpforms_gutenberg_block_form_content', \ob_get_clean(), $id );
+		$content = \ob_get_clean();
+
+		if ( empty( $content ) ) {
+			$content = '<div class="components-placeholder"><div class="components-placeholder__label"></div><div class="components-placeholder__fieldset">' . \esc_html__( 'The form cannot be displayed.', 'wpforms-lite' ) . '</div></div>';
+		}
+
+		return \apply_filters( 'wpforms_gutenberg_block_form_content', $content, $id );
 	}
 
 	/**

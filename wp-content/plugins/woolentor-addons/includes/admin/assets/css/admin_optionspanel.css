@@ -46,8 +46,11 @@
 .woolentor-theme-content h3 span{
     color: #ff3535;
 }
-#woolentor_template_library_tabs h2,#woolentor_general_tabs h2,#woolentor_buy_pro_tabs h2{display: none;}
+#woolentor_template_library_tabs h2,#woolentor_general_tabs h2,#woolentor_buy_pro_tabs h2, #woolentor_style_tabs h2{display: none;}
 
+#woolentor_style_tabs .element_section_title{
+  display: block;
+}
 .woolentor-admin-tab-pane{
   display: none;
 }
@@ -362,7 +365,7 @@
   margin: 20px 0 15px;
 }
 
-#tp-grid {
+/*#tp-grid {
   margin-left: 0 !important;
   margin-top: 35px !important;
 }
@@ -470,11 +473,11 @@
   right: 0;
   z-index: 2;
   transition: 0.4s;
-}
+}*/
 .httemplate-row .htsingle-templates-laibrary *, .httemplate-row .htsingle-templates-laibrary *::after, .httemplate-row .htsingle-templates-laibrary *::before,.httemplate-row .htsingle-templates-laibrary {
   box-sizing: border-box;
 }
-.httemplate-action a {
+/*.httemplate-action a {
   color: #fff;
   flex: 0 0 50%;
   font-size: 14px;
@@ -488,7 +491,7 @@
 }
 .httemplate-action a:hover{
   background: #0085ba none repeat scroll 0 0;
-}
+}*/
 
 /*Pop Up*/
 .httemplate-popupcontent {
@@ -585,17 +588,18 @@
   min-height: 250px;
 }
 
-/* Admin Promo Notice */
-.woolentor-admin-notice.notice {
-  position: relative;
-  padding-top: 20px !important;
-  padding-right: 40px;
+/**
+ * Style Tab
+ */
+#woolentor_style_tabs{}
+.woolentor_style_seperator-title{
+  margin:0;
 }
-.woolentor-admin-notice.notice img{
-  width: 100%;
+.form-table .woolentor_table_row_half td{
+  padding: 10px 10px;
 }
-.woolentor-admin-notice.notice-warning {
-  border-left-color: #22b9ff;
+.form-table .woolentor_table_row_half th{
+  padding: 10px 10px 10px 0;
 }
 
 /*

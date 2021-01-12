@@ -5,11 +5,7 @@ namespace WPForms\Integrations;
 /**
  * Class Loader gives ability to track/load all integrations.
  *
- * @package    WPForms\Integrations
- * @author     WPForms
- * @since      1.4.8
- * @license    GPL-2.0+
- * @copyright  Copyright (c) 2018, WPForms LLC
+ * @since 1.4.8
  */
 class Loader {
 
@@ -37,10 +33,12 @@ class Loader {
 	public function __construct() {
 
 		$core_class_names = array(
+			'Divi\Divi',
+			'Elementor\Elementor',
 			'Gutenberg\FormSelector',
-			'SiteHealth\SiteHealth',
 			'WPMailSMTP\Notifications',
 			'WPorg\Translations',
+			'UsageTracking\UsageTracking',
 		);
 
 		$class_names = \apply_filters( 'wpforms_integrations_available', $core_class_names );

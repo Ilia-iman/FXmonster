@@ -6,8 +6,6 @@ namespace WPForms {
 	 * Main WPForms class.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @package WPForms
 	 */
 	final class WPForms {
 
@@ -94,15 +92,6 @@ namespace WPForms {
 		public $smart_tags;
 
 		/**
-		 * The Logging instance.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @var \WPForms_Logging
-		 */
-		public $logs;
-
-		/**
 		 * The License class instance (Pro).
 		 *
 		 * @since 1.0.0
@@ -125,7 +114,7 @@ namespace WPForms {
 		 *
 		 * @since 1.3.9
 		 *
-		 * @var boolean
+		 * @var bool
 		 */
 		public $pro = false;
 
@@ -147,8 +136,8 @@ namespace WPForms {
 		/**
 		 * Main WPForms Instance.
 		 *
-		 * Insures that only one instance of WPForms exists in memory at any one
-		 * time. Also prevents needing to define globals all over the place.
+		 * Only one instance of WPForms exists in memory at any one time.
+		 * Also prevent the need to define globals all over the place.
 		 *
 		 * @since 1.0.0
 		 *
@@ -167,12 +156,12 @@ namespace WPForms {
 
 				// Load Pro or Lite specific files.
 				if ( self::$instance->pro ) {
-					require_once WPFORMS_PLUGIN_DIR . 'pro/wpforms-pro.php';
+					self::$instance->registry['pro'] = require_once WPFORMS_PLUGIN_DIR . 'pro/wpforms-pro.php';
 				} else {
 					require_once WPFORMS_PLUGIN_DIR . 'lite/wpforms-lite.php';
 				}
 
-				add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ), 10 );
+				add_action( 'init', array( self::$instance, 'load_textdomain' ), 10 );
 				add_action( 'plugins_loaded', array( self::$instance, 'objects' ), 10 );
 			}
 
@@ -199,13 +188,21 @@ namespace WPForms {
 		}
 
 		/**
-		 * Loads the plugin language files.
+		 * Load the plugin language files.
 		 *
 		 * @since 1.0.0
 		 * @since 1.5.0 Load only the lite translation.
 		 */
 		public function load_textdomain() {
-			load_plugin_textdomain( 'wpforms-lite', false, dirname( plugin_basename( WPFORMS_PLUGIN_FILE ) ) . '/languages/' );
+
+			// If the user is logged in, unset the current text-domains before loading our text domain.
+			// This feels hacky, but this way a user's set language in their profile will be used,
+			// rather than the site-specific language.
+			if ( is_user_logged_in() ) {
+				unload_textdomain( 'wpforms-lite' );
+			}
+
+			load_plugin_textdomain( 'wpforms-lite', false, dirname( plugin_basename( WPFORMS_PLUGIN_FILE ) ) . '/assets/languages/' );
 		}
 
 		/**
@@ -214,6 +211,8 @@ namespace WPForms {
 		 * @since 1.0.0
 		 */
 		private function includes() {
+
+			require_once WPFORMS_PLUGIN_DIR . 'includes/class-db.php';
 
 			$this->includes_magic();
 
@@ -230,7 +229,6 @@ namespace WPForms {
 			require_once WPFORMS_PLUGIN_DIR . 'includes/class-providers.php';
 			require_once WPFORMS_PLUGIN_DIR . 'includes/class-process.php';
 			require_once WPFORMS_PLUGIN_DIR . 'includes/class-smart-tags.php';
-			require_once WPFORMS_PLUGIN_DIR . 'includes/class-logging.php';
 			require_once WPFORMS_PLUGIN_DIR . 'includes/class-widget.php';
 			require_once WPFORMS_PLUGIN_DIR . 'includes/class-conditional-logic-core.php';
 			require_once WPFORMS_PLUGIN_DIR . 'includes/emails/class-emails.php';
@@ -253,7 +251,6 @@ namespace WPForms {
 				require_once WPFORMS_PLUGIN_DIR . 'includes/admin/class-importers.php';
 				require_once WPFORMS_PLUGIN_DIR . 'includes/admin/class-about.php';
 				require_once WPFORMS_PLUGIN_DIR . 'includes/admin/ajax-actions.php';
-				require_once WPFORMS_PLUGIN_DIR . 'includes/admin/class-am-deactivation-survey.php';
 			}
 		}
 
@@ -264,8 +261,19 @@ namespace WPForms {
 		 */
 		private function includes_magic() {
 
+			// Action Scheduler requires a special loading procedure.
+			require_once WPFORMS_PLUGIN_DIR . 'vendor/woocommerce/action-scheduler/action-scheduler.php';
+
 			// Autoload Composer packages.
 			require_once WPFORMS_PLUGIN_DIR . 'vendor/autoload.php';
+
+			// Load the class loader.
+			$this->register(
+				[
+					'name' => 'Loader',
+					'hook' => false,
+				]
+			);
 
 			if ( version_compare( phpversion(), '5.5', '>=' ) ) {
 				/*
@@ -309,13 +317,6 @@ namespace WPForms {
 			$this->frontend   = new \WPForms_Frontend();
 			$this->process    = new \WPForms_Process();
 			$this->smart_tags = new \WPForms_Smart_Tags();
-			$this->logs       = new \WPForms_Logging();
-
-			if ( is_admin() ) {
-				if ( $this->pro || ( ! $this->pro && ! file_exists( WP_PLUGIN_DIR . '/wpforms/wpforms.php' ) ) ) {
-					new \AM_Deactivation_Survey( 'WPForms', basename( dirname( __DIR__ ) ) );
-				}
-			}
 
 			// Hook now that all of the WPForms stuff is loaded.
 			do_action( 'wpforms_loaded' );
@@ -326,33 +327,32 @@ namespace WPForms {
 		 *
 		 * @since 1.5.7
 		 *
-		 * @param string $class_name Class to register.
-		 * @param array  $args       Class registration options.
+		 * @param array $class Class registration info.
 		 */
-		public function register( $class_name, $args = array() ) {
+		public function register( $class ) {
 
-			if ( empty( $class_name ) ) {
+			if ( empty( $class['name'] ) || ! is_string( $class['name'] ) ) {
 				return;
 			}
 
-			if ( isset( $args['condition'] ) && empty( $args['condition'] ) ) {
+			if ( isset( $class['condition'] ) && empty( $class['condition'] ) ) {
 				return;
 			}
 
-			$full_name = $this->pro ? '\WPForms\Pro\\' . $class_name : '\WPForms\Lite\\' . $class_name;
-			$full_name = class_exists( $full_name ) ? $full_name : '\WPForms\\' . $class_name;
+			$full_name = $this->pro ? '\WPForms\Pro\\' . $class['name'] : '\WPForms\Lite\\' . $class['name'];
+			$full_name = class_exists( $full_name ) ? $full_name : '\WPForms\\' . $class['name'];
 
 			if ( ! class_exists( $full_name ) ) {
 				return;
 			}
 
 			$pattern  = '/[^a-zA-Z0-9_\\\-]/';
-			$id       = isset( $args['id'] ) ? $args['id'] : '';
+			$id       = isset( $class['id'] ) ? $class['id'] : '';
 			$id       = $id ? preg_replace( $pattern, '', (string) $id ) : $id;
-			$hook     = isset( $args['hook'] ) ? $args['hook'] : 'wpforms_loaded';
+			$hook     = isset( $class['hook'] ) ? $class['hook'] : 'wpforms_loaded';
 			$hook     = $hook ? preg_replace( $pattern, '', (string) $hook ) : $hook;
-			$run      = isset( $args['run'] ) ? $args['run'] : 'init';
-			$priority = isset( $args['priority'] ) && is_int( $args['priority'] ) ? $args['priority'] : 10;
+			$run      = isset( $class['run'] ) ? $class['run'] : 'init';
+			$priority = isset( $class['priority'] ) && is_int( $class['priority'] ) ? $class['priority'] : 10;
 
 			$callback = function () use ( $full_name, $id, $run ) {
 
@@ -385,8 +385,8 @@ namespace WPForms {
 				return;
 			}
 
-			foreach ( $classes as $class_name => $args ) {
-				$this->register( $class_name, $args );
+			foreach ( $classes as $class ) {
+				$this->register( $class );
 			}
 		}
 
@@ -397,7 +397,7 @@ namespace WPForms {
 		 *
 		 * @param string $name Class name or an alias.
 		 *
-		 * @return mixed|null
+		 * @return mixed|\stdClass
 		 */
 		public function get( $name ) {
 
@@ -405,7 +405,23 @@ namespace WPForms {
 				return $this->registry[ $name ];
 			}
 
-			return null;
+			return new \stdClass();
+		}
+
+		/**
+		 * Get the list of all custom tables starting with `wpforms_*`.
+		 *
+		 * @since 1.6.3
+		 *
+		 * @return array List of table names.
+		 */
+		public function get_existing_custom_tables() {
+
+			global $wpdb;
+
+			$tables = $wpdb->get_results( "SHOW TABLES LIKE '" . $wpdb->prefix . "wpforms_%'", 'ARRAY_N' ); // phpcs:ignore
+
+			return ! empty( $tables ) ? wp_list_pluck( $tables, 0 ) : array();
 		}
 	}
 }

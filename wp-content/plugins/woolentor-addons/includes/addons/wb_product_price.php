@@ -21,6 +21,16 @@ class WL_Product_Price_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['price','product price'];
+    }
+
     protected function _register_controls() {
 
         // Product Price Style
@@ -37,7 +47,7 @@ class WL_Product_Price_Element extends Widget_Base {
                     'label'     => __( 'Price Color', 'woolentor' ),
                     'type'      => Controls_Manager::COLOR,
                     'selectors' => [
-                        '{{WRAPPER}} .price del' => 'color: {{VALUE}};',
+                        '{{WRAPPER}} .price del' => 'color: {{VALUE}} !important;',
                     ],
                 ]
             );
@@ -58,7 +68,7 @@ class WL_Product_Price_Element extends Widget_Base {
                     'type' => Controls_Manager::DIMENSIONS,
                     'size_units' => [ 'px', 'em' ],
                     'selectors' => [
-                        '{{WRAPPER}} .price' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                        '{{WRAPPER}} .price' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
                     ],
                 ]
             );
@@ -78,7 +88,7 @@ class WL_Product_Price_Element extends Widget_Base {
                     'label'     => __( 'Price Color', 'woolentor' ),
                     'type'      => Controls_Manager::COLOR,
                     'selectors' => [
-                        '{{WRAPPER}} .price' => 'color: {{VALUE}};',
+                        '{{WRAPPER}} .price' => 'color: {{VALUE}} !important;',
                     ],
                 ]
             );
@@ -105,7 +115,7 @@ class WL_Product_Price_Element extends Widget_Base {
         $product = wc_get_product();
 
         if( Plugin::instance()->editor->is_edit_mode() ){
-            echo '<p class="price"><del><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">£</span>20.00</span></del> <ins><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">£</span>18.00</span></ins></p>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         }else{
             if ( empty( $product ) ) { return; }
             woocommerce_template_single_price();

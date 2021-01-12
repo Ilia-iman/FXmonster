@@ -24,6 +24,7 @@ class WooLentor_Ajax_Search_Base{
 
 		// register widget
 		add_action( 'widgets_init', [ $this, 'register_widget' ] );
+
 	}
 
 	/**
@@ -98,6 +99,10 @@ class WooLentor_Ajax_Search_Base{
 	 */
 	public function shortcode( $atts = array(), $content = '' ) {
 		
+		wp_enqueue_style( 'woolentor-ajax-search' );
+        wp_enqueue_script( 'jquery-nicescroll' );
+        wp_enqueue_script( 'woolentor-ajax-search' );
+
 		extract( shortcode_atts( array(
 			'limit' => 10,
 			'placeholder' => 'Search Products',
@@ -112,7 +117,7 @@ class WooLentor_Ajax_Search_Base{
         $output = '';
         $output .= '<div class="woolentor_widget_psa" id="wluniq-'.uniqid().'">
 	            <form role="search" method="get" action="'.esc_url( home_url( '/' ) ).'" data-settings='.wp_json_encode( $data_settings ).'>
-	                <input type="search" placeholder="'.esc_attr__( $placeholder, 'woolentor' ).'" value="'.get_search_query().'" name="s" />
+	                <input type="search" placeholder="'.esc_attr__( $placeholder, 'woolentor' ).'" value="'.get_search_query().'" name="s" autocomplete="off" />
 	                <input type="hidden" name="post_type" value="product" />
 	                <button type="submit" value="'.esc_attr_x( 'Search', 'submit button', 'woolentor' ).'">
 	                    <i class="sli sli-magnifier"></i>

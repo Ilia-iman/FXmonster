@@ -21,6 +21,16 @@ class Woolentor_Elementor_Widget_Add_Banner extends Widget_Base {
         return [ 'woolentor-addons' ];
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['banner','image banner','adds','adds banner'];
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -140,10 +150,6 @@ class Woolentor_Elementor_Widget_Add_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#404040',
                     'selectors' => [
                         '{{WRAPPER}} .woolentor-banner .banner_title' => 'color: {{VALUE}};',
@@ -187,10 +193,6 @@ class Woolentor_Elementor_Widget_Add_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#404040',
                     'selectors' => [
                         '{{WRAPPER}} .woolentor-banner .banner_subtitle' => 'color: {{VALUE}};',
@@ -234,10 +236,6 @@ class Woolentor_Elementor_Widget_Add_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#404040',
                     'selectors' => [
                         '{{WRAPPER}} .woolentor-banner .banner_button' => 'color: {{VALUE}};border-color: {{VALUE}};',
@@ -250,10 +248,6 @@ class Woolentor_Elementor_Widget_Add_Banner extends Widget_Base {
                 [
                     'label' => __( 'Hover Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#404040',
                     'selectors' => [
                         '{{WRAPPER}} .woolentor-banner .banner_button:hover' => 'color: {{VALUE}};border-color: {{VALUE}};',

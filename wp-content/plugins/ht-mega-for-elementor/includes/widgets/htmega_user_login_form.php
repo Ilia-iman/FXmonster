@@ -844,11 +844,11 @@ class HTMega_Elementor_Widget_User_Login_Form extends Widget_Base {
 
         <?php
 
-        $this->htmega_login_check( $redirect_url, $id );
+        $this->htmega_login_check( $settings['redirect_page'], $redirect_url, $id );
 
     }
 
-    public function htmega_login_check( $redirect_url, $id ) {
+    public function htmega_login_check( $reddirectstatus, $redirect_url, $id ) {
 
         ?>
 
@@ -861,6 +861,7 @@ class HTMega_Elementor_Widget_User_Login_Form extends Widget_Base {
                 var loadingmessage = '<?php echo esc_html__('Please wait...','htmega-addons'); ?>';
                 var login_form_id = 'form#htmega_login_form_<?php echo esc_attr( $id ); ?>';
                 var login_button_id = '#login_form_submit_<?php echo esc_attr( $id ); ?>';
+                var redirect = '<?php echo $reddirectstatus; ?>';
 
                 $( login_button_id ).on('click', function(){
 
@@ -879,7 +880,9 @@ class HTMega_Elementor_Widget_User_Login_Form extends Widget_Base {
                         success: function(msg){
                             if ( msg.loggeauth == true ){
                                 $('#htmega_message_<?php echo esc_attr( $id ); ?>').html('<div class="htmega_success_msg alert alert-success">'+ msg.message +'</div>').fadeIn();
-                                document.location.href = '<?php echo esc_url( $redirect_url ); ?>';
+                                if( redirect === 'yes' ){
+                                    document.location.href = '<?php echo esc_url( $redirect_url ); ?>';
+                                }
                             }else{
                                 $('#htmega_message_<?php echo esc_attr( $id ); ?>').html('<div class="htmega_invalid_msg alert alert-danger">'+ msg.message +'</div>').fadeIn();
                             }

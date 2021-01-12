@@ -16,8 +16,19 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
     public function get_icon() {
         return 'eicon-image';
     }
+
     public function get_categories() {
         return [ 'woolentor-addons' ];
+    }
+
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return['offer','day','day offer','special offer','special day'];
     }
 
     protected function _register_controls() {
@@ -77,7 +88,7 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
             $this->add_control(
                 'banner_sub_title',
                 [
-                    'label' => __( 'Sub Title', 'woolentor' ),
+                    'label' => __( 'Subtitle', 'woolentor' ),
                     'type' => Controls_Manager::TEXT,
                     'placeholder' => __( 'Banner Sub Title', 'woolentor' ),
                 ]
@@ -320,10 +331,6 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#ffffff',
                     'selectors' => [
                         '{{WRAPPER}} .wlspcial-banner .banner-content h2' => 'color: {{VALUE}};',
@@ -384,10 +391,6 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#ffffff',
                     'selectors' => [
                         '{{WRAPPER}} .wlspcial-banner .banner-content h6' => 'color: {{VALUE}};',
@@ -448,10 +451,6 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#ffffff',
                     'selectors' => [
                         '{{WRAPPER}} .wlspcial-banner .banner-content p' => 'color: {{VALUE}};',
@@ -512,10 +511,6 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#ffffff',
                     'selectors' => [
                         '{{WRAPPER}} .wlspcial-banner .banner-content h5' => 'color: {{VALUE}};',
@@ -576,10 +571,6 @@ class Woolentor_Elementor_Widget_Special_day_Banner extends Widget_Base {
                 [
                     'label' => __( 'Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
-                    'scheme' => [
-                        'type' => Scheme_Color::get_type(),
-                        'value' => Scheme_Color::COLOR_1,
-                    ],
                     'default' => '#ffffff',
                     'selectors' => [
                         '{{WRAPPER}} .wlspcial-banner .banner-content h5 span' => 'color: {{VALUE}};',

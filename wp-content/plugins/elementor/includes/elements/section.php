@@ -5,8 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Schemes;
-
 /**
  * Elementor section element.
  *
@@ -199,13 +197,13 @@ class Element_Section extends Element_Base {
 	 * the control, element name, type, icon and more. This method also adds
 	 * section presets.
 	 *
-	 * @since 1.0.10
+	 * @since 2.9.0
 	 * @access protected
 	 *
 	 * @return array The initial config.
 	 */
-	protected function _get_initial_config() {
-		$config = parent::_get_initial_config();
+	protected function get_initial_config() {
+		$config = parent::get_initial_config();
 
 		$config['presets'] = self::get_presets();
 		$config['controls'] = $this->get_controls();
@@ -223,7 +221,6 @@ class Element_Section extends Element_Base {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-
 		$this->start_controls_section(
 			'section_layout',
 			[
@@ -239,21 +236,6 @@ class Element_Section extends Element_Base {
 				'label' => __( 'Title', 'elementor' ),
 				'type' => Controls_Manager::HIDDEN,
 				'render_type' => 'none',
-			]
-		);
-
-		$this->add_control(
-			'stretch_section',
-			[
-				'label' => __( 'Stretch Section', 'elementor' ),
-				'type' => Controls_Manager::SWITCHER,
-				'default' => '',
-				'return_value' => 'section-stretched',
-				'prefix_class' => 'elementor-',
-				'hide_in_inner' => true,
-				'description' => __( 'Stretch the section to the full width of the page using JS.', 'elementor' ) . sprintf( ' <a href="%1$s" target="_blank">%2$s</a>', 'https://go.elementor.com/stretch-section/', __( 'Learn more.', 'elementor' ) ),
-				'render_type' => 'none',
-				'frontend_available' => true,
 			]
 		);
 
@@ -418,6 +400,9 @@ class Element_Section extends Element_Base {
 			]
 		);
 
+		$is_legacy_mode_active = Plugin::instance()->get_legacy_mode( 'elementWrappers' );
+		$content_position_selector = $is_legacy_mode_active ? '{{WRAPPER}} > .elementor-container > .elementor-row > .elementor-column > .elementor-column-wrap > .elementor-widget-wrap' : '{{WRAPPER}} > .elementor-container > .elementor-column > .elementor-widget-wrap';
+
 		$this->add_control(
 			'content_position',
 			[
@@ -439,7 +424,7 @@ class Element_Section extends Element_Base {
 					'bottom' => 'flex-end',
 				],
 				'selectors' => [
-					'{{WRAPPER}} > .elementor-container > .elementor-row > .elementor-column > .elementor-column-wrap > .elementor-widget-wrap' => 'align-content: {{VALUE}}; align-items: {{VALUE}};',
+					$content_position_selector => 'align-content: {{VALUE}}; align-items: {{VALUE}};',
 				],
 				// TODO: The following line is for BC since 2.7.0
 				'prefix_class' => 'elementor-section-content-',
@@ -459,6 +444,21 @@ class Element_Section extends Element_Base {
 				'selectors' => [
 					'{{WRAPPER}}' => 'overflow: {{VALUE}}',
 				],
+			]
+		);
+
+		$this->add_control(
+			'stretch_section',
+			[
+				'label' => __( 'Stretch Section', 'elementor' ),
+				'type' => Controls_Manager::SWITCHER,
+				'default' => '',
+				'return_value' => 'section-stretched',
+				'prefix_class' => 'elementor-',
+				'hide_in_inner' => true,
+				'description' => __( 'Stretch the section to the full width of the page using JS.', 'elementor' ) . sprintf( ' <a href="%1$s" target="_blank">%2$s</a>', 'https://go.elementor.com/stretch-section/', __( 'Learn more.', 'elementor' ) ),
+				'render_type' => 'none',
+				'frontend_available' => true,
 			]
 		);
 
@@ -638,6 +638,21 @@ class Element_Section extends Element_Base {
 			[
 				'name' => 'css_filters',
 				'selector' => '{{WRAPPER}} .elementor-background-overlay',
+				'conditions' => [
+					'relation' => 'or',
+					'terms' => [
+						[
+							'name' => 'background_overlay_image[url]',
+							'operator' => '!==',
+							'value' => '',
+						],
+						[
+							'name' => 'background_overlay_color',
+							'operator' => '!==',
+							'value' => '',
+						],
+					],
+				],
 			]
 		);
 
@@ -660,6 +675,21 @@ class Element_Section extends Element_Base {
 				],
 				'selectors' => [
 					'{{WRAPPER}} > .elementor-background-overlay' => 'mix-blend-mode: {{VALUE}}',
+				],
+				'conditions' => [
+					'relation' => 'or',
+					'terms' => [
+						[
+							'name' => 'background_overlay_image[url]',
+							'operator' => '!==',
+							'value' => '',
+						],
+						[
+							'name' => 'background_overlay_color',
+							'operator' => '!==',
+							'value' => '',
+						],
+					],
 				],
 			]
 		);
@@ -1023,17 +1053,6 @@ class Element_Section extends Element_Base {
 			]
 		);
 
-		if ( in_array( Schemes\Color::get_type(), Schemes\Manager::get_enabled_schemes(), true ) ) {
-			$this->add_control(
-				'colors_warning',
-				[
-					'type' => Controls_Manager::RAW_HTML,
-					'raw' => __( 'Note: The following colors won\'t work if Default Colors are enabled.', 'elementor' ),
-					'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
-				]
-			);
-		}
-
 		$this->add_control(
 			'heading_color',
 			[
@@ -1124,7 +1143,7 @@ class Element_Section extends Element_Base {
 			[
 				'label' => __( 'Margin', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', 'em', '%', 'rem' ],
 				'allowed_dimensions' => 'vertical',
 				'placeholder' => [
 					'top' => '',
@@ -1143,14 +1162,14 @@ class Element_Section extends Element_Base {
 			[
 				'label' => __( 'Padding', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', 'em', '%', 'rem' ],
 				'selectors' => [
 					'{{WRAPPER}}' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'z_index',
 			[
 				'label' => __( 'Z-Index', 'elementor' ),
@@ -1159,7 +1178,6 @@ class Element_Section extends Element_Base {
 				'selectors' => [
 					'{{WRAPPER}}' => 'z-index: {{VALUE}};',
 				],
-				'label_block' => false,
 			]
 		);
 
@@ -1173,7 +1191,6 @@ class Element_Section extends Element_Base {
 					'active' => true,
 				],
 				'title' => __( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor' ),
-				'label_block' => false,
 				'style_transfer' => false,
 				'classes' => 'elementor-control-direction-ltr',
 			]
@@ -1190,7 +1207,6 @@ class Element_Section extends Element_Base {
 				],
 				'prefix_class' => '',
 				'title' => __( 'Add your custom class WITHOUT the dot. e.g: my-class', 'elementor' ),
-				'label_block' => false,
 				'classes' => 'elementor-control-direction-ltr',
 			]
 		);
@@ -1340,6 +1356,8 @@ class Element_Section extends Element_Base {
 
 		$this->end_controls_section();
 
+		Plugin::$instance->controls_manager->add_custom_attributes_controls( $this );
+
 		Plugin::$instance->controls_manager->add_custom_css_controls( $this );
 	}
 
@@ -1348,10 +1366,10 @@ class Element_Section extends Element_Base {
 	 *
 	 * Used to generate the live preview, using a Backbone JavaScript template.
 	 *
-	 * @since 1.0.0
+	 * @since 2.9.0
 	 * @access protected
 	 */
-	protected function _content_template() {
+	protected function content_template() {
 		?>
 		<#
 		if ( settings.background_video_link ) {
@@ -1376,7 +1394,9 @@ class Element_Section extends Element_Base {
 		<div class="elementor-shape elementor-shape-top"></div>
 		<div class="elementor-shape elementor-shape-bottom"></div>
 		<div class="elementor-container elementor-column-gap-{{ settings.gap }}">
-			<div class="elementor-row"></div>
+			<?php if ( Plugin::instance()->get_legacy_mode( 'elementWrappers' ) ) { ?>
+				<div class="elementor-row"></div>
+			<?php } ?>
 		</div>
 		<?php
 	}
@@ -1391,7 +1411,6 @@ class Element_Section extends Element_Base {
 	 */
 	public function before_render() {
 		$settings = $this->get_settings_for_display();
-
 		?>
 		<<?php echo esc_html( $this->get_html_tag() ); ?> <?php $this->print_render_attribute_string( '_wrapper' ); ?>>
 			<?php
@@ -1440,8 +1459,9 @@ class Element_Section extends Element_Base {
 			}
 			?>
 			<div class="elementor-container elementor-column-gap-<?php echo esc_attr( $settings['gap'] ); ?>">
+			<?php if ( Plugin::instance()->get_legacy_mode( 'elementWrappers' ) ) { ?>
 				<div class="elementor-row">
-		<?php
+			<?php }
 	}
 
 	/**
@@ -1454,7 +1474,9 @@ class Element_Section extends Element_Base {
 	 */
 	public function after_render() {
 		?>
+		<?php if ( Plugin::instance()->get_legacy_mode( 'elementWrappers' ) ) { ?>
 				</div>
+		<?php } ?>
 			</div>
 		</<?php echo esc_html( $this->get_html_tag() ); ?>>
 		<?php
@@ -1469,7 +1491,6 @@ class Element_Section extends Element_Base {
 	 * @access protected
 	 */
 	protected function _add_render_attributes() {
-		parent::_add_render_attributes();
 
 		$section_type = $this->get_data( 'isInner' ) ? 'inner' : 'top';
 
@@ -1479,6 +1500,8 @@ class Element_Section extends Element_Base {
 				'elementor-' . $section_type . '-section',
 			]
 		);
+
+		parent::_add_render_attributes();
 	}
 
 	/**

@@ -1,11 +1,11 @@
 <?php
 
 add_action( 'wp_enqueue_scripts', 'bento_child_enqueue_styles' );
-add_action( 'wp_enqueue_scripts', 'LazyGif' );
+add_action( 'wp_enqueue_scripts', 'Scripts' );
 
-function lazygif() {
-//    wp_enqueue_script( 'lazyGif', get_template_directory_uri() . '-child/js/lazygif.js' );
-    wp_enqueue_script( 'lazyload', 'https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js' );
+function Scripts () {
+//        wp_enqueue_script( 'lazyload', 'https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js' );
+        wp_enqueue_script( 'scripts', get_template_directory_uri() . '-child/js/scripts.js' );
 }
 
 function bento_child_enqueue_styles() {
@@ -28,7 +28,14 @@ add_filter('woocommerce_before_widget_product_list', 'wpse240457_add_class', 1, 
 
 /*
  * Подключение генерации кода покупки
+ * Подключение Carbon Feilds
  */
 require get_template_directory() . '-child/FXMIntegration.php';
+require get_template_directory() . '-child/inc/carbon-fields/carbon-fields-plugin.php';
 
+add_action( 'carbon_fields_register_fields', 'crb_attach_custom_fields' );
+  function crb_attach_custom_fields() {
+    require_once __DIR__ . '/inc/custom-fields/custom-fields.php';
+    require_once __DIR__ . '/inc/custom-fields/gif-grid.php';
+  }
 ?>

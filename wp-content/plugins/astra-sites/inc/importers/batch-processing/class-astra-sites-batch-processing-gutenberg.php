@@ -33,7 +33,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 		public static function get_instance() {
 
 			if ( ! isset( self::$instance ) ) {
-				self::$instance = new self;
+				self::$instance = new self();
 			}
 			return self::$instance;
 		}
@@ -54,7 +54,7 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 		 *                                  'pre_user_description'.
 		 * @return array Array of allowed HTML tags and their allowed attributes.
 		 */
-		function allowed_tags_and_attributes( $allowedposttags, $context ) {
+		public function allowed_tags_and_attributes( $allowedposttags, $context ) {
 
 			// Keep only for 'post' contenxt.
 			if ( 'post' === $context ) {
@@ -85,9 +85,16 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 			// Allow the SVG tags in batch update process.
 			add_filter( 'wp_kses_allowed_html', array( $this, 'allowed_tags_and_attributes' ), 10, 2 );
 
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Processing "Gutenberg" Batch Import' );
+			}
+
 			Astra_Sites_Importer_Log::add( '---- Processing WordPress Posts / Pages - for "Gutenberg" ----' );
 
 			$post_types = apply_filters( 'astra_sites_gutenberg_batch_process_post_types', array( 'page' ) );
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'For post types: ' . implode( ', ', $post_types ) );
+			}
 
 			$post_ids = Astra_Sites_Batch_Processing::get_pages( $post_types );
 			if ( empty( $post_ids ) && ! is_array( $post_ids ) ) {
@@ -107,11 +114,34 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 		 */
 		public function import_single_post( $post_id = 0 ) {
 
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Gutenberg - Processing page: ' . $post_id );
+			}
+
+			// Is page imported with Starter Sites?
+			// If not then skip batch process.
+			$imported_from_demo_site = get_post_meta( $post_id, '_astra_sites_enable_for_batch', true );
+			if ( ! $imported_from_demo_site ) {
+				return;
+			}
+
+			$is_elementor_page      = get_post_meta( $post_id, '_elementor_version', true );
+			$is_beaver_builder_page = get_post_meta( $post_id, '_fl_builder_enabled', true );
+			$is_brizy_page          = get_post_meta( $post_id, 'brizy_post_uid', true );
+
+			// If page contain Elementor, Brizy or Beaver Builder meta then skip this page.
+			if ( $is_elementor_page || $is_beaver_builder_page || $is_brizy_page ) {
+				return;
+			}
+
+			Astra_Sites_Importer_Log::add( '---- Processing WordPress Page - for Gutenberg ---- "' . $post_id . '"' );
+
 			$ids_mapping = get_option( 'astra_sites_wpforms_ids_mapping', array() );
 
 			// Post content.
 			$content = get_post_field( 'post_content', $post_id );
 
+			// Empty mapping? Then return.
 			if ( ! empty( $ids_mapping ) ) {
 				// Replace ID's.
 				foreach ( $ids_mapping as $old_id => $new_id ) {
@@ -130,12 +160,14 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 
 					$catogory_mapping = ( isset( $tax_mapping['post']['category'] ) ) ? $tax_mapping['post']['category'] : array();
 
-					if ( is_array( $catogory_mapping ) ) {
+					if ( is_array( $catogory_mapping ) && ! empty( $catogory_mapping ) ) {
 
 						foreach ( $catogory_mapping as $key => $value ) {
 
 							$this_site_term = get_term_by( 'slug', $value['slug'], 'category' );
-							$content        = str_replace( '"categories":"' . $value['id'], '"categories":"' . $this_site_term->term_id, $content );
+							if ( ! is_wp_error( $this_site_term ) && $this_site_term ) {
+								$content = str_replace( '"categories":"' . $value['id'], '"categories":"' . $this_site_term->term_id, $content );
+							}
 						}
 					}
 				}
@@ -146,7 +178,8 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 			// expects as 'u0026amp;'. So, Converted '&amp;' with 'u0026amp;'.
 			//
 			// @todo This affect for normal page content too. Detect only Gutenberg pages and process only on it.
-			$content = str_replace( '&amp;', "\u0026amp;", $content );
+			// $content = str_replace( '&amp;', "\u0026amp;", $content );
+			$content = $this->get_content( $content );
 
 			// Update content.
 			wp_update_post(
@@ -155,6 +188,91 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing_Gutenberg' ) ) :
 					'post_content' => $content,
 				)
 			);
+		}
+
+		/**
+		 * Download and Replace hotlink images
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param  string $content Mixed post content.
+		 * @return array           Hotlink image array.
+		 */
+		public function get_content( $content = '' ) {
+
+			$content = stripslashes( $content );
+
+			// Extract all links.
+			preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match );
+
+			$all_links = array_unique( $match[0] );
+
+			// Not have any link.
+			if ( empty( $all_links ) ) {
+				return $content;
+			}
+
+			$link_mapping = array();
+			$image_links  = array();
+			$other_links  = array();
+
+			// Extract normal and image links.
+			foreach ( $all_links as $key => $link ) {
+				if ( preg_match( '/^((https?:\/\/)|(www\.))([a-z0-9-].?)+(:[0-9]+)?\/[\w\-]+\.(jpg|png|gif|jpeg)\/?$/i', $link ) ) {
+
+					// Get all image links.
+					// Avoid *-150x, *-300x and *-1024x images.
+					if (
+						false === strpos( $link, '-150x' ) &&
+						false === strpos( $link, '-300x' ) &&
+						false === strpos( $link, '-1024x' )
+					) {
+						$image_links[] = $link;
+					}
+				} else {
+
+					// Collect other links.
+					$other_links[] = $link;
+				}
+			}
+
+			// Step 1: Download images.
+			if ( ! empty( $image_links ) ) {
+				foreach ( $image_links as $key => $image_url ) {
+					// Download remote image.
+					$image            = array(
+						'url' => $image_url,
+						'id'  => 0,
+					);
+					$downloaded_image = Astra_Sites_Image_Importer::get_instance()->import( $image );
+
+					// Old and New image mapping links.
+					$link_mapping[ $image_url ] = $downloaded_image['url'];
+				}
+			}
+
+			// Step 2: Replace the demo site URL with live site URL.
+			if ( ! empty( $other_links ) ) {
+				$demo_data = get_option( 'astra_sites_import_data', array() );
+				if ( isset( $demo_data['astra-site-url'] ) ) {
+					$site_url = get_site_url();
+					foreach ( $other_links as $key => $link ) {
+						$link_mapping[ $link ] = str_replace( 'https:' . $demo_data['astra-site-url'], $site_url, $link );
+					}
+				}
+			}
+
+			// Step 3: Replace mapping links.
+			foreach ( $link_mapping as $old_url => $new_url ) {
+				$content = str_replace( $old_url, $new_url, $content );
+
+				// Replace the slashed URLs if any exist.
+				$old_url = str_replace( '/', '/\\', $old_url );
+				$new_url = str_replace( '/', '/\\', $new_url );
+				$content = str_replace( $old_url, $new_url, $content );
+			}
+
+			return $content;
 		}
 
 	}

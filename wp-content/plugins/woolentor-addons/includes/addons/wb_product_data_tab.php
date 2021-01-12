@@ -21,6 +21,16 @@ class WL_Product_Product_Data_Tabs_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['product','data tab','product tabs','tabs','product info tab'];
+    }
+
     protected function _register_controls() {
 
         // Product Style
@@ -264,10 +274,9 @@ class WL_Product_Product_Data_Tabs_Element extends Widget_Base {
         $settings   = $this->get_settings_for_display();
 
         if ( Plugin::instance()->editor->is_edit_mode() ) {
-            echo '<div class="woocommerce-tabs wc-tabs-wrapper">'.__( 'Product Data Tabs', 'woolentor' ).'</div>';
+            echo \WooLentor_Default_Data::instance()->default( $this->get_name() );
         }else{
             global $product;
-            $product = wc_get_product();
             if ( empty( $product ) ) {
                 return;
             }

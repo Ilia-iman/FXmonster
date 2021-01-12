@@ -22,6 +22,15 @@ class Single_Product_Ajax_Add_To_Cart{
         add_action( 'wp_ajax_wl_singleproduct_ajax_add_to_cart', [ $this, 'woocommerce_ajax_add_to_cart' ] );
         add_action( 'wp_ajax_nopriv_wl_singleproduct_ajax_add_to_cart', [ $this, 'woocommerce_ajax_add_to_cart' ] );
 
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+
+    }
+
+    // Ajax Cart Script
+    public function enqueue_scripts(){
+        if( is_product() ){
+            wp_enqueue_script( 'jquery-single-product-ajax-cart' );
+        }
     }
 
     // Ajax callback function

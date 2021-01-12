@@ -3,7 +3,7 @@
  * Plugin Name: Simple Featured Video
  * Plugin URI:  https://www.primisdigital.com/
  * Description: Featured Video uploading for wordpress posts,pages, woocommerce products,  and custom post type
- * Version:     1.2
+ * Version:     1.3
  * Author:      Primis Digital
  * Author URI:  https://www.primisdigital.com/
  * License:     GPL2
@@ -64,8 +64,6 @@ include("lib/sfv_menu.php");
 add_action('add_meta_boxes', 'sfv_featured_video');
 function sfv_featured_video()
 {
-	  wp_nonce_field( 'theme_meta_box_nonce', 'meta_box_nonce' );
-
    if (get_option('sfv_posts_types')) {
         $posts_available = get_option('sfv_posts_types');
 		if(!empty($posts_available)){

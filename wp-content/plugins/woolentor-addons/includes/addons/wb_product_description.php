@@ -21,6 +21,16 @@ class WL_Product_Description_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['description','product description','product content'];
+    }
+
     protected function _register_controls() {
 
         // Product Style
@@ -66,7 +76,7 @@ class WL_Product_Description_Element extends Widget_Base {
                     'label' => __( 'Text Color', 'woolentor' ),
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
-                        '.woocommerce {{WRAPPER}} .woocommerce_product_description' => 'color: {{VALUE}}',
+                        '.woocommerce {{WRAPPER}} .woocommerce_product_description' => 'color: {{VALUE}} !important',
                     ],
                 ]
             );
@@ -89,11 +99,9 @@ class WL_Product_Description_Element extends Widget_Base {
        global $product, $post;
         $product = wc_get_product();
         if ( Plugin::instance()->editor->is_edit_mode() ) {
-            echo '<div class="woocommerce_product_description">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</div>';
+            echo '<div class="woocommerce_product_description">'.\WooLentor_Default_Data::instance()->default( $this->get_name() ).'</div>';
         }else{
-            if ( empty( $product ) ) {
-                return;
-            }
+            if ( empty( $product ) ) { return; }
             echo '<div class="woocommerce_product_description">'.$post->post_content.'</div>';
         }
     }

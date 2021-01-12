@@ -22,6 +22,16 @@ class WL_Product_Call_For_Price_Element extends Widget_Base {
         return array( 'woolentor-addons' );
     }
 
+    public function get_style_depends(){
+        return [
+            'woolentor-widgets',
+        ];
+    }
+
+    public function get_keywords(){
+        return ['price','call for price'];
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -38,6 +48,7 @@ class WL_Product_Call_For_Price_Element extends Widget_Base {
                     'type' => Controls_Manager::TEXT,
                     'default' => __( 'Call For Price', 'woolentor' ),
                     'placeholder' => __( 'Call For Price', 'woolentor' ),
+                    'label_block' => true,
                 ]
             );
 
@@ -48,6 +59,7 @@ class WL_Product_Call_For_Price_Element extends Widget_Base {
                     'type' => Controls_Manager::TEXT,
                     'default' => __( '123-456-7890', 'woolentor' ),
                     'placeholder' => __( '123-456-7890', 'woolentor' ),
+                    'label_block' => true,
                 ]
             );
 
